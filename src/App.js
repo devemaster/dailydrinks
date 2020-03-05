@@ -20,27 +20,56 @@ import NovusBiArticleComponent from './container/novusBiArticle/novusBiArticle';
 class App extends React.PureComponent {
   
   render() {
-    const TOKEN = getItem('auth_token');
+    // const TOKEN = getItem('auth_token');
 
-    if(TOKEN === null) {
-      return(
-        <React.Fragment>
-          <BrowserRouter>
-            <Switch>
-              <Route exact={true} path="/" component={LoginComponent} />
-              <Route path="/forgetpassword" component={ForgetPasswordComponent} />
-              <Route path="/resetpassword/:token" component={ResetPasswordComponent} />
-              <Route render={() => (<Redirect to={'/'} />)} />
-            </Switch>
-          </BrowserRouter>
-        </React.Fragment>       
-      )
-    } else if (TOKEN !== null) {
-      return(
-        <div>
+    // if(TOKEN === null) {
+    //   return(
+    //     <React.Fragment>
+    //       <BrowserRouter>
+    //         <Switch>
+    //           <Route exact={true} path="/" component={LoginComponent} />
+    //           <Route path="/forgetpassword" component={ForgetPasswordComponent} />
+    //           <Route path="/resetpassword/:token" component={ResetPasswordComponent} />
+    //           <Route render={() => (<Redirect to={'/'} />)} />
+    //         </Switch>
+    //       </BrowserRouter>
+    //     </React.Fragment>       
+    //   )
+    // } else if (TOKEN !== null) {
+    //   return(
+    //     <div>
+    //       <React.Fragment>
+    //         <BrowserRouter>
+    //           <Switch>
+    //             <Route path="/users" component={UsersComponent} />
+    //             <Route path="/createUser" component={CreateUserComponent} />
+    //             <Route path="/updateUser" component={EditUserComponent} />
+    //             <Route path="/applications" component={ApplicationsComponent} />
+    //             <Route path="/create-application" component={CreateApplicationComponent} />
+    //             <Route path="/update-application" component={UpdateApplicationComponent} />
+    //             <Route path="/notification" component={CreateNotificationComponent} />
+    //             <Route path="/adminDetails" component={AdminDetailsComponent} />
+    //             <Route path="/create-admin" component={CreateAdminComponent} />
+    //             <Route path="/novus-bi" component={NovusBiComponent} />
+    //             <Route path="/novus-bi-create" component={NovusBiCreateComponent} />
+    //             <Route path="/novus-bi-article" component={NovusBiArticleComponent} />
+    //             <Route render={() => (<Redirect to="/users" />)} />
+                
+    //           </Switch>
+    //         </BrowserRouter>
+    //       </React.Fragment>
+    //     </div>
+    //   )
+    // }
+
+      return(   
           <React.Fragment>
             <BrowserRouter>
               <Switch>
+              <Route exact={true} path="/" component={LoginComponent} />
+              <Route path="/forgetpassword" component={ForgetPasswordComponent} />
+              <Route path="/resetpassword/:token" component={ResetPasswordComponent} />
+              {/* <Route render={() => (<Redirect to={'/'} />)} /> */}
                 <Route path="/users" component={UsersComponent} />
                 <Route path="/createUser" component={CreateUserComponent} />
                 <Route path="/updateUser" component={EditUserComponent} />
@@ -58,9 +87,8 @@ class App extends React.PureComponent {
               </Switch>
             </BrowserRouter>
           </React.Fragment>
-        </div>
+
       )
-    }
   }
 }
 
