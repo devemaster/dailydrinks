@@ -9,10 +9,10 @@
 /coverage
 
 # production
-/build
+# /build
 
 package-lock.json
-yarn.lock
+yarn.lock 
 
 # misc
 .DS_Store
