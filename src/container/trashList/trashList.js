@@ -16,8 +16,7 @@ import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Button} from 'primereact/button';
-import {Dropdown} from 'primereact/dropdown';
+import logoImg from '../../assets/images/novusone-logo.png';
 
 
 let isDelete = false;
@@ -142,7 +141,7 @@ class TrashListComponent extends React.PureComponent {
     return (
       <div>
         {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-        <img src='http://localhost:3000/static/media/novusone-logo.6b9fef02.png' alt='icon' className="image_icons" />
+        <img src={logoImg} alt='icon' className="image_icons" />
       </div>
     );
   }

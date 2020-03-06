@@ -237,6 +237,12 @@ class CategoryListComponent extends React.PureComponent {
       </div>
     );
   }
+  goUpdateApplication = (rowData) => {
+    // this.props.history.push({
+    //   pathname: '/novus-bi-create',
+    //   state: {appData: rowData}
+    // })
+  }
 
   render() {
     const header = (

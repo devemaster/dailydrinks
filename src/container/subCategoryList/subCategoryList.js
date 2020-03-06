@@ -19,10 +19,6 @@ import { getItem } from '../../utils/localStore';
 import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
 import subImg1 from '../../../src/assets/images/subimg1.PNG';
-import subImg2 from '../../../src/assets/images/subimg2.PNG';
-import subImg3 from '../../../src/assets/images/subimg3.PNG';
-import subImg4 from '../../../src/assets/images/subimg4.PNG';
-import subImg5 from '../../../src/assets/images/subimg5.PNG';
 import { Link } from 'react-router-dom';
 
 

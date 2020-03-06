@@ -18,7 +18,8 @@ import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
 import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
-import { Link } from 'react-router-dom';
+import logoImg from '../../assets/images/novusone-logo.png';
+
 
 
 let isDelete = false;
@@ -144,7 +145,7 @@ class ContentListComponent extends React.PureComponent {
     return (
       <div>
         {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-        <img src='http://localhost:3000/static/media/novusone-logo.6b9fef02.png' alt='icon' className="image_icons_content" />
+        <img src={logoImg} alt='icon' className="image_icons_content" />
       </div>
     );
   }

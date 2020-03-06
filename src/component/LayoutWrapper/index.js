@@ -140,21 +140,21 @@ class LayoutWrapper extends React.PureComponent {
                                             
                                                 <div className={page[1]==='content-list' ? 'active' : 'no-class'}>
                                                     <NavLink to={"/content-list"} data-parent="#sidebar" >
-                                                    <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <i className="fa fa-file" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">List of Content</span>
                                                     </NavLink>
                                                 </div>
 
                                                 <div className={page[1]==='comment-list' ? 'active' : 'no-class'}>
                                                     <NavLink to={"/comment-list"} data-parent="#sidebar" >
-                                                    <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <i className="fa fa-comments" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Comments</span>
                                                     </NavLink>
                                                 </div>
 
                                                 <div className={page[1]==='trash-list' ? 'active' : 'no-class'}>
                                                     <NavLink to={"/trash-list"} data-parent="#sidebar" >
-                                                    <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <i className="fa fa-trash" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Trash</span>
                                                     </NavLink>
                                                 </div>
