@@ -168,3 +168,35 @@ body .novus_datatable.p-datatable .p-datatable-tbody > tr {
     outline: none !important;
     box-shadow: none;
 }
+body .p-datatable .p-datatable-thead > tr > th {
+    border: 0px solid #c8c8c8 !important;
+}
+body .p-datatable .p-datatable-tbody > tr > td {
+    border: 0px solid #c8c8c8 !important;
+}
+body .p-paginator {
+    border: 0px solid #c8c8c8 !important;
+}
+.p-treetable-frozen-view>.p-treetable-scrollable-body>table>.p-treetable-tbody>tr>td:last-child {
+    height: 50px !important;
+}
+span.fa.fa-search.form-control-feedback.search-icon {
+    display: none;
+}
+.header_dropopen .dropdown-menu.menu_fontSze {
+    display: block;
+}
+.active_drop_menus .dropdown-menu.menu_fontSze {
+    display: block;
+} 
+.active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a i, 
+.active_drop_menus .right_sidebar_content .dropdown-menu.menu_fontSze a i,
+.active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a span, 
+.active_drop_menus .right_sidebar_content .dropdown-menu.menu_fontSze a span{
+    color: #333;
+}
+tbody.p-datatable-tbody tr:nth-child(1) i.fa.fa-eye, 
+tbody.p-datatable-tbody tr:nth-child(4) i.fa.fa-eye, 
+tbody.p-datatable-tbody tr:nth-child(5) i.fa.fa-eye {
+    display: none;
+} 

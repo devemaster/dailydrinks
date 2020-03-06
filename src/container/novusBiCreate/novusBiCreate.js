@@ -14,6 +14,7 @@ import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
+import { Link } from 'react-router-dom';
 
 class NovusBiCreateComponent extends React.PureComponent {
     _isMounted = false;
@@ -82,7 +83,7 @@ class NovusBiCreateComponent extends React.PureComponent {
         }
     }
     handleBack = () => {
-        this.props.history.push('/novus-bi');
+        this.props.history.push('/category-list');
     }
 
     handleSubmit = () => {

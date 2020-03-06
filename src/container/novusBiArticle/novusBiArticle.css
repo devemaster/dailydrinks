@@ -44,10 +44,11 @@ body .iu-filesInputContainer {
   height: 100%!important;
 }
 body .iu-dropzone {
-  width: 100%!important;
+  width: 50%!important;
   height: 100%!important;
-  min-height: 200px;
-  background: #eee;
+  min-height: 160px;
+  background: transparent;
+  margin: 0 auto;
 }
 .iu-pseudobutton span .iu-imgPreview {
   background-size: auto;
@@ -75,7 +76,7 @@ p.tabs_icons {
   cursor: pointer;
 }
 i.upload_icon {
-  font-size: 80px;
+  font-size: 60px;
 }
 .image_uploader_main {
   text-align: center;
@@ -83,7 +84,8 @@ i.upload_icon {
   border-radius: 6px;
   padding: 30px;
   margin-bottom: 15px;
-}
+  background: #f5f5f5;
+} 
 .iu-dropzone{
   border-color: transparent !important;
 }
@@ -93,6 +95,39 @@ i.upload_icon {
 button.btn.btn-primary.login_button {
   margin-bottom: 110px;
 }
+p.ever_element {
+  font-weight: 500;
+}
+.text_area_article{
+  width: 100%;
+}
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(2),
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(8)
+ {
+  color: #888 !important;
+  text-transform: uppercase;
+  background: #fff !important;
+  cursor: auto;
+  pointer-events: none;
+}
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(1),
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(2),
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(8)
+{
+  padding-left: 15px !important;
+}
+.all_section_tab ul.p-dropdown-items.p-dropdown-list.p-component li:nth-child(n)
+{
+  padding-left: 30px;
+}
+.p-dropdown.p-component.all_section_tab {
+  margin-left: 15px;
+}
+.p-dropdown-items-wrapper {
+  max-height: 300px !important;
+  min-width: 250px !important;
+}
+
 
 @media (max-width: 575px) {
   .createprofile_back_icon,
@@ -172,9 +207,6 @@ button.btn.btn-primary.login_button {
     /* background: #8DC73F; */
     border: 1px solid #000;
   }
-  .email-checkbox:focus + label:before {
-    /* box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12); */
-  }
   .email-checkbox:checked + label:before {
     background: #8DC73F;
   }
@@ -203,4 +235,7 @@ button.btn.btn-primary.login_button {
   }
   .edit_profile_form_fields_wrapper .editor_cls button {
     margin-top: 0;
+  }
+  .editprofile_content.last_row {
+    margin-bottom: 20px;
   }

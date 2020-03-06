@@ -24,6 +24,12 @@ import checkUserReducer from './checkUserReducer';
 import novusBiReducer from './novusBiReducer';
 import novusBiCreateReducer from './novusBiCreateReducer';
 import novusBiArticleReducer from './novusBiArticleReducer';
+import contentListReducer from './contentListReducer';
+import categoryListReducer from './categoryListReducer';
+import commentListReducer from './commentListReducer';
+import trashListReducer from './trashListReducer';
+import subCategoryListReducer from './subCategoryListReducer';
+import articleListReducer from './articleListReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -51,4 +57,10 @@ export default combineReducers({
   novusBi: novusBiReducer,
   novusBiCreate: novusBiCreateReducer,
   novusBiArticle: novusBiArticleReducer,
+  contentList: contentListReducer,
+  categoryList: categoryListReducer,
+  commentList: commentListReducer,
+  trashList: trashListReducer,
+  subCategoryList: subCategoryListReducer,
+  articleList: articleListReducer
 });

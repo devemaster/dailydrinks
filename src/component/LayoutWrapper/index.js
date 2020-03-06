@@ -130,21 +130,37 @@ class LayoutWrapper extends React.PureComponent {
                                             <span className="content-name">Novus Bi</span>
                                             </a>
                                             <div className="dropdown-menu menu_fontSze" aria-labelledby="navbarDropdown">
-                                                <div className={page[1]==='novus-bi' ? 'active' : 'no-class'}>
-                                                    <NavLink to={"/novus-bi"} data-parent="#sidebar" >
+                                                <div className={page[1]==='category-list' ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/category-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-newspaper" style={{fontSize: '14px'}}  aria-hidden="true"></i>
-                                                    <span className="content-name">News</span>
+                                                    <span className="content-name">Sections</span>
                                                     </NavLink>
                                                 </div>
 
-                                                <div>
-                                                    <NavLink to={"/novus-bi"} data-parent="#sidebar" >
+                                            
+                                                <div className={page[1]==='content-list' ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/content-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
-                                                    <span className="content-name">MARKET KPI's</span>
+                                                    <span className="content-name">List of Content</span>
                                                     </NavLink>
                                                 </div>
 
-                                                <div>
+                                                <div className={page[1]==='comment-list' ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/comment-list"} data-parent="#sidebar" >
+                                                    <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <span className="content-name">Comments</span>
+                                                    </NavLink>
+                                                </div>
+
+                                                <div className={page[1]==='trash-list' ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/trash-list"} data-parent="#sidebar" >
+                                                    <i className="fa fa-bar-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <span className="content-name">Trash</span>
+                                                    </NavLink>
+                                                </div>
+                                         
+
+                                                {/* <div>
                                                     <NavLink to={"/novus-bi"} data-parent="#sidebar" >
                                                     <i className="fa fa-pie-chart" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">IMPORTS STATS</span>
@@ -168,11 +184,11 @@ class LayoutWrapper extends React.PureComponent {
                                                 <div>
                                                 <div className={page[1]==='novus-bi-article' ? 'active' : 'no-class'}>
                                                     <NavLink to={"/novus-bi-article"} data-parent="#sidebar" >
-                                                    <i className="fa fa-volume-up" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <i className="fa fa-file" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Novus Bi Article</span>
                                                     </NavLink>
                                                 </div>
-                                                </div>                                                
+                                                </div>                                                 */}
                                             </div>
                                         </div>
                                         <div className="no-class">
