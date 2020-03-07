@@ -22,6 +22,10 @@ import CommentListComponent from './container/commentList/commentList';
 import TrashListComponent from './container/trashList/trashList';
 import SubCategoryList from './container/subCategoryList/subCategoryList';
 import ArticleList from './container/articleList/articleList';
+import UpdateContent from './container/updateContent/updateContent';
+import UpdateCategory from './container/updateCategory/updateCategory';
+import UpdateSubCategory from './container/updateSubCategory/updateSubCategory';
+import CreateCategory from './container/createCategory/createCategory';
 
 class App extends React.PureComponent {
   
@@ -65,6 +69,11 @@ class App extends React.PureComponent {
                 <Route path="/trash-list" component={TrashListComponent} />
                 <Route path="/subcategory-list" component={SubCategoryList} />
                 <Route path="/article-list" component={ArticleList} />
+                <Route path="/update-content" component={UpdateContent} />
+                <Route path="/update-category" component={UpdateCategory} />
+                <Route path="/update-subcategory" component={UpdateSubCategory} />
+                <Route path="/create-category" component={CreateCategory} />
+                
                 
                 <Route render={() => (<Redirect to="/users" />)} />
                 

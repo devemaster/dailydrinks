@@ -1,8 +1,8 @@
-import { getItem } from '../utils/localStore';
-import { BASE_URL } from '../constants';
 
-class SubCategoryListApi {  
-    static getsubCategoryList() {
+import { BASE_URL } from '../constants';
+import { getItem } from '../utils/localStore';
+class DeleteSubCategoryListApi {
+    static doDeleteApp(data) {
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -11,10 +11,11 @@ class SubCategoryListApi {
                 'Authorization': TOKEN
             });
             let body = {
-                method: 'POST',
+                method: 'DELETE',
                 headers: ajaxRequestHeaders,
+                body: JSON.stringify(data)
             }
-            return fetch(BASE_URL + '/SubCategories', body).then(response => {
+            return fetch(BASE_URL + '/admin_delete_application', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';
@@ -24,8 +25,9 @@ class SubCategoryListApi {
                 return error;
             });
         }catch(err){
+
         }
     }
-}  
+}
 
-export default SubCategoryListApi;
+export default DeleteSubCategoryListApi;

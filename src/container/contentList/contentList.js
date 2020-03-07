@@ -9,14 +9,13 @@ import { Column } from 'primereact/components/column/Column';
 import './contentList.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchcontentList, getcontentListRes } from '../../action/contentListActions';
-import { deleteApplicationRecord, doDeleteAppRes } from '../../action/deleteApplicationActions';
+import { deleteContentListRecord, doDeleteAppRes } from '../../action/deleteContentListActions';
 // import Swal from 'sweetalert2';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Button} from 'primereact/button';
 import {Dropdown} from 'primereact/dropdown';
 import logoImg from '../../assets/images/novusone-logo.png';
 
@@ -43,6 +42,7 @@ class ContentListComponent extends React.PureComponent {
       isDisabled: false,
 
     }
+    this.actionTemplate = this.actionTemplate.bind(this);
   }
 
   componentDidMount() {
@@ -104,10 +104,10 @@ class ContentListComponent extends React.PureComponent {
   }
 
   goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/novus-bi-create',
-    //   state: {appData: rowData}
-    // })
+    this.props.history.push({
+      pathname: '/update-content',
+      state: {appData: rowData}
+    })
   }
 
 
@@ -125,7 +125,7 @@ class ContentListComponent extends React.PureComponent {
     let payload = {
       app_id: this.state.appId
     }
-    this.props.deleteApplicationRecord(payload);
+    this.props.deleteContentListRecord(payload);
   }
 
   openDeleteApp = (rowData) => {
@@ -153,7 +153,7 @@ class ContentListComponent extends React.PureComponent {
   actionStatusTemplate = (data) => {
     return (
       <div className="status_main_bx">
-        <button className="btn pending-status" onClick={this.toggleBox}>
+        <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
           Draft
         </button>         
       </div>
@@ -238,73 +238,8 @@ class ContentListComponent extends React.PureComponent {
 
                     <Dropdown className="all_sec_dropdown" optionLabel="name" value={this.state.allContent} options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content"/>
 
-                        <Dropdown className="all_sec_dropdown all_section_tab" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} placeholder="All Section"/>
+                    <Dropdown className="all_sec_dropdown all_section_tab" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} placeholder="All Section"/>
 
-                    {/* <div className="all_content_bx">
-                    <div>
-                        <button className="button_drop_main" onClick={this.showMenu}>
-                          All Content <i class="fas fa-chevron-down"></i>
-                        </button>
-                        
-                        {
-                          this.state.showMenu
-                            ? (
-                              <div
-                                className="menu"
-                                ref={(element) => {
-                                  this.dropdownMenu = element;
-                                }}
-                              >
-                                <button> All Articles </button>
-                                <button> All Sounds </button>
-                              </div> 
-                            )
-                            : (
-                              null
-                            )
-                        }
-                        </div>        
-                     </div> */}
-
-                     {/* <div className="all_section_bx">
-                    <div>
-                        <button className="button_drop_main" onClick={this.showMenuSection}>
-                          All Sections <i class="fas fa-chevron-down"></i>
-                        </button>
-                        
-                        {
-                          this.state.showMenuSection
-                            ? (
-                              <div
-                                className="menu"
-                                ref={(element) => {
-                                  this.dropdownMenusec = element;
-                                }}
-                              >
-                                
-                                <p> All Section </p>
-                                <button>NEWS</button>
-                                <p>KPI'S MARKET</p>
-                                <button className="sub_catrgory_menu">Birds</button>
-                                    <button className="sub_catrgory_menu">Pigs</button>
-                                    <button className="sub_catrgory_menu">Ruminants</button>
-                                    <button className="sub_catrgory_menu">Aqua</button>
-                                    <button className="sub_catrgory_menu">Grains</button>
-                                <p>IMPORTS STATS</p>
-                                    <button className="sub_catrgory_menu">ENZYMES </button>
-                                    <button className="sub_catrgory_menu">MINERALS </button>
-                                    <button className="sub_catrgory_menu">EUBIOTICS </button>
-                                    <button className="sub_catrgory_menu">METIONINA </button>
-                                <button>COMPETITION</button>
-                                <button>PODCASTS</button>
-                              </div>
-                            )
-                            : (
-                              null
-                            )
-                        }
-                        </div>        
-                     </div> */}
                     
                     <div className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-12 tableheight advisor-tab-tableheight" style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 15 }}>
@@ -378,7 +313,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
 		fetchcontentList: () => dispatch(fetchcontentList()),
-		deleteApplicationRecord: (data) => dispatch(deleteApplicationRecord(data)),
+		deleteContentListRecord: (data) => dispatch(deleteContentListRecord(data)),
   };
 }
 

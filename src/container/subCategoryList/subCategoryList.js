@@ -9,7 +9,7 @@ import { Column } from 'primereact/components/column/Column';
 import './subCategoryList.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchsubCategoryList, getsubCategoryListRes } from '../../action/subCategoryListActions';
-import { deleteApplicationRecord, doDeleteAppRes } from '../../action/deleteApplicationActions';
+import { deleteSubCategoryListRecord, doDeleteAppRes } from '../../action/deleteSubCategoryListActions';
 // import Swal from 'sweetalert2';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -36,11 +36,11 @@ class SubCategoryListComponent extends React.PureComponent {
     isDelete = false;
 		this.state = {
       columns: [
-        { CategoryName: 'Birds', View: '98' },
-        { CategoryName: 'Pigs', View: '98' },
-        { CategoryName: 'Ruminants', View: '98' },
-        { CategoryName: 'Aqua', View: '98' },
-        { CategoryName: 'Grains', View: '98' },
+        { CategoryName: 'Birds' },
+        { CategoryName: 'Pigs' },
+        { CategoryName: 'Ruminants' },
+        { CategoryName: 'Aqua' },
+        { CategoryName: 'Grains' },
       ],
 			isLoader: false,
       globalFilter: '',
@@ -48,7 +48,8 @@ class SubCategoryListComponent extends React.PureComponent {
       renderUI: false,
       openDeleteAppModal: false,
       isDisabled: false,
-		}
+    }
+    this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
   componentDidMount() {
@@ -109,10 +110,10 @@ class SubCategoryListComponent extends React.PureComponent {
     );
   }
   goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/novus-bi-create',
-    //   state: {appData: rowData}
-    // })
+    this.props.history.push({
+      pathname: '/update-subcategory',
+      state: {appData: rowData}
+    })
   }
 
 
@@ -219,17 +220,13 @@ class SubCategoryListComponent extends React.PureComponent {
                               <button
                                 className="btn delete-user-yes-btn"
                                 onClick={() => this.deleteApp() }
-                                disabled={this.state.isDisabled}
-                              >
-                                Yes
+                                disabled={this.state.isDisabled} >Yes
                               </button>
                             </div>
                             <div className="col-6 col-md-6 col-sm-6">
                               <button
                                 className="btn delete-user-no-btn"
-                                onClick={() => this.cancelDeleteApp() }
-                              >
-                                No
+                                onClick={() => this.cancelDeleteApp() } > No
                               </button>
                             </div>
                           </div>
@@ -261,7 +258,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
 		fetchsubCategoryList: () => dispatch(fetchsubCategoryList()),
-		deleteApplicationRecord: (data) => dispatch(deleteApplicationRecord(data)),
+		deleteSubCategoryListRecord: (data) => dispatch(deleteSubCategoryListRecord(data)),
   };
 }
 

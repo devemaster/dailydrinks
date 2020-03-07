@@ -3,61 +3,81 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import './novusBiCreate.css';
+// import { reduxForm } from 'redux-form';
+import './updateCategory.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/createUserActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { submitCreateApplication, doCreateApplicationRes } from '../../action/createApplicationActions';
+import { submitUpdateCategory, doUpdateAppRes } from '../../action/updateCategoryActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
-import { Link } from 'react-router-dom';
-
-class NovusBiCreateComponent extends React.PureComponent {
-    _isMounted = false;
+class UpdateCategoryComponent extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             isLoader: true,
             isSubmited: false,
-            applicationName: '',
+            category_name: '',
             icon: '',
+            countries: '',
             countryList: [],
             usersList: [],
             selectedCountry: null,
-            selectedUser: null,
             file: null,
+            appData: null
         }
     }
     componentDidMount() {
+        // Get country list //
         this.props.getAllCountry();
-        // this.props.getAllUsers();
+        const appDetails = this.props.location.state.appData;
+        this.setState({
+            appData: appDetails,
+        }, () => {
+            this.setState({
+                category_name: this.state.appData.category_name,
+                icon: this.state.appData.icon,
+                // countries: this.state.appData.selected_countries
+            })
+        });
         this.setState({
             isLoader: false,
         });
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.doAllCountryRes){
-            if(nextProps.doAllCountryRes.data.countryList ){
-                if(nextProps.doAllCountryRes.data.countryList.success === true){
-                    this.setState({
-                        countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-                    });
-                }
-            }
-        }
-        if(nextProps.allUsersRes){
-            if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
-				if (nextProps.allUsersRes.data.allUser.success===true) {
-                    this.setState({
-                        usersList: nextProps.allUsersRes.data.allUser.data
-                    });
-				}
-			}
-        }
+        console.log("Props cat", nextProps)
+        // if(nextProps.doAllCountryRes){
+        //     if(nextProps.doAllCountryRes.data.countryList ){
+        //         if(nextProps.doAllCountryRes.data.countryList.success === true){
+        //             this.setState({
+        //                 countryList: nextProps.doAllCountryRes.data.countryList.countriesList
+        //             }, () => {
+        //                 // if (this.state.countries !== '') {
+        //                 //     let selectedcn = [];
+        //                 //     let countryD = this.state.countries.split(',');
+        //                 //     for (let item of this.state.countryList) {
+        //                 //         for (let cn of countryD) {
+        //                 //             if (cn === item.country_name) {
+        //                 //                 selectedcn.push({
+        //                 //                     value: item.country_name,
+        //                 //                     label: item.country_name,
+        //                 //                     original: item
+        //                 //                 })
+        //                 //             }
+        //                 //         }
+        //                 //     }
+        //                 //     this.setState({
+        //                 //         selectedCountry: selectedcn,
+        //                 //     });
+        //                 // }
+        //             });
+        //         }
+        //     }
+        // }
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -67,20 +87,19 @@ class NovusBiCreateComponent extends React.PureComponent {
 				}
 			}
         }
-        if(nextProps.createAppRes){
-            if(nextProps.createAppRes.data.createApplication ){
-                if(nextProps.createAppRes.data.createApplication.success === true){
-                    this.setState({
-                        isLoader: false
-                    });
-                    this.props.history.push('/category-list');
-                } else {
-                    setTimeout(() => { this.setState({
-                        isLoader: false
-                    }); }, 3000);
+        if(nextProps.updateAppRes){
+            if(nextProps.updateAppRes && nextProps.updateAppRes.data){            
+                if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateCategory ){
+                    if(nextProps.updateAppRes.data.updateCategory && nextProps.updateAppRes.data.updateCategory.success === true){
+                        this.setState({
+                            isLoader: false
+                        });
+                        this.props.history.push('/category-list');
+                    } 
                 }
             }
         }
+        
     }
     handleBack = () => {
         this.props.history.push('/category-list');
@@ -93,15 +112,14 @@ class NovusBiCreateComponent extends React.PureComponent {
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
-            let selectedCon = [];
-            for (let item of this.state.selectedCountry) {
-                selectedCon.push(item.value)
-            }
+            // let selectedCou = [];
+            // for (let item of this.state.selectedCountry) {
+            //     selectedCou.push(item.value)
+            // }
             let payloadReq = {
-                applicationName: this.state.applicationName,
+                cat_id: this.state.appData.cat_id,
+                category_name: this.state.category_name,
                 icon: this.state.icon,
-                selectedCountries: selectedCon.join(),
-                selectedUser: '',
             }
             this.props.handleFormSubmit(payloadReq);
         }
@@ -117,38 +135,20 @@ class NovusBiCreateComponent extends React.PureComponent {
         });
         this.props.uploadImage(e.target.files);
     }
-    countryChange = (item) => {
-        this.setState({
-            selectedCountry: item
-        });
-    }
-    userChange = (item) => {
-        this.setState({
-            selectedUser: item
-        });
-
-    }
-    renderHeader() {
-        return (
-            <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button className="ql-underline" aria-label="Underline"></button>
-            </span>
-        );
-    }
+    // countryChange = (item) => {
+    //     this.setState({
+    //         selectedCountry: item,
+    //         country: item.value
+    //     });
+    // }
     render() {
-        const header = this.renderHeader();
-
-        const Header = (<div className="offer_head">Create User</div>);
+        const Header = (<div className="offer_head">Update Category</div>);
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
         const errors = validate(this.state);
-        const { isSubmited, countryList, usersList } = this.state;
+        const { isSubmited, countryList } = this.state;
 
-        // let countryListOptionsItems = [];
         const countryListOptions = [];
-
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
                 countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
@@ -159,46 +159,41 @@ class NovusBiCreateComponent extends React.PureComponent {
                 );
             });
         }
-        const userListOptions = [];
-        if (usersList && usersList.length > 0) {
-            usersList.map((item) => {
-                userListOptions.push({ value: item.fullname, label: item.fullname, original: item });
-                return (
-                <option value={item.fullname} id={item.user_id} key={item.user_id}>
-                    {item.fullname}              
-                </option>
-                );
-            });
-        }
         return (
-                <LayoutWrapper title="Create Application" header={Header} >
+                <LayoutWrapper title="Create Category" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
                         <div className="edit_profile_content_wrapper">
                             <div className="createprofile_heading">
                                 <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
-                                    <span className="createprofile_go_back">Back to Novus Bi</span>
+                                    <span className="createprofile_go_back">Back to Category</span>
                                 </div>
-                                <span className="offering_detail_title">Create Category</span>
+                                <span className="offering_detail_title">Update Category</span>
                             </div>
                             <div className="editprofile_content">
                                 <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                    {/* <CreateUserForm handleFormSubmit={(data) => { this.handleSubmit(data) }} /> */}
                                     <div >
                                         <div className="row">
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" placeholder="Enter Title" name="applicationName" onChange={(e) => this.handleChange(e)} />
-                                                        {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
+                                                        <input type="text" className="form-control" placeholder="Enter Content name" name="category_name" onChange={(e) => this.handleChange(e)} value={this.state.category_name} />
+                                                        {errors && isSubmited && <span className="error-message">{errors.category_name}</span>}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="col-6">
-                                                <div className="mt-2">
-                                                    <div className="form-group">
-                                                        <input type="file" className="form-control" name="icon" accept="image/*" onChange={(e) => this.handleFileChange(e)} />
-                                                        {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
+                                                <div className="row">
+                                                    <div className="col-8">
+                                                        <div className="mt-2">
+                                                            <div className="form-group">
+                                                                <input type="file" className="form-control" name="icon" accept="image/*" onChange={(e) => this.handleFileChange(e)} />
+                                                                {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-4">
+                                                        <img src={this.state.icon} style={{width: 60, height: 60}} alt=""/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -217,21 +212,6 @@ class NovusBiCreateComponent extends React.PureComponent {
                                                     </div>
                                                 </div>
                                             </div> */}
-                                            {/* <div className="col-6">
-                                                <div className="mt-2">
-                                                    <div className="form-group">
-                                                        <Select
-                                                            value={this.state.selectedUser}
-                                                            onChange={this.userChange}
-                                                            options={userListOptions}
-                                                            name="selectedUser"
-                                                            placeholder="Select users"
-                                                            isMulti={true}
-                                                        />
-                                                        {errors && isSubmited && <span className="error-message">{errors.selectedUser}</span>}
-                                                    </div>
-                                                </div>
-                                            </div> */}
                                         </div>
                                         <div>
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
@@ -246,16 +226,16 @@ class NovusBiCreateComponent extends React.PureComponent {
     }
 }
 
-NovusBiCreateComponent.propTypes = {
+UpdateCategoryComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
-    createAppRes: PropTypes.any,
+    updateAppRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
     allUsersRes: PropTypes.any,
     doUploadAppIconRes: PropTypes.any
 };
 
 const mapStateToProps = createStructuredSelector({
-    createAppRes: doCreateApplicationRes,
+    updateAppRes: doUpdateAppRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
@@ -263,7 +243,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitCreateApplication(data)),
+        handleFormSubmit: (data) => dispatch(submitUpdateCategory(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
@@ -271,4 +251,4 @@ function mapDispatchToProps(dispatch) {
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(NovusBiCreateComponent);
+export default compose(withConnect)(UpdateCategoryComponent);

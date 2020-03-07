@@ -3,52 +3,41 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import './novusBiCreate.css';
+import './createCategory.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
-import { getAllCountry, doAllCountryRes } from '../../action/createUserActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { submitCreateApplication, doCreateApplicationRes } from '../../action/createApplicationActions';
+import { submitCreateCategory, doCreateCategoryRes } from '../../action/createCategoryActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
-import { Link } from 'react-router-dom';
-
-class NovusBiCreateComponent extends React.PureComponent {
+class CreateCategoryComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
             isLoader: true,
             isSubmited: false,
-            applicationName: '',
+            category_name: '',
+            cat_id: '',
             icon: '',
             countryList: [],
             usersList: [],
             selectedCountry: null,
             selectedUser: null,
-            file: null,
+            file: null
         }
     }
     componentDidMount() {
-        this.props.getAllCountry();
         // this.props.getAllUsers();
         this.setState({
             isLoader: false,
         });
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.doAllCountryRes){
-            if(nextProps.doAllCountryRes.data.countryList ){
-                if(nextProps.doAllCountryRes.data.countryList.success === true){
-                    this.setState({
-                        countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-                    });
-                }
-            }
-        }
+        console.log("Check nextProps", nextProps)
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -68,8 +57,8 @@ class NovusBiCreateComponent extends React.PureComponent {
 			}
         }
         if(nextProps.createAppRes){
-            if(nextProps.createAppRes.data.createApplication ){
-                if(nextProps.createAppRes.data.createApplication.success === true){
+            if(nextProps.createAppRes.data.createCategory ){
+                if(nextProps.createAppRes.data.createCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
@@ -93,14 +82,10 @@ class NovusBiCreateComponent extends React.PureComponent {
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
-            let selectedCon = [];
-            for (let item of this.state.selectedCountry) {
-                selectedCon.push(item.value)
-            }
             let payloadReq = {
-                applicationName: this.state.applicationName,
+                cat_id: this.state.cat_id,
+                category_name: this.state.category_name,
                 icon: this.state.icon,
-                selectedCountries: selectedCon.join(),
                 selectedUser: '',
             }
             this.props.handleFormSubmit(payloadReq);
@@ -117,29 +102,14 @@ class NovusBiCreateComponent extends React.PureComponent {
         });
         this.props.uploadImage(e.target.files);
     }
-    countryChange = (item) => {
-        this.setState({
-            selectedCountry: item
-        });
-    }
+    
     userChange = (item) => {
         this.setState({
             selectedUser: item
         });
 
     }
-    renderHeader() {
-        return (
-            <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button className="ql-underline" aria-label="Underline"></button>
-            </span>
-        );
-    }
     render() {
-        const header = this.renderHeader();
-
         const Header = (<div className="offer_head">Create User</div>);
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
@@ -147,18 +117,6 @@ class NovusBiCreateComponent extends React.PureComponent {
         const { isSubmited, countryList, usersList } = this.state;
 
         // let countryListOptionsItems = [];
-        const countryListOptions = [];
-
-        if (countryList && countryList.length > 0) {
-            countryList.map((item) => {
-                countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
-                return (
-                <option value={item.country_name} id={item.id} key={item.id}>
-                    {item.country_name}              
-                </option>
-                );
-            });
-        }
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -171,13 +129,13 @@ class NovusBiCreateComponent extends React.PureComponent {
             });
         }
         return (
-                <LayoutWrapper title="Create Application" header={Header} >
+                <LayoutWrapper title="Create Category" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
                         <div className="edit_profile_content_wrapper">
                             <div className="createprofile_heading">
                                 <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
-                                    <span className="createprofile_go_back">Back to Novus Bi</span>
+                                    <span className="createprofile_go_back">Back to Category</span>
                                 </div>
                                 <span className="offering_detail_title">Create Category</span>
                             </div>
@@ -189,8 +147,8 @@ class NovusBiCreateComponent extends React.PureComponent {
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" placeholder="Enter Title" name="applicationName" onChange={(e) => this.handleChange(e)} />
-                                                        {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
+                                                        <input type="text" className="form-control" placeholder="Enter Category name" name="category_name" onChange={(e) => this.handleChange(e)} />
+                                                        {errors && isSubmited && <span className="error-message">{errors.category_name}</span>}
                                                     </div>
                                                 </div>
                                             </div>
@@ -246,29 +204,26 @@ class NovusBiCreateComponent extends React.PureComponent {
     }
 }
 
-NovusBiCreateComponent.propTypes = {
+CreateCategoryComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAppRes: PropTypes.any,
-    doAllCountryRes: PropTypes.any,
     allUsersRes: PropTypes.any,
     doUploadAppIconRes: PropTypes.any
 };
 
 const mapStateToProps = createStructuredSelector({
-    createAppRes: doCreateApplicationRes,
-    doAllCountryRes: doAllCountryRes,
+    createAppRes: doCreateCategoryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
 });
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitCreateApplication(data)),
-        getAllCountry: () => dispatch(getAllCountry()),
+        handleFormSubmit: (data) => dispatch(submitCreateCategory(data)),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(NovusBiCreateComponent);
+export default compose(withConnect)(CreateCategoryComponent);

@@ -262,3 +262,10 @@ button.button_drop_main {
 button.button_drop_main i {
     font-size: 12px;
 }
+.application-list_content button.btn.pending-status.btn_draft {
+    background: #00395a;
+    color: #fff;
+}
+body div .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background-color: #00395a;
+}

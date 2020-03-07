@@ -14,7 +14,7 @@ class CategoryListApi {
                 method: 'GET',
                 headers: ajaxRequestHeaders,
             }
-            return fetch(BASE_URL + '/application_list', body).then(response => {
+            return fetch(BASE_URL + '/Categories', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';

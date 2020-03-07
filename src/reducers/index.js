@@ -30,6 +30,11 @@ import commentListReducer from './commentListReducer';
 import trashListReducer from './trashListReducer';
 import subCategoryListReducer from './subCategoryListReducer';
 import articleListReducer from './articleListReducer';
+import updateContentReducer from './updateContentReducer';
+import updateCategoryReducer from './updateCategoryReducer';
+import updateSubCategoryReducer from './updateSubCategoryReducer';
+import createCategoryReducer from './createCategoryReducer';
+import deleteCategoryListReducer from './deleteCategoryListReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -62,5 +67,10 @@ export default combineReducers({
   commentList: commentListReducer,
   trashList: trashListReducer,
   subCategoryList: subCategoryListReducer,
-  articleList: articleListReducer
+  articleList: articleListReducer,
+  updateContent: updateContentReducer,
+  updateCategory: updateCategoryReducer,
+  updateSubCategory: updateSubCategoryReducer,
+  createCategory: createCategoryReducer,
+  deleteCategoryList: deleteCategoryListReducer
 });
