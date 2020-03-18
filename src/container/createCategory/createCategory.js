@@ -21,7 +21,7 @@ class CreateCategoryComponent extends React.PureComponent {
             isLoader: true,
             isSubmited: false,
             category_name: '',
-            cat_id: '',
+            cat_id: 0,
             icon: '',
             countryList: [],
             usersList: [],
@@ -83,10 +83,9 @@ class CreateCategoryComponent extends React.PureComponent {
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
             let payloadReq = {
-                cat_id: this.state.cat_id,
+                parent_id: this.state.cat_id,
                 category_name: this.state.category_name,
-                icon: this.state.icon,
-                selectedUser: '',
+                icon: this.state.icon
             }
             this.props.handleFormSubmit(payloadReq);
         }

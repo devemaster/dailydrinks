@@ -59,6 +59,7 @@ body .iu-dropzone {
 .btn_box_main {
   position: relative;
   display: inline-block;
+  
 }
 .box_for_tabs {
   position: absolute;
@@ -120,9 +121,9 @@ p.ever_element {
 {
   padding-left: 30px;
 }
-.p-dropdown.p-component.all_section_tab {
+/* .p-dropdown.p-component.all_section_tab {
   margin-left: 15px;
-}
+} */
 .p-dropdown-items-wrapper {
   max-height: 300px !important;
   min-width: 250px !important;
@@ -239,3 +240,10 @@ p.ever_element {
   .editprofile_content.last_row {
     margin-bottom: 20px;
   }
+  .form-drop-control {
+    width: 100%;
+    display: block;
+}
+input.p-inputtext.p-component.p-inputtext.p-component.p-filled {
+  width: 90%;
+}

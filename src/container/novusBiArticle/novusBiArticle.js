@@ -22,7 +22,16 @@ import 'react-images-uploader/font.css';
 import { Link } from 'react-router-dom';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from 'primereact/dropdown';
+import {Calendar} from 'primereact/calendar';
+import moment from 'moment';
+import {MultiSelect} from 'primereact/multiselect';
+import {InputText} from "primereact/inputtext";
+import {Checkbox} from 'primereact/checkbox';
+import {InputSwitch} from 'primereact/inputswitch';
+import {FileUpload} from 'primereact/fileupload';
 
+import {Growl} from 'primereact/growl';
+const editorArray = [{'value':"editor",'name':""}];
 class NovusBiArticleComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -55,30 +64,34 @@ class NovusBiArticleComponent extends React.PureComponent {
             quote3: true,
             showMenu: false,
             showMenuSection: false,
-            // text1 : '<div>Type Here !!!</div><div><br></div>',
-            // text2 : ''
+            date:new Date(),
+            authorInput:false,
+            authorSelect:true,
+            comment:true,
+            editorArray:editorArray
         }
         
-        this.editorBtn = this.editorBtn.bind(this);
-        this.uploaderBtn = this.uploaderBtn.bind(this);
-        this.uploaderBtn2 = this.uploaderBtn2.bind(this);
-        this.uploaderBtn3 = this.uploaderBtn3.bind(this);
-        this.editorBtn2 = this.editorBtn2.bind(this);
-        this.editorBtn3 = this.editorBtn3.bind(this);
-        this.uploaderBtn1 = this.uploaderBtn1.bind(this);
-        this.editorBtn1 = this.editorBtn1.bind(this);
-        this.embedBtn = this.embedBtn.bind(this);
-        this.embedBtn1 = this.embedBtn1.bind(this);
-        this.embedBtn2 = this.embedBtn2.bind(this);
-        this.embedBtn3 = this.embedBtn3.bind(this);
-        this.quoteBtn = this.quoteBtn.bind(this);
-        this.quoteBtn1 = this.quoteBtn1.bind(this);
-        this.quoteBtn2 = this.quoteBtn2.bind(this);
-        this.quoteBtn3 = this.quoteBtn3.bind(this);
+        // this.editorBtn = this.editorBtn.bind(this);
+        // this.uploaderBtn = this.uploaderBtn.bind(this);
+        // // this.uploaderBtn2 = this.uploaderBtn2.bind(this);
+        // // this.uploaderBtn3 = this.uploaderBtn3.bind(this);
+        // // this.editorBtn2 = this.editorBtn2.bind(this);
+        // // this.editorBtn3 = this.editorBtn3.bind(this);
+        // // this.uploaderBtn1 = this.uploaderBtn1.bind(this);
+        // // this.editorBtn1 = this.editorBtn1.bind(this);
+        // this.embedBtn = this.embedBtn.bind(this);
+        // // this.embedBtn1 = this.embedBtn1.bind(this);
+        // // this.embedBtn2 = this.embedBtn2.bind(this);
+        // // this.embedBtn3 = this.embedBtn3.bind(this);
+        // this.quoteBtn = this.quoteBtn.bind(this);
+        // this.quoteBtn1 = this.quoteBtn1.bind(this);
+        // this.quoteBtn2 = this.quoteBtn2.bind(this);
+        // this.quoteBtn3 = this.quoteBtn3.bind(this);
         this.showMenu = this.showMenu.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.showMenuSection = this.showMenuSection.bind(this);
         this.closeMenuSection = this.closeMenuSection.bind(this);
+        this.onBasicUploadAuto = this.onBasicUploadAuto.bind(this);
     }
     showMenu(event) {
         event.preventDefault();
@@ -117,6 +130,23 @@ class NovusBiArticleComponent extends React.PureComponent {
           
         }
       }
+    selectAuthor = (event) => {
+        console.log(event.value)
+        if(event.value.name === 'Other'){
+            this.setState({
+                authorInput:true,
+                authorSelect:false
+            })
+        }else{
+            this.setState({
+                authorInput:false,
+                authorSelect:true
+            })
+        }
+    }
+    onBasicUploadAuto(event) {
+        this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+    }
 
     componentDidMount() {
         this.props.getAllCountry();
@@ -171,137 +201,43 @@ class NovusBiArticleComponent extends React.PureComponent {
     handleBack = () => {
         this.props.history.push('/content-list');
     }
-    uploaderBtn() {		
+    uploaderBtn = () => {	
+        editorArray.push({
+            'value':'uploader','name':""
+        })
         this.setState({
-            uploader: true,
-            editor: false,
-            quote: false,
-            embed: false,
-        });    
+            editorArray:editorArray,
+            quote:!this.state.quote
+        })
     }
-    editorBtn() {		
+    editorBtn = () => {		
+        editorArray.push({
+            'value':'editor','name':""
+        })
         this.setState({
-            editor: true,
-            uploader: false,
-            embed: false,
-            quote: false,
-        });    
+            editorArray:editorArray,
+            quote:!this.state.quote
+        })
+        console.log(this.state.editorArray)
     }
-
-    uploaderBtn2() {		
+    embedBtn = () => {		
+        editorArray.push({
+            'value':'embed','name':""
+        })  
         this.setState({
-            uploader2: true,
-            editor2: false,
-            embed2: false,
-            quote2: false,
-        });    
+            editorArray:editorArray,
+            quote:!this.state.quote
+        })
     }
-    uploaderBtn3() {		
+    quoteBtn = () => {	
+        editorArray.push({
+            'value':'quote','name':""
+        })	
         this.setState({
-            uploader3: true,
-            editor3: false,
-            embed3: false,
-            quote3: false,
-        });    
+            editorArray:editorArray,
+            quote:!this.state.quote
+        })  
     }
-    editorBtn2() {		
-        this.setState({
-            editor2: true,
-            uploader2: false,
-            embed2: false,
-            quote: false,
-        });    
-    }
-    editorBtn3() {		
-        this.setState({
-            editor3: true,
-            uploader3: false,
-            embed3: false,
-            quote3: false,
-        });    
-    }
-
-    uploaderBtn1() {		
-        this.setState({
-            uploader1: true,
-            editor1: false,
-            embed1: false,
-            quote1: false,
-        });    
-    }
-    editorBtn1() {		
-        this.setState({
-            editor1: true,
-            uploader1: false,
-            embed1: false,
-            quote1: false,
-        });    
-    }
-    embedBtn() {		
-        this.setState({
-            embed: true,
-            uploader: false,
-            editor: false,
-            quote: false,
-        });    
-    }
-    embedBtn1() {		
-        this.setState({
-            embed1: true,
-            uploader1: false,
-            editor1: false,
-            quote1: false,
-        });    
-    }
-    embedBtn2() {		
-        this.setState({
-            embed2: true,
-            uploader2: false,
-            editor2: false,
-            quote2: false,
-        });    
-    }
-    embedBtn3() {		
-        this.setState({
-            embed3: true,
-            uploader3: false,
-            editor3: false,
-            quote3: false,
-        });    
-    }
-    quoteBtn() {		
-        this.setState({
-            quote: true,
-            uploader: false,
-            editor: false,
-            embed: false,
-        });    
-    }
-    quoteBtn1() {		
-        this.setState({
-            quote1: true,
-            uploader1: false,
-            editor1: false,
-            embed1: false,
-        });    
-    }
-    quoteBtn2() {		
-        this.setState({
-            quote2: true,
-            uploader2: false,
-            editor2: false,
-            embed2: false,
-        });    
-    }
-    quoteBtn3() {		
-        this.setState({
-            quote3: true,
-            uploader3: false,
-            editor3: false,
-            embed3: false,
-        });    
-    }
-
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -321,6 +257,26 @@ class NovusBiArticleComponent extends React.PureComponent {
             }
             this.props.handleFormSubmit(payloadReq);
         }
+    }
+    handleEditorChange(e,index){
+        console.log(e)
+        this.state.editorArray.map((editor, sidx) => {
+            if(sidx === index){
+                editor.name = e.htmlValue;
+            }
+            
+          });
+        this.setState({ editorArray: this.state.editorArray });
+    }
+    handleEmbadeChange(e,index){
+        console.log(e.target.value)
+        this.state.editorArray.map((editor, sidx) => {
+            if(sidx === index){
+                editor.name = e.target.value;
+            }
+            
+          });
+        this.setState({ editorArray: this.state.editorArray });
     }
     handleChange = (e) => {
         this.setState({
@@ -344,6 +300,13 @@ class NovusBiArticleComponent extends React.PureComponent {
         });
 
     }
+    remove = (index) =>{
+        editorArray.splice(index,1);
+        this.setState({
+            editorArray:editorArray,
+            quote:!this.state.quote
+        }) 
+    }
     renderHeader() {
         return (
             <span className="ql-formats">
@@ -353,6 +316,8 @@ class NovusBiArticleComponent extends React.PureComponent {
             </span>
         );
     }
+
+    
     render() {
         const allContent = [
             {name: 'All Articles'},
@@ -375,7 +340,14 @@ class NovusBiArticleComponent extends React.PureComponent {
             {name: 'COMPETITION'},
             {name: 'PODCASTS'},
 
-        ];        
+        ];     
+        
+        const authorSection = [
+            {name: 'Other'},
+            {name: 'Team'},
+            {name: 'GuilhermeFray'},
+        ];  
+
         const { uploader } = this.state;       
         const { editor } = this.state;
         const { uploader2 } = this.state;       
@@ -435,313 +407,177 @@ class NovusBiArticleComponent extends React.PureComponent {
                                 </div>
                                 <span className="offering_detail_title">Add Content</span>
                             </div>
-
-                        <div className="all_content_bx">
-                            <Dropdown className="all_sec_dropdown" optionLabel="name" value={this.state.allContent} options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content"/>
-
-                            <Dropdown className="all_sec_dropdown all_section_tab" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} placeholder="All Section"/>
-                        </div>                  
-
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="mt-2">
-                                        <div className="form-group">
-                                            <input type="text" className="form-control" placeholder="Title of your article" name="applicationName" onChange={(e) => this.handleChange(e)} />
-                                            {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             
-                            <div className="editprofile_content ">
-                                <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                <div className="btn_box_main">
-                                    <div>
-                                        <p className="ever_element"><i className="fa fa-plus-circle"></i> Add An element</p>
-                                    </div>
-                                    <div className="box_for_tabs">
-                                        <p className="tabs_icons" onClick={this.editorBtn}><i className="fa fa-pencil"></i> Editor</p>
-                                        <p className="tabs_icons" onClick={this.uploaderBtn}><i className="fa fa-image"></i> Image</p>
-                                        <p className="tabs_icons" onClick={this.embedBtn}><i className="fa fa-code"></i> Embed</p>
-                                        <p className="tabs_icons" onClick={this.quoteBtn}><i className="fa fa-quote-right"></i> Quotations</p>
-                                    </div>  
-                                </div>
-                                    <div>
-                                        <div className="row">                          
-                                            <div className="col-12">
-                                            { editor && (
-                                            <Editor className="editor_cls" style={{height:'320px'}} value={this.state.text1} onTextChange={(e)=>this.setState({text1:e.htmlValue})}/>
-                                            )}
-                                            </div>
-                                            <div className="col-12">
-                                                { uploader && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-camera upload_icon"></i>
-                                                    <ImagesUploader
-                                                    url="http://localhost:3000/notmultiple"
-                                                    optimisticPreviews
-                                                    multiple={false}
-                                                    onLoadEnd={(err) => {
-                                                        if (err) {
-                                                            console.error(err);
-                                                        }
-                                                    }} />
-                                                </div>
-                                                )}
-                                                </div>   
+                                             
+                            <div className="row">
+                                <div className="col-9 col-md-9">
+                                    <div className="row">
                                         <div className="col-12">
                                             <div className="mt-2">
-                                                { embed && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-code upload_icon"></i>
-                                                    <p>Paste the embedded code below</p>
-                                                    <InputTextarea value={this.state.value} onChange={(e) => this.setState({value: e.target.value})} rows={4} className="text_area_article"></InputTextarea>
-                                                    
+                                                <div className="form-group">
+                                                    <input type="text" className="form-control" placeholder="Title of your article" name="applicationName" onChange={(e) => this.handleChange(e)} />
+                                                    {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
                                                 </div>
-                                                )}
-                                                </div>
-                                                </div>     
-                                                <div className="col-12">
-                                                <div className="mt-2">
-                                                    { quote && (
-                                                    
-                                                    <div className="image_uploader_main">
-                                                        <i className="fa fa-quote-right upload_icon"></i>
-                                                        <p>Quotations</p>
-                                                        <InputTextarea rows={4} className="text_area_article"></InputTextarea>
-                                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {this.state.editorArray.map((editorVal, index) => (
+                                    <div className="editprofile_content " key={index}>
+                                        <div className="form_content_editprofile edit_profile_form_fields_wrapper">
+                                        <div className="btn_box_main">
+                                            <div>
+                                                <p className="ever_element pull-left" ><i className="fa fa-plus-circle"></i> Add An element</p>
+                                                 
+                                            </div>
+                                            <div className="box_for_tabs">
+                                                <p className="tabs_icons" onClick={() => this.editorBtn()}><i className="fa fa-pencil"></i> Editor</p>
+                                                <p className="tabs_icons" onClick={this.uploaderBtn}><i className="fa fa-image"></i> Image</p>
+                                                <p className="tabs_icons" onClick={this.embedBtn}><i className="fa fa-code"></i> Embed</p>
+                                                <p className="tabs_icons" onClick={this.quoteBtn}><i className="fa fa-quote-right"></i> Quotations</p>
+                                            </div>
+                                             
+                                        </div>
+                                        <button className="pull-right btn-dark" onClick={() => this.remove(index)}><i className="fa fa-trash"></i></button>
+                                            <div> 
+                                                <div className="row">                          
+                                                    <div className="col-12">
+                                                    { 'editor' === editorVal.value && (
+                                                        <Editor className="editor_cls" style={{height:'320px'}} value={editorVal.name} onTextChange={(e)=>this.handleEditorChange(e,index)}/>
+                                                    )}
                                                     </div>
-                                                )}
+                                                    <div className="col-12">
+                                                        { 'uploader' === editorVal.value && (
+                                                        
+                                                        <div className="image_uploader_main">
+                                                            <i className="fa fa-camera upload_icon"></i>
+                                                            <ImagesUploader
+                                                            url="http://13.90.215.196:3000/api/file_upload"
+                                                            optimisticPreviews
+                                                            multiple={false}
+                                                            onLoadEnd={(err) => {
+                                                                if (err) {
+                                                                    console.error(err);
+                                                                }
+                                                            }} />
+                                                        </div>
+                                                        )}
+                                                    </div>   
+                                                    <div className="col-12">
+                                                        <div className="mt-2">
+                                                            { 'embed' === editorVal.value && (
+                                                            
+                                                            <div className="image_uploader_main">
+                                                                <i className="fa fa-code upload_icon"></i>
+                                                                <p>Paste the embedded code below</p>
+                                                                <InputTextarea  onChange={(e)=>this.handleEmbadeChange(e,index)} rows={4} className="text_area_article"></InputTextarea>
+                                                                
+                                                            </div>
+                                                            )}
+                                                        </div>
+                                                    </div>     
+                                                    <div className="col-12">
+                                                        <div className="mt-2">
+                                                            { 'quote' === editorVal.value && (
+                                                            
+                                                            <div className="image_uploader_main">
+                                                                <i className="fa fa-quote-right upload_icon"></i>
+                                                                <p>Quotations</p>
+                                                                <InputTextarea rows={4}  onChange={(e)=>this.handleEmbadeChange(e,index)} className="text_area_article"></InputTextarea>
+                                                                
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>                                      
                                                 </div>
-                                                </div>                                      
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ))}   <br />                         
+                                    <div className="row">
+                                        <div class="col-12">
+                                            <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div className="col-3 col-md-3">
+                                    <div className="editprofile_content ">
+                                        <div className="form_content_editprofile edit_profile_form_fields_wrapper">
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <h3 className="heading-sidebar">Information</h3>
+                                                </div>
+                                            </div>          
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Type:</label>
+                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.allContent} options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content"/>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Appear at:</label>
+                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Date:</label>
+                                                    <Calendar className="all_sec_dropdown  form-drop-control" value={this.state.date} onChange={(e) => this.setState({date: e.value})} showIcon={true} showTime={true} showSeconds={true}/>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Author:</label>
+                                                    {this.state.authorSelect && 
+                                                        <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.authorSection} options={authorSection} onChange={(e) => this.selectAuthor(e)} placeholder="Author"/>
+                                                    }
+
+                                                    {this.state.authorInput && 
+                                                        <div className="p-inputgroup">
+                                                            <InputText className="all_sec_dropdown form-control" placeholder="Type Author Name" name="authorName" onChange={(e) => this.selectAuthor(e)}/>
+                                                            <Button icon="pi pi-times" className="p-button-danger" onClick={() => this.setState({
+                                                                authorInput:false,
+                                                                authorSelect:true})}/>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div> 
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Your List item:</label><br />
+                                                    <label><small>Highlight</small></label><br />
+                                                    <Checkbox checked={this.state.checked} onChange={e => this.setState({checked: e.checked})} />
+                                                    <label htmlFor="heighlight" className="p-checkbox-label"> Put at the top of the list</label>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label tooltip="This element display depends on the template and / or the platform used" tooltipoptions={{position: 'top'}}>Resume:</label>
+                                                    <InputTextarea rows={5} cols={30} value={this.state.resume} onChange={(e) => this.setState({resume: e.target.value})} />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label>Comments:</label><br />
+                                                    <InputSwitch checked={this.state.comment} onChange={(e) => this.setState({comment: e.value})} />
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="row">
+                                                <div className="col-12 form-group">
+                                                    <label> PDF attached:</label><br />
+                                                    
+                                                    <FileUpload mode="basic" name="demo[]" uurl="./upload.php" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel="Search For" />
+
+                                                    <Growl ref={(el) => { this.growl = el; }}></Growl>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="editprofile_content">
-                                <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                <div className="btn_box_main">
-                                    <div>
-                                        <p className="ever_element"><i className="fa fa-plus-circle"></i> Add An element</p>
-                                    </div>
-                                    <div className="box_for_tabs">
-                                        <p className="tabs_icons" onClick={this.editorBtn1}><i className="fa fa-pencil"></i> Editor</p>
-                                        <p className="tabs_icons" onClick={this.uploaderBtn1}><i className="fa fa-image"></i> Image</p>
-                                        <p className="tabs_icons" onClick={this.embedBtn1}><i className="fa fa-code"></i> Embed</p>
-                                        <p className="tabs_icons" onClick={this.quoteBtn1}><i className="fa fa-quote-right"></i> Quotations</p>
-                                    </div>  
-                                </div>
-                                    <div>
-                                        <div className="row">                              
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                            { editor1 && (
-                                            <Editor className="editor_cls" style={{height:'320px'}} value={this.state.text1} onTextChange={(e)=>this.setState({text1:e.htmlValue})}/>
-                                            )}
-                                            </div>
-                                            </div>
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                                { uploader1 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-camera upload_icon"></i>
-                                                    <ImagesUploader
-                                                    url="http://localhost:3000/notmultiple"
-                                                    optimisticPreviews
-                                                    multiple={false}
-                                                    onLoadEnd={(err) => {
-                                                        if (err) {
-                                                            console.error(err);
-                                                        }
-                                                    }} />
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                        <div className="col-12">
-                                            <div className="mt-2">
-                                                { embed1 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-code upload_icon"></i>
-                                                    <p>Paste the embedded code below</p>
-                                                    <InputTextarea value={this.state.value} onChange={(e) => this.setState({value: e.target.value})} rows={4} className="text_area_article"></InputTextarea>
-                                                    
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                                <div className="col-12">
-                                                <div className="mt-2">
-                                                    { quote1 && (
-                                                    
-                                                    <div className="image_uploader_main">
-                                                        <i className="fa fa-quote-right upload_icon"></i>
-                                                        <p>Quotations</p>
-                                                        <InputTextarea rows={4} className="text_area_article"></InputTextarea>
-                                                        
-                                                    </div>
-                                                )}
-                                                </div>
-                                                </div>                                      
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>  
-
-                            <div className="editprofile_content last_row">
-                                <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                <div className="btn_box_main">
-                                    <div>
-                                        <p className="ever_element"><i className="fa fa-plus-circle"></i> Add An element</p>
-                                    </div>
-                                    <div className="box_for_tabs">
-                                        <p className="tabs_icons" onClick={this.editorBtn2}><i className="fa fa-pencil"></i> Editor</p>
-                                        <p className="tabs_icons" onClick={this.uploaderBtn2}><i className="fa fa-image"></i> Image</p>
-                                        <p className="tabs_icons" onClick={this.embedBtn2}><i className="fa fa-code"></i> Embed</p>
-                                        <p className="tabs_icons" onClick={this.quoteBtn2}><i className="fa fa-quote-right"></i> Quotations</p>
-                                    </div>  
-                                </div>
-                                    <div>
-                                        <div className="row">                              
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                            { editor2 && (
-                                            <Editor className="editor_cls" style={{height:'320px'}} value={this.state.text1} onTextChange={(e)=>this.setState({text1:e.htmlValue})}/>
-                                            )}
-                                            </div>
-                                            </div>
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                                { uploader2 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-camera upload_icon"></i>
-                                                    <ImagesUploader
-                                                    url="http://localhost:3000/notmultiple"
-                                                    optimisticPreviews
-                                                    multiple={false}
-                                                    onLoadEnd={(err) => {
-                                                        if (err) {
-                                                            console.error(err);
-                                                        }
-                                                    }} />
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                                { embed2 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-code upload_icon"></i>
-                                                    <p>Paste the embedded code below</p>
-                                                    <InputTextarea value={this.state.value} onChange={(e) => this.setState({value: e.target.value})} rows={4} className="text_area_article"></InputTextarea>
-                                                    
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                                <div className="col-12">
-                                                <div className="mt-2">
-                                                    { quote2 && (
-                                                    
-                                                    <div className="image_uploader_main">
-                                                        <i className="fa fa-quote-right upload_icon"></i>
-                                                        <p>Quotations</p>
-                                                        <InputTextarea rows={4} className="text_area_article"></InputTextarea>
-                                                        
-                                                    </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                                                                             
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-
-                            <div className="editprofile_content last_row">
-                                <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                <div className="btn_box_main">
-                                    <div>
-                                        <p className="ever_element"><i className="fa fa-plus-circle"></i> Add An element</p>
-                                    </div>
-                                    <div className="box_for_tabs">
-                                        <p className="tabs_icons" onClick={this.editorBtn3}><i className="fa fa-pencil"></i> Editor</p>
-                                        <p className="tabs_icons" onClick={this.uploaderBtn3}><i className="fa fa-image"></i> Image</p>
-                                        <p className="tabs_icons" onClick={this.embedBtn3}><i className="fa fa-code"></i> Embed</p>
-                                        <p className="tabs_icons" onClick={this.quoteBtn3}><i className="fa fa-quote-right"></i> Quotations</p>
-                                    </div>  
-                                </div>
-                                    <div>
-                                        <div className="row">                              
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                            { editor3 && (
-                                            <Editor className="editor_cls" style={{height:'320px'}} value={this.state.text1} onTextChange={(e)=>this.setState({text1:e.htmlValue})}/>
-                                            )}
-                                            </div>
-                                            </div>
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                                { uploader3 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-camera upload_icon"></i>
-                                                    <ImagesUploader
-                                                    url="http://localhost:3000/notmultiple"
-                                                    optimisticPreviews
-                                                    multiple={false}
-                                                    onLoadEnd={(err) => {
-                                                        if (err) {
-                                                            console.error(err);
-                                                        }
-                                                    }} />
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                            <div className="col-12">
-                                            <div className="mt-2">
-                                                { embed3 && (
-                                                
-                                                <div className="image_uploader_main">
-                                                    <i className="fa fa-code upload_icon"></i>
-                                                    <p>Paste the embedded code below</p>
-                                                    <InputTextarea value={this.state.value} onChange={(e) => this.setState({value: e.target.value})} rows={4} className="text_area_article"></InputTextarea>
-                                                    
-                                                </div>
-                                                )}
-                                                </div>
-                                                </div> 
-
-                                            <div className="col-12">
-                                                <div className="mt-2">
-                                                    { quote3 && (
-                                                    
-                                                    <div className="image_uploader_main">
-                                                        <i className="fa fa-quote-right upload_icon"></i>
-                                                        <p>Quotations</p>
-                                                        <InputTextarea rows={4} className="text_area_article"></InputTextarea>
-                                                        
-                                                    </div>
-                                                )}
-                                                </div>
-                                                </div> 
-                                                                                             
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div>
-                                <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
-                            </div>                                                    
+                                                                             
                         </div>
                     </Loader>
                 </LayoutWrapper>

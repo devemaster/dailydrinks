@@ -129,7 +129,7 @@ class LayoutWrapper extends React.PureComponent {
                                             <i className="fa fa-dashboard" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                             <span className="content-name">Novus Bi</span>
                                             </a>
-                                            <div className="dropdown-menu menu_fontSze" aria-labelledby="navbarDropdown">
+                                            <div className="dropdown-menu menu_fontSze" aria-labelledby="navbarDropdown" style={page[1]==='novus-bi-article' ? {'display':'block'}:{'display':'inherit'} }>
                                                 <div className={page[1]==='category-list' ? 'active' : 'no-class'}>
                                                     <NavLink to={"/category-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-newspaper" style={{fontSize: '14px'}}  aria-hidden="true"></i>
@@ -138,7 +138,7 @@ class LayoutWrapper extends React.PureComponent {
                                                 </div>
 
                                             
-                                                <div className={page[1]==='content-list' ? 'active' : 'no-class'}>
+                                                <div className={(page[1]==='content-list'|| page[1]==='novus-bi-article') ? 'active' : 'no-class'}>
                                                     <NavLink to={"/content-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-file" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">List of Content</span>
