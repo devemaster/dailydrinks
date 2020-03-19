@@ -36,7 +36,7 @@ class UpdateCategoryComponent extends React.PureComponent {
         this.props.getAllCountry();
         const appDetails = this.props.location.state.appData;
         this.setState({
-            appData: appDetails,
+            appData: appDetails, 
         }, () => {
             this.setState({
                 category_name: this.state.appData.category_name,
@@ -112,12 +112,8 @@ class UpdateCategoryComponent extends React.PureComponent {
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
-            // let selectedCou = [];
-            // for (let item of this.state.selectedCountry) {
-            //     selectedCou.push(item.value)
-            // }
             let payloadReq = {
-                cat_id: this.state.appData.cat_id,
+                parent_id: 0,
                 category_name: this.state.category_name,
                 icon: this.state.icon,
             }

@@ -18,11 +18,11 @@ export function getsubCategoryListRes(data) {
   };
 }
 
-export function fetchsubCategoryList() {
+export function fetchsubCategoryList(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){
     return function(dispatch) {
-      subCategoryListApi.getsubCategoryList().then(data => {
+      subCategoryListApi.getsubCategoryList(data).then(data => {
         dispatch(getsubCategoryListRes(data));
         if(data.error){
           Swal.fire({

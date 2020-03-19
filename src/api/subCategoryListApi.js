@@ -2,7 +2,7 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class SubCategoryListApi {  
-    static getsubCategoryList() {
+    static getsubCategoryList(data) {
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -13,6 +13,7 @@ class SubCategoryListApi {
             let body = {
                 method: 'POST',
                 headers: ajaxRequestHeaders,
+                body: JSON.stringify(data)
             }
             return fetch(BASE_URL + '/SubCategories', body).then(response => {
                 if (response.status === 401) {

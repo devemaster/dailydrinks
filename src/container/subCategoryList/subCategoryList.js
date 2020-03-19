@@ -53,22 +53,23 @@ class SubCategoryListComponent extends React.PureComponent {
 	}
 
   componentDidMount() {
-    let appData = JSON.parse(getItem('adminAppData'));
-    if(appData !== null) {
-      appData.application_id = appData.app_id;
-      appData.application_name = appData.app_name;
-      appData.icon = appData.app_icon;
-      delete appData.app_id;
-      delete appData.app_name;
-      delete appData.app_icon;
-      let itemArr = [];
-      itemArr.push(appData);
+    console.log(this.props.location.state)
+    if(this.props.location.state.appData){
       this.setState({
-        subCategoryList: itemArr
+          appData: this.props.location.state.appData,
+      }, () => {
+         console.log(this.state.appData )
+         let payloadReq = {
+          cat_id: this.state.appData
+        }
+        this.props.fetchsubCategoryList(payloadReq);
       });
-    } else {
-      this.props.fetchsubCategoryList();
+    }else{
+      this.props.history.push({
+        pathname: '/category-list'
+      })
     }
+    
   }
 
   componentWillReceiveProps(props) {
@@ -99,11 +100,11 @@ class SubCategoryListComponent extends React.PureComponent {
 
   actionTemplate(rowData, column) {
     return (
-      <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" onClick={()=> this.goUpdateApplication(rowData)}>
+      <div style={{textAlign: 'center'}} className="btn-group">
+        <button className="btn btn-primary " data-toggle="tooltip" data-placement="top" title="Edit Sub Category" onClick={()=> this.goUpdateApplication(rowData)}>
           <i className="fa fa-pencil" aria-hidden="true"></i>
         </button>
-        <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
+        <button className="btn btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete Sub Category" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button>      
       </div>
@@ -151,7 +152,7 @@ class SubCategoryListComponent extends React.PureComponent {
     return (
       <div>
         {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-        <img src={subImg1} alt='icon' className="image_icons" />
+        <img src={data.icon} alt='icon' className="image_icons" />
       </div>
     );
   }
@@ -184,13 +185,13 @@ class SubCategoryListComponent extends React.PureComponent {
                   <div className="administration_tab">
                     <div  className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-sm-12 col-md-6">
-                        <div className="heading_title">Sub-Category List</div>
+                        <div className="heading_title">Sub Category List</div>
                       </div>
                       {
                         userRole == '1' &&
                         <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
                           <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Create List</button>
-                        </div>
+                        </div> 
                       }
                     </div>
                     
@@ -202,9 +203,9 @@ class SubCategoryListComponent extends React.PureComponent {
                           <Column className="tableCols" field="application_name" header="Sub Category Name" sortable style={{width: '120px'}}/>
                           <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
                         </DataTable> */}
-                        <DataTable value={this.state.columns} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.scategoryList} onSelectionChange={this.onSelectionChange} className="novus_datatable">
-                        <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
-                            <Column field="CategoryName" header="Sub Category Name"/>                            
+                        <DataTable value={this.state.subCategoryList} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.scategoryList} onSelectionChange={this.onSelectionChange} className="novus_datatable">
+                            <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
+                            <Column field="subcategory_name" header="Sub Category Name"/>                            
                             <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
                         </DataTable>
                       </div>
@@ -257,7 +258,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-		fetchsubCategoryList: () => dispatch(fetchsubCategoryList()),
+		fetchsubCategoryList: (data) => dispatch(fetchsubCategoryList(data)),
 		deleteSubCategoryListRecord: (data) => dispatch(deleteSubCategoryListRecord(data)),
   };
 }

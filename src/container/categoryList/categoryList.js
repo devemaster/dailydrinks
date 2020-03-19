@@ -49,6 +49,7 @@ class CategoryListComponent extends React.PureComponent {
       isDisabled: false,
     }
     this.actionTemplate = this.actionTemplate.bind(this);
+    this.viewTemplate = this.viewTemplate.bind(this);
 	}
 
   componentDidMount() {
@@ -140,28 +141,54 @@ class CategoryListComponent extends React.PureComponent {
   }
   actionTemplate(rowData, column) {
     return (
-      <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" onClick={()=> this.goUpdateApplication(rowData)}>
+      <div style={{textAlign: 'center'}}  className="btn-group">
+        <button className="btn btn-success" data-toggle="tooltip" data-placement="top" title="Edit Category" onClick={()=> this.goUpdateApplication(rowData)}>
           <i className="fa fa-pencil" aria-hidden="true"></i>
         </button>
-        <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
+        <button className="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete Category" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
-        </button>      
+        </button>  
+        <button className="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Add Sub Category" onClick={()=> this.goAddSubCategory(rowData)}>
+          <i className="fa fa-plus" aria-hidden="true"></i>
+        </button>        
+        
+      </div>
+    );
+  }
+  actionIconTemplate = (data) => {
+    // console.log(data)
+    return (
+      <div>
+        {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
+        <img src={data.icon} alt='icon' className="image_icons" />
       </div>
     );
   }
   viewTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
-        <Link to={"/subcategory-list"}>
-          <i className="fa fa-eye" aria-hidden="true"></i> 
-          </Link>  
+        <button className="btn btn-info" data-toggle="tooltip" data-placement="top" title="View Sub Category" onClick={()=> this.getSubCategory(rowData)}>
+          <i className="fa fa-eye" aria-hidden="true"></i>
+        </button>  
       </div>
     );
+  }
+  getSubCategory = (rowData) => {
+    console.log(rowData.cat_id)
+    this.props.history.push({
+      pathname: '/subcategory-list',
+      state: {appData: rowData.cat_id}
+    })
   }
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/update-category',
+      state: {appData: rowData}
+    })
+  }
+  goAddSubCategory = (rowData) => {
+    this.props.history.push({
+      pathname: '/create-category',
       state: {appData: rowData}
     })
   }
@@ -199,15 +226,13 @@ class CategoryListComponent extends React.PureComponent {
                     <div className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-12 tableheight advisor-tab-tableheight" style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 15 }}>
                         {/* <DataTable value={categoryList} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.categorysList} onSelectionChange={this.onSelectionChange} className="novus_datatable"> */}
-                        <DataTable value={categoryList} sortMode="multiple" editable={false} 
-                selection={this.state.categorysList} onSelectionChange={this.onSelectionChange} paginator={true} rows={10} rowsPerPageOptions={[5,10,20]} responsive={true}>
+                        <DataTable value={categoryList} sortMode="multiple" editable={false} selection={this.state.categorysList} onSelectionChange={this.onSelectionChange} paginator={true} rows={10} rowsPerPageOptions={[5,10,20]} responsive={true}>
 
-                  {/* <Column selectionMode="multiple" style={{width:'2em'}}/> */}
-									<Column field="category_name" header="Category Name"/>
-                  {/* <Column field="icon" header="Icon" /> */}
-									<Column field="View" header="View"  body={this.viewTemplate}  />
-                  <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
-								</DataTable>
+                          <Column className="tableCols" field="icon" body={this.actionIconTemplate}   header="Icon"/>
+                          <Column field="category_name" header="Category Name"/>
+                          <Column field="View" header="View"  body={this.viewTemplate}  />
+                          <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
+                        </DataTable>
 
                 
                       </div>

@@ -16,7 +16,7 @@ class novusBiArticleApi {
                 headers: ajaxRequestHeaders,
                 body: JSON.stringify(data)
             }
-            return fetch(BASE_URL + '/createUser', body).then(response => {
+            return fetch(BASE_URL + '/createContant', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';

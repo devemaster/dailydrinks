@@ -8,7 +8,7 @@ import './updateSubCategory.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/createUserActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { submitUpdateSubCategory, doUpdateAppRes } from '../../action/updateSubCategoryActions';
+import { submitUpdateCategory, doUpdateAppRes } from '../../action/updateCategoryActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -21,7 +21,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         this.state = {
             isLoader: true,
             isSubmited: false,
-            applicationName: '',
+            category_name: '',
             icon: '',
             countries: '',
             countryList: [],
@@ -33,15 +33,14 @@ class UpdateSubCategoryComponent extends React.PureComponent {
     }
     componentDidMount() {
         // Get country list //
-        this.props.getAllCountry();
-        const appDetails = this.props.location.state.appData;
+        console.log(this.props.location.state.appData)
         this.setState({
-            appData: appDetails,
+            appData: this.props.location.state.appData,
         }, () => {
             this.setState({
-                applicationName: this.state.appData.application_name,
+                category_name: this.state.appData.subcategory_name,
                 icon: this.state.appData.icon,
-                countries: this.state.appData.selected_countries
+                cat_id:this.state.appData.cat_id
             })
         });
         this.setState({
@@ -49,35 +48,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         });
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.doAllCountryRes){
-            if(nextProps.doAllCountryRes.data.countryList ){
-                if(nextProps.doAllCountryRes.data.countryList.success === true){
-                    this.setState({
-                        countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-                    }, 
-                    () => {
-                        // if (this.state.countries !== '') {
-                        //     let selectedcn = [];
-                        //     let countryD = this.state.countries.split(',');
-                        //     for (let item of this.state.countryList) {
-                        //         for (let cn of countryD) {
-                        //             if (cn === item.country_name) {
-                        //                 selectedcn.push({
-                        //                     value: item.country_name,
-                        //                     label: item.country_name,
-                        //                     original: item
-                        //                 })
-                        //             }
-                        //         }
-                        //     }
-                        //     this.setState({
-                        //         selectedCountry: selectedcn,
-                        //     });
-                        // }
-                    });
-                }
-            }
-        }
+        console.log(nextProps)
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -87,13 +58,16 @@ class UpdateSubCategoryComponent extends React.PureComponent {
 				}
 			}
         }
-        if(nextProps.updateAppRes){
-            if(nextProps.updateAppRes.data.uploadSubCategory ){
-                if(nextProps.updateAppRes.data.uploadSubCategory.success === true){
+        if(nextProps.updateAppRes){       
+            if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateCategory ){
+                if(nextProps.updateAppRes.data.updateCategory && nextProps.updateAppRes.data.updateCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
-                    this.props.history.push('/applications');
+                    this.props.history.push({
+                        pathname: '/subcategory-list',
+                        state: {appData: this.state.cat_id}
+                      })
                 } else {
                     setTimeout(() => { this.setState({
                         isLoader: false
@@ -113,16 +87,10 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
-            let selectedCou = [];
-            for (let item of this.state.selectedCountry) {
-                selectedCou.push(item.value)
-            }
             let payloadReq = {
-                app_id: this.state.appData.application_id,
-                applicationName: this.state.applicationName,
+                parent_id: this.state.cat_id,
+                category_name: this.state.category_name,
                 icon: this.state.icon,
-                selectedCountries: selectedCou.join(),
-                selectedUser: '',
             }
             this.props.handleFormSubmit(payloadReq);
         }
@@ -180,7 +148,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" placeholder="Enter SubCategory name" name="applicationName" onChange={(e) => this.handleChange(e)} value={this.state.applicationName} />
+                                                        <input type="text" className="form-control" placeholder="Enter SubCategory name" name="category_name" onChange={(e) => this.handleChange(e)} value={this.state.category_name} />
                                                         {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
                                                     </div>
                                                 </div>
@@ -246,7 +214,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitUpdateSubCategory(data)),
+        handleFormSubmit: (data) => dispatch(submitUpdateCategory(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),

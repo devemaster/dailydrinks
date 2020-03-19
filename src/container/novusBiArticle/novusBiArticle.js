@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import './novusBiArticle.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/novusBiArticleActions';
-import { getAllUsers, doUserAllRes } from '../../action/userActions';
+import { getAllUsers, doUserAllRes } from '../../action/userActions'; 
 import { submitnovusBiArticle, donovusBiArticleRes } from '../../action/novusBiArticleActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
@@ -31,7 +31,7 @@ import {InputSwitch} from 'primereact/inputswitch';
 import {FileUpload} from 'primereact/fileupload';
 
 import {Growl} from 'primereact/growl';
-const editorArray = [{'value':"editor",'name':""}];
+const editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -68,25 +68,10 @@ class NovusBiArticleComponent extends React.PureComponent {
             authorInput:false,
             authorSelect:true,
             comment:true,
-            editorArray:editorArray
+            editorArray:editorArray,
+            mainTitle:''
         }
         
-        // this.editorBtn = this.editorBtn.bind(this);
-        // this.uploaderBtn = this.uploaderBtn.bind(this);
-        // // this.uploaderBtn2 = this.uploaderBtn2.bind(this);
-        // // this.uploaderBtn3 = this.uploaderBtn3.bind(this);
-        // // this.editorBtn2 = this.editorBtn2.bind(this);
-        // // this.editorBtn3 = this.editorBtn3.bind(this);
-        // // this.uploaderBtn1 = this.uploaderBtn1.bind(this);
-        // // this.editorBtn1 = this.editorBtn1.bind(this);
-        // this.embedBtn = this.embedBtn.bind(this);
-        // // this.embedBtn1 = this.embedBtn1.bind(this);
-        // // this.embedBtn2 = this.embedBtn2.bind(this);
-        // // this.embedBtn3 = this.embedBtn3.bind(this);
-        // this.quoteBtn = this.quoteBtn.bind(this);
-        // this.quoteBtn1 = this.quoteBtn1.bind(this);
-        // this.quoteBtn2 = this.quoteBtn2.bind(this);
-        // this.quoteBtn3 = this.quoteBtn3.bind(this);
         this.showMenu = this.showMenu.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.showMenuSection = this.showMenuSection.bind(this);
@@ -140,11 +125,13 @@ class NovusBiArticleComponent extends React.PureComponent {
         }else{
             this.setState({
                 authorInput:false,
-                authorSelect:true
+                authorSelect:true,
+                author:event.value.name
             })
         }
     }
     onBasicUploadAuto(event) {
+        console.log(event)
         this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
 
@@ -189,7 +176,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                     this.setState({
                         isLoader: false
                     });
-                    this.props.history.push('/applications');
+                    this.props.history.push('/content-list');
                 } else {
                     setTimeout(() => { this.setState({
                         isLoader: false
@@ -201,42 +188,16 @@ class NovusBiArticleComponent extends React.PureComponent {
     handleBack = () => {
         this.props.history.push('/content-list');
     }
-    uploaderBtn = () => {	
-        editorArray.push({
-            'value':'uploader','name':""
-        })
-        this.setState({
-            editorArray:editorArray,
-            quote:!this.state.quote
-        })
-    }
-    editorBtn = () => {		
-        editorArray.push({
-            'value':'editor','name':""
-        })
+    editorBtn = (i, item) => {
+        editorArray.splice(i+1, 0, {
+            'type':item,'name':""
+        });
+        editorArray.join();
         this.setState({
             editorArray:editorArray,
             quote:!this.state.quote
         })
         console.log(this.state.editorArray)
-    }
-    embedBtn = () => {		
-        editorArray.push({
-            'value':'embed','name':""
-        })  
-        this.setState({
-            editorArray:editorArray,
-            quote:!this.state.quote
-        })
-    }
-    quoteBtn = () => {	
-        editorArray.push({
-            'value':'quote','name':""
-        })	
-        this.setState({
-            editorArray:editorArray,
-            quote:!this.state.quote
-        })  
     }
     handleSubmit = () => {
         this.setState({
@@ -244,19 +205,24 @@ class NovusBiArticleComponent extends React.PureComponent {
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
-        if (Object.keys(errors).length === 0) {
-            let selectedCon = [];
-            for (let item of this.state.selectedCountry) {
-                selectedCon.push(item.value)
-            }
+        console.log(this.state)
+        // if (Object.keys(errors).length === 0) {
+
+            
             let payloadReq = {
-                applicationName: this.state.applicationName,
-                icon: this.state.icon,
-                selectedCountries: selectedCon.join(),
-                selectedUser: '',
+                title: this.state.mainTitle,
+                content: JSON.stringify(this.state.editorArray),
+                type:this.state.type,
+                category:this.state.category,
+                date:this.state.date,
+                author:this.state.author,
+                heighlight:this.state.heighlight,
+                resume:this.state.resume,
+                comment:this.state.comment,
+                pdf:this.state.pdf
             }
             this.props.handleFormSubmit(payloadReq);
-        }
+        // }
     }
     handleEditorChange(e,index){
         console.log(e)
@@ -293,6 +259,12 @@ class NovusBiArticleComponent extends React.PureComponent {
         this.setState({
             selectedCountry: item
         });
+    }
+    titleChange = (e) => {
+        console.log(e.target.value)
+        this.setState({
+            mainTitle:e.target.value
+        })
     }
     userChange = (item) => {
         this.setState({
@@ -415,80 +387,86 @@ class NovusBiArticleComponent extends React.PureComponent {
                                         <div className="col-12">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <input type="text" className="form-control" placeholder="Title of your article" name="applicationName" onChange={(e) => this.handleChange(e)} />
-                                                    {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
+                                                    
+                                                    <InputText className="form-control" placeholder="Title of your article" name="mainTitle" onChange={(e) => this.titleChange(e)} />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     {this.state.editorArray.map((editorVal, index) => (
                                     <div className="editprofile_content " key={index}>
                                         <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                        <div className="btn_box_main">
-                                            <div>
-                                                <p className="ever_element pull-left" ><i className="fa fa-plus-circle"></i> Add An element</p>
-                                                 
-                                            </div>
-                                            <div className="box_for_tabs">
-                                                <p className="tabs_icons" onClick={() => this.editorBtn()}><i className="fa fa-pencil"></i> Editor</p>
-                                                <p className="tabs_icons" onClick={this.uploaderBtn}><i className="fa fa-image"></i> Image</p>
-                                                <p className="tabs_icons" onClick={this.embedBtn}><i className="fa fa-code"></i> Embed</p>
-                                                <p className="tabs_icons" onClick={this.quoteBtn}><i className="fa fa-quote-right"></i> Quotations</p>
-                                            </div>
-                                             
-                                        </div>
-                                        <button className="pull-right btn-dark" onClick={() => this.remove(index)}><i className="fa fa-trash"></i></button>
+                                        
                                             <div> 
-                                                <div className="row">                          
+                                                <div className="row">   
+                                                    { 'editor' === editorVal.type && (                       
                                                     <div className="col-12">
-                                                    { 'editor' === editorVal.value && (
+                                                    
                                                         <Editor className="editor_cls" style={{height:'320px'}} value={editorVal.name} onTextChange={(e)=>this.handleEditorChange(e,index)}/>
-                                                    )}
+                                                    
                                                     </div>
+                                                    )}
+                                                    { 'uploader' === editorVal.type && (
                                                     <div className="col-12">
-                                                        { 'uploader' === editorVal.value && (
-                                                        
                                                         <div className="image_uploader_main">
                                                             <i className="fa fa-camera upload_icon"></i>
                                                             <ImagesUploader
                                                             url="http://13.90.215.196:3000/api/file_upload"
                                                             optimisticPreviews
                                                             multiple={false}
-                                                            onLoadEnd={(err) => {
+                                                            onLoadEnd={(err,response) => {
+                                                                console.log(response)
                                                                 if (err) {
                                                                     console.error(err);
                                                                 }
                                                             }} />
                                                         </div>
-                                                        )}
-                                                    </div>   
+                                                        
+                                                    </div>  
+                                                    )} 
+                                                    { 'embed' === editorVal.type && (
                                                     <div className="col-12">
                                                         <div className="mt-2">
-                                                            { 'embed' === editorVal.value && (
-                                                            
                                                             <div className="image_uploader_main">
                                                                 <i className="fa fa-code upload_icon"></i>
                                                                 <p>Paste the embedded code below</p>
                                                                 <InputTextarea  onChange={(e)=>this.handleEmbadeChange(e,index)} rows={4} className="text_area_article"></InputTextarea>
                                                                 
-                                                            </div>
-                                                            )}
+                                                            </div>                                                            
                                                         </div>
                                                     </div>     
+                                                    )}
+                                                    { 'quote' === editorVal.type && (
                                                     <div className="col-12">
                                                         <div className="mt-2">
-                                                            { 'quote' === editorVal.value && (
-                                                            
                                                             <div className="image_uploader_main">
                                                                 <i className="fa fa-quote-right upload_icon"></i>
                                                                 <p>Quotations</p>
                                                                 <InputTextarea rows={4}  onChange={(e)=>this.handleEmbadeChange(e,index)} className="text_area_article"></InputTextarea>
                                                                 
                                                                 </div>
-                                                            )}
                                                         </div>
-                                                    </div>                                      
+                                                    </div>  
+                                                    )}                                    
                                                 </div>
+                                                <div className="btn_box_main">
+                                                    <div>
+                                                        <p className="ever_element pull-left" ><i className="fa fa-plus-circle"></i> Add An element</p>
+                                                        
+                                                    </div>
+                                                    <div className="box_for_tabs">
+                                                        <p className="tabs_icons" onClick={() => this.editorBtn(index, 'editor')}><i className="fa fa-pencil"></i> Editor</p>
+                                                        <p className="tabs_icons" onClick={() => this.editorBtn(index,'uploader')}><i className="fa fa-image"></i> Image</p>
+                                                        <p className="tabs_icons" onClick={() => this.editorBtn(index,'embed')}><i className="fa fa-code"></i> Embed</p>
+                                                        <p className="tabs_icons" onClick={() => this.editorBtn(index, 'quote')}><i className="fa fa-quote-right"></i> Quotations</p>
+                                                    </div>
+                                                    
+                                                </div>
+                                                {
+                                                    index !== 0 && <button className="pull-right btn-dark" onClick={() => this.remove(index)}><i className="fa fa-trash"></i></button>
+                                                }
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -510,13 +488,13 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.allContent} options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content"/>
+                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => {this.setState({type: e.value.name})}} placeholder="All Content"/>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Appear at:</label>
-                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.category} options={allSection} onChange={(e) => {this.setState({category: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -529,12 +507,12 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label>Author:</label>
                                                     {this.state.authorSelect && 
-                                                        <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.authorSection} options={authorSection} onChange={(e) => this.selectAuthor(e)} placeholder="Author"/>
+                                                        <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.author} options={authorSection} onChange={(e) => this.selectAuthor(e)} placeholder="Author"/>
                                                     }
 
                                                     {this.state.authorInput && 
                                                         <div className="p-inputgroup">
-                                                            <InputText className="all_sec_dropdown form-control" placeholder="Type Author Name" name="authorName" onChange={(e) => this.selectAuthor(e)}/>
+                                                            <InputText className="all_sec_dropdown form-control" placeholder="Type Author Name" name="authorName" onChange={(e) => {this.setState({author: e.value})}} />
                                                             <Button icon="pi pi-times" className="p-button-danger" onClick={() => this.setState({
                                                                 authorInput:false,
                                                                 authorSelect:true})}/>
@@ -546,7 +524,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label>Your List item:</label><br />
                                                     <label><small>Highlight</small></label><br />
-                                                    <Checkbox checked={this.state.checked} onChange={e => this.setState({checked: e.checked})} />
+                                                    <Checkbox checked={this.state.heighlight} onChange={e => this.setState({heighlight: e.checked})} />
                                                     <label htmlFor="heighlight" className="p-checkbox-label"> Put at the top of the list</label>
                                                 </div>
                                             </div>
@@ -567,7 +545,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
                                                     
-                                                    <FileUpload mode="basic" name="demo[]" uurl="./upload.php" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel="Search For" />
+                                                    <FileUpload mode="basic" name="demo[]" uurl="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel="Search For" />
 
                                                     <Growl ref={(el) => { this.growl = el; }}></Growl>
                                                 </div>

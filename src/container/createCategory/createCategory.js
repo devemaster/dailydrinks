@@ -27,11 +27,25 @@ class CreateCategoryComponent extends React.PureComponent {
             usersList: [],
             selectedCountry: null,
             selectedUser: null,
-            file: null
+            file: null,
+            categoryTitle:'Create Category'
         }
     }
     componentDidMount() {
         // this.props.getAllUsers();
+        if(this.props.location.state.appData){
+            const appDetails = this.props.location.state.appData;
+            this.setState({
+                appData: appDetails,
+            }, () => {
+                this.setState({
+                    cat_id: this.state.appData.cat_id,
+                    categoryTitle:'Create Sub Category'
+                    // countries: this.state.appData.selected_countries
+                })
+            });
+        }
+        
         this.setState({
             isLoader: false,
         });
@@ -136,7 +150,7 @@ class CreateCategoryComponent extends React.PureComponent {
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
                                     <span className="createprofile_go_back">Back to Category</span>
                                 </div>
-                                <span className="offering_detail_title">Create Category</span>
+                                <span className="offering_detail_title">{this.state.categoryTitle}</span>
                             </div>
                             <div className="editprofile_content">
                                 <div className="form_content_editprofile edit_profile_form_fields_wrapper">
@@ -146,7 +160,7 @@ class CreateCategoryComponent extends React.PureComponent {
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" placeholder="Enter Category name" name="category_name" onChange={(e) => this.handleChange(e)} />
+                                                        <input type="text" className="form-control" placeholder="Enter name" name="category_name" onChange={(e) => this.handleChange(e)} />
                                                         {errors && isSubmited && <span className="error-message">{errors.category_name}</span>}
                                                     </div>
                                                 </div>
