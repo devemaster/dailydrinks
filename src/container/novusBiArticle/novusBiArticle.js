@@ -8,6 +8,7 @@ import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/novusBiArticleActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions'; 
 import { submitnovusBiArticle, donovusBiArticleRes } from '../../action/novusBiArticleActions';
+import { fetchallcategoryList, getallcategoryListRes } from '../../action/allCategoryListActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -23,7 +24,7 @@ import { Link } from 'react-router-dom';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from 'primereact/dropdown';
 import {Calendar} from 'primereact/calendar';
-import moment from 'moment';
+
 import {MultiSelect} from 'primereact/multiselect';
 import {InputText} from "primereact/inputtext";
 import {Checkbox} from 'primereact/checkbox';
@@ -43,6 +44,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             icon: '',
             countryList: [],
             usersList: [],
+            categoryList:[],
             selectedCountry: null,
             selectedUser: null,
             file: null,
@@ -69,7 +71,12 @@ class NovusBiArticleComponent extends React.PureComponent {
             authorSelect:true,
             comment:true,
             editorArray:editorArray,
-            mainTitle:''
+            mainTitle:'',
+            pdfName:'Search for',
+            pdfError:'',
+            uploadName:'Upload Here',
+            uploadUrl:'',
+            UploaderError: ''
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -131,18 +138,39 @@ class NovusBiArticleComponent extends React.PureComponent {
         }
     }
     onBasicUploadAuto(event) {
-        console.log(event)
-        this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+        let response = JSON.parse(event.xhr.response)
+        if(response.success === true){
+            this.setState({
+                pdfName:response.path,
+                pdf:response.imageurl,
+                pdfError: ''
+            })
+        }else{
+            this.setState({
+                pdfError:response.message
+            })
+        }
+        // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
+    
 
     componentDidMount() {
         this.props.getAllCountry();
-        // this.props.getAllUsers();
+        this.props.fetchallcategoryList();
         this.setState({
             isLoader: false,
         });
     }
     componentWillReceiveProps(nextProps) {
+        if(nextProps.allCategoryListRes){
+            if(nextProps.allCategoryListRes.data.allCategoryList ){
+                if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
+                    this.setState({
+                        categoryList: nextProps.allCategoryListRes.data.allCategoryList.data
+                    });
+                }
+            }
+        }
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -173,6 +201,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         if(nextProps.ArticleAppRes){
             if(nextProps.ArticleAppRes.data.ArticleApplication ){
                 if(nextProps.ArticleAppRes.data.ArticleApplication.success === true){
+                    console.log("success")
                     this.setState({
                         isLoader: false
                     });
@@ -200,6 +229,13 @@ class NovusBiArticleComponent extends React.PureComponent {
         console.log(this.state.editorArray)
     }
     handleSubmit = () => {
+        
+        const categories = [];
+        for(let item of this.state.category){
+            categories.push(item.id)
+        }
+        const vals = categories.join(',');
+
         this.setState({
           isSubmited: true,
         }, () => { });
@@ -207,13 +243,12 @@ class NovusBiArticleComponent extends React.PureComponent {
         const errors = validate(this.state);
         console.log(this.state)
         // if (Object.keys(errors).length === 0) {
-
             
             let payloadReq = {
                 title: this.state.mainTitle,
-                content: JSON.stringify(this.state.editorArray),
+                content: this.state.editorArray,
                 type:this.state.type,
-                category:this.state.category,
+                category:vals,
                 date:this.state.date,
                 author:this.state.author,
                 heighlight:this.state.heighlight,
@@ -244,6 +279,24 @@ class NovusBiArticleComponent extends React.PureComponent {
           });
         this.setState({ editorArray: this.state.editorArray });
     }
+    contentUploadImage(event,index) {
+        let response = JSON.parse(event.xhr.response)
+        if(response.success === true){            
+            this.state.editorArray.map((editor, sidx) => {
+                if(sidx === index){
+                    editor.name = response.imageurl;
+                }
+                
+              });
+            this.setState({ 
+                editorArray: this.state.editorArray,
+                quote:!this.state.quote });
+        }else{
+            
+        }
+        // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+    }
+
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -296,46 +349,13 @@ class NovusBiArticleComponent extends React.PureComponent {
             {name: 'All Sounds'},
         ];
 
-        const allSection = [
-            {name: 'News'},
-            {name: 'KPIs Market'},
-            {name: 'Birds'},
-            {name: 'Pigs'},
-            {name: 'Ruminants'},
-            {name: 'Aqua'},
-            {name: 'Grains'},
-            {name: 'IMPORTS STATS'},
-            {name: 'ENZYMES '},
-            {name: 'MINERALS '},
-            {name: 'EUBIOTICS '},
-            {name: 'METIONINA '},
-            {name: 'COMPETITION'},
-            {name: 'PODCASTS'},
-
-        ];     
+            
         
         const authorSection = [
             {name: 'Other'},
             {name: 'Team'},
             {name: 'GuilhermeFray'},
         ];  
-
-        const { uploader } = this.state;       
-        const { editor } = this.state;
-        const { uploader2 } = this.state;       
-        const { editor2 } = this.state;
-        const { uploader1 } = this.state;  
-        const { uploader3 } = this.state;    
-        const { editor1 } = this.state;
-        const { editor3 } = this.state;
-        const { embed } = this.state;
-        const { embed1 } = this.state;
-        const { embed2 } = this.state;
-        const { embed3 } = this.state;
-        const { quote } = this.state;
-        const { quote1 } = this.state;
-        const { quote2 } = this.state;
-        const { quote3 } = this.state;
         const header = this.renderHeader();
 
         const Header = (<div className="offer_head">Create User</div>);
@@ -410,17 +430,17 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                     { 'uploader' === editorVal.type && (
                                                     <div className="col-12">
                                                         <div className="image_uploader_main">
-                                                            <i className="fa fa-camera upload_icon"></i>
-                                                            <ImagesUploader
-                                                            url="http://13.90.215.196:3000/api/file_upload"
-                                                            optimisticPreviews
-                                                            multiple={false}
-                                                            onLoadEnd={(err,response) => {
-                                                                console.log(response)
-                                                                if (err) {
-                                                                    console.error(err);
-                                                                }
-                                                            }} />
+                                                            {
+                                                                editorVal.name === '' &&
+                                                                <i className="fa fa-camera upload_icon"></i>
+                                                            }
+                                                            {
+                                                                editorVal.name !== '' &&
+                                                                <img src={editorVal.name} style={{"maxWidth":"200px"}} />
+                                                            }
+                                                            <br /><br />
+                                                            <FileUpload mode="basic" name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
+                                                            
                                                         </div>
                                                         
                                                     </div>  
@@ -472,7 +492,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                     </div>
                                     ))}   <br />                         
                                     <div className="row">
-                                        <div class="col-12">
+                                        <div className="col-12">
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
                                         </div>
                                     </div>  
@@ -494,7 +514,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Appear at:</label>
-                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.category} options={allSection} onChange={(e) => {this.setState({category: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" optionValue="id" value={this.state.category} options={this.state.categoryList} onChange={(e) => {this.setState({category: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -545,9 +565,13 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
                                                     
-                                                    <FileUpload mode="basic" name="demo[]" uurl="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel="Search For" />
-
-                                                    <Growl ref={(el) => { this.growl = el; }}></Growl>
+                                                    <FileUpload mode="basic" name="pdf" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.pdfName} />
+                                                    {
+                                                        this.state.pdfError !== '' &&
+                                                        <span style={{'color':'red'}}>{this.state.pdfError}</span>
+                                                    }
+                                                    
+                                                    
                                                 </div>
                                             </div>
                                             
@@ -568,18 +592,21 @@ NovusBiArticleComponent.propTypes = {
     ArticleAppRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
     allUsersRes: PropTypes.any,
-    doUploadAppIconRes: PropTypes.any
+    doUploadAppIconRes: PropTypes.any,
+    allCategoryListRes:PropTypes.any
 };
 
 const mapStateToProps = createStructuredSelector({
     ArticleAppRes: donovusBiArticleRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
-    doUploadAppIconRes: doUploadAppIconRes
+    doUploadAppIconRes: doUploadAppIconRes,
+    allCategoryListRes:getallcategoryListRes
 });
 
 function mapDispatchToProps(dispatch) {
     return {
+        fetchallcategoryList: () => dispatch(fetchallcategoryList()),
         handleFormSubmit: (data) => dispatch(submitnovusBiArticle(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),

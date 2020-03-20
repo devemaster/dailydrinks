@@ -250,3 +250,6 @@ input.p-inputtext.p-component.p-inputtext.p-component.p-filled {
 .form_content_editprofile > div {
   border-bottom: 2px solid #c1bfbf;
 }
+span.p-button.p-fileupload-choose.p-component.p-button-text-icon-left {
+  margin-bottom: 50px;
+}

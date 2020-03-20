@@ -1,8 +1,8 @@
 import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
-class ContentList {  
-    static getcontentList() {
+class AllCategoryListApi {  
+    static getAllcategoryList() {
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -11,17 +11,15 @@ class ContentList {
                 'Authorization': TOKEN
             });
             let body = {
-                method: 'POST',
+                method: 'GET',
                 headers: ajaxRequestHeaders,
-                body:JSON.stringify({
-                        "cat_id"    : ""
-                    })
             }
-            return fetch(BASE_URL + '/contants', body).then(response => {
+            return fetch(BASE_URL + '/Categories_list', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';
                 }
+                // console.log(response.json())
                 return response.json();
             }).catch(error => {
                 return error;
@@ -31,4 +29,4 @@ class ContentList {
     }
 }  
 
-export default ContentList;
+export default AllCategoryListApi;

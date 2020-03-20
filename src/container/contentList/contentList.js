@@ -18,7 +18,7 @@ import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
 import {Dropdown} from 'primereact/dropdown';
 import logoImg from '../../assets/images/novusone-logo.png';
-
+import moment from 'moment';
 
 
 let isDelete = false;
@@ -68,10 +68,12 @@ class ContentListComponent extends React.PureComponent {
     console.log("props check", props)
     if (props.contentListRes) {
 			if (props.contentListRes.data && props.contentListRes.data.contentList) {
-				if (props.contentListRes.data.contentList.success===true) {
+				if (props.contentListRes.data.contentList.status===true) {
           this.setState({
             contentList: props.contentListRes.data.contentList.data,
             isLoader: false,
+          },()=>{
+            console.log(this.state.contentList)
           });
 				}
 			}
@@ -160,18 +162,22 @@ class ContentListComponent extends React.PureComponent {
     );
   }
   actionTypeTemplate = (data) => {
+    let cat =data.categories.split(',');
     return (
-      <div className="status_main_bx">
-          News    
-      </div>
+      <ul className="status_main_bx">
+          {cat.map((item) => 
+            <li>{item}</li>
+          )}    
+      </ul>
     );
   }
 
   adminActionTemplate = (rowData) => {
+    let date =moment(rowData.date).format('DD/MM/YYYY HH:mm');
     return (
       <div className="date_field" style={{textAlign: 'center'}}>
         <p onClick={()=> this.goToAdmin(rowData)}>
-          19/02/2020 11:15  
+          {date}
         </p>    
       </div>
     );
@@ -246,7 +252,7 @@ class ContentListComponent extends React.PureComponent {
                         <DataTable value={contentList} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.wmsList} onSelectionChange={this.onSelectionChange} className="novus_datatable">
                         <Column selectionMode="multiple" style={{width:'2em'}}/>
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
-                          <Column className="tableCols" field="application_name" header="Title" sortable style={{width: '120px'}}/>
+                          <Column className="tableCols" field="title" header="Title" sortable style={{width: '120px'}}/>
                           {
                             userRole == '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
