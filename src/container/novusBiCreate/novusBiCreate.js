@@ -5,17 +5,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import './novusBiCreate.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
-import { getAllCountry, doAllCountryRes } from '../../action/createUserActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { submitCreateApplication, doCreateApplicationRes } from '../../action/createApplicationActions';
+import { submitCreateCategory, doCreateCategoryRes } from '../../action/createCategoryActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
-import { Link } from 'react-router-dom';
-
 class NovusBiCreateComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -23,32 +20,40 @@ class NovusBiCreateComponent extends React.PureComponent {
         this.state = {
             isLoader: true,
             isSubmited: false,
-            applicationName: '',
+            category_name: '',
+            cat_id: 0,
             icon: '',
             countryList: [],
             usersList: [],
             selectedCountry: null,
             selectedUser: null,
             file: null,
+            categoryTitle:'Create Category'
         }
     }
     componentDidMount() {
-        this.props.getAllCountry();
         // this.props.getAllUsers();
+        console.log(this.props.location)
+        
+        if(this.props.location.state){
+            const appDetails = this.props.location.state.appData;
+            this.setState({
+                appData: appDetails,
+            }, () => {
+                this.setState({
+                    cat_id: this.state.appData.cat_id,
+                    categoryTitle:'Create Sub Category'
+                    // countries: this.state.appData.selected_countries
+                })
+            });
+        }
+        
         this.setState({
             isLoader: false,
         });
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.doAllCountryRes){
-            if(nextProps.doAllCountryRes.data.countryList ){
-                if(nextProps.doAllCountryRes.data.countryList.success === true){
-                    this.setState({
-                        countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-                    });
-                }
-            }
-        }
+        console.log("Check nextProps", nextProps)
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -68,8 +73,8 @@ class NovusBiCreateComponent extends React.PureComponent {
 			}
         }
         if(nextProps.createAppRes){
-            if(nextProps.createAppRes.data.createApplication ){
-                if(nextProps.createAppRes.data.createApplication.success === true){
+            if(nextProps.createAppRes.data.createCategory ){
+                if(nextProps.createAppRes.data.createCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
@@ -87,24 +92,20 @@ class NovusBiCreateComponent extends React.PureComponent {
     }
 
     handleSubmit = () => {
+        console.log("hello")
         this.setState({
           isSubmited: true,
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
-        if (Object.keys(errors).length === 0) {
-            let selectedCon = [];
-            for (let item of this.state.selectedCountry) {
-                selectedCon.push(item.value)
-            }
+        // if (Object.keys(errors).length === 0) {
             let payloadReq = {
-                applicationName: this.state.applicationName,
-                icon: this.state.icon,
-                selectedCountries: selectedCon.join(),
-                selectedUser: '',
+                parent_id: this.state.cat_id,
+                category_name: this.state.category_name,
+                icon: this.state.icon
             }
             this.props.handleFormSubmit(payloadReq);
-        }
+        // }
     }
     handleChange = (e) => {
         this.setState({
@@ -117,29 +118,14 @@ class NovusBiCreateComponent extends React.PureComponent {
         });
         this.props.uploadImage(e.target.files);
     }
-    countryChange = (item) => {
-        this.setState({
-            selectedCountry: item
-        });
-    }
+    
     userChange = (item) => {
         this.setState({
             selectedUser: item
         });
 
     }
-    renderHeader() {
-        return (
-            <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button className="ql-underline" aria-label="Underline"></button>
-            </span>
-        );
-    }
     render() {
-        const header = this.renderHeader();
-
         const Header = (<div className="offer_head">Create User</div>);
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
@@ -147,18 +133,6 @@ class NovusBiCreateComponent extends React.PureComponent {
         const { isSubmited, countryList, usersList } = this.state;
 
         // let countryListOptionsItems = [];
-        const countryListOptions = [];
-
-        if (countryList && countryList.length > 0) {
-            countryList.map((item) => {
-                countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
-                return (
-                <option value={item.country_name} id={item.id} key={item.id}>
-                    {item.country_name}              
-                </option>
-                );
-            });
-        }
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -171,15 +145,15 @@ class NovusBiCreateComponent extends React.PureComponent {
             });
         }
         return (
-                <LayoutWrapper title="Create Application" header={Header} >
+                <LayoutWrapper title="Create Category" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
                         <div className="edit_profile_content_wrapper">
                             <div className="createprofile_heading">
                                 <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
-                                    <span className="createprofile_go_back">Back to Novus Bi</span>
+                                    <span className="createprofile_go_back">Back to Category</span>
                                 </div>
-                                <span className="offering_detail_title">Create Category</span>
+                                <span className="offering_detail_title">{this.state.categoryTitle}</span>
                             </div>
                             <div className="editprofile_content">
                                 <div className="form_content_editprofile edit_profile_form_fields_wrapper">
@@ -189,8 +163,8 @@ class NovusBiCreateComponent extends React.PureComponent {
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" placeholder="Enter Title" name="applicationName" onChange={(e) => this.handleChange(e)} />
-                                                        {errors && isSubmited && <span className="error-message">{errors.applicationName}</span>}
+                                                        <input type="text" className="form-control" placeholder="Enter name" name="category_name" onChange={(e) => this.handleChange(e)} />
+                                                        {errors && isSubmited && <span className="error-message">{errors.category_name}</span>}
                                                     </div>
                                                 </div>
                                             </div>
@@ -249,22 +223,19 @@ class NovusBiCreateComponent extends React.PureComponent {
 NovusBiCreateComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAppRes: PropTypes.any,
-    doAllCountryRes: PropTypes.any,
     allUsersRes: PropTypes.any,
     doUploadAppIconRes: PropTypes.any
 };
 
 const mapStateToProps = createStructuredSelector({
-    createAppRes: doCreateApplicationRes,
-    doAllCountryRes: doAllCountryRes,
+    createAppRes: doCreateCategoryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
 });
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitCreateApplication(data)),
-        getAllCountry: () => dispatch(getAllCountry()),
+        handleFormSubmit: (data) => dispatch(submitCreateCategory(data)),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };

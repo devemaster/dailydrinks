@@ -90,19 +90,20 @@ class CreateCategoryComponent extends React.PureComponent {
     }
 
     handleSubmit = () => {
+        console.log("hello")
         this.setState({
           isSubmited: true,
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
-        if (Object.keys(errors).length === 0) {
+        // if (Object.keys(errors).length === 0) {
             let payloadReq = {
                 parent_id: this.state.cat_id,
                 category_name: this.state.category_name,
                 icon: this.state.icon
             }
             this.props.handleFormSubmit(payloadReq);
-        }
+        // }
     }
     handleChange = (e) => {
         this.setState({
