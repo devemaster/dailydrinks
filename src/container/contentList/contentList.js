@@ -149,10 +149,10 @@ class ContentListComponent extends React.PureComponent {
   }
 
   goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/update-content',
-    //   state: {appData: rowData}
-    // })
+    this.props.history.push({
+      pathname: '/novus-bi-article',
+      state: {appData: rowData}
+    })
   }
 
 

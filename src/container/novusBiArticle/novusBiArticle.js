@@ -159,6 +159,29 @@ class NovusBiArticleComponent extends React.PureComponent {
     
 
     componentDidMount() {
+        if(this.props.location.state){
+            const appDetails = this.props.location.state.appData;
+            console.log(appDetails);
+            this.setState({
+                appData: appDetails,
+            }, () => {
+                this.setState({
+                    cat_id: this.state.appData.contant_id,
+                    mainTitle:this.state.appData.title,
+                    editorArray:JSON.parse(this.state.appData.contant),
+                    type:this.state.appData.type,
+                    categories:this.state.appData.categories.split(','),
+                    date:this.state.appData.date,
+                    author:this.state.appData.author,
+                    heighlight:this.state.appData.higlight,
+                    resume:this.state.appData.resume,
+                    comment:parseInt(this.state.appData.comment)
+                    // countries: this.state.appData.selected_countries
+                })
+                // console.log(this.state.heighlight)
+            });
+        }
+
         this.props.getAllCountry();
         this.props.fetchallcategoryList();
         this.setState({
