@@ -36,6 +36,8 @@ import updateSubCategoryReducer from './updateSubCategoryReducer';
 import createCategoryReducer from './createCategoryReducer';
 import deleteCategoryListReducer from './deleteCategoryListReducer';
 import allCategoryListReducer from './allCategoryListReducer';
+import deleteContentReducer from './deleteContentReducer';
+import statusContentReducer from './statusContentReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -74,5 +76,7 @@ export default combineReducers({
   updateSubCategory: updateSubCategoryReducer,
   createCategory: createCategoryReducer,
   deleteCategoryList: deleteCategoryListReducer,
-  allCategoryList:allCategoryListReducer
+  allCategoryList:allCategoryListReducer,  
+  doDeleteContentRes: deleteContentReducer,
+  doStatusContentRes: statusContentReducer,
 });

@@ -9,7 +9,9 @@ import { Column } from 'primereact/components/column/Column';
 import './contentList.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchcontentList, getcontentListRes } from '../../action/contentListActions';
-import { deleteContentListRecord, doDeleteAppRes } from '../../action/deleteContentListActions';
+import { deleteContentListRecord, doDeleteContentRes } from '../../action/deleteContentListActions';
+import { statusContentListRecord, doStatusContentRes } from '../../action/statusContentListActions';
+import { fetchallcategoryList, getallcategoryListRes } from '../../action/allCategoryListActions';
 // import Swal from 'sweetalert2';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -22,6 +24,7 @@ import moment from 'moment';
 
 
 let isDelete = false;
+let isUpdate = true;
 
 class ContentListComponent extends React.PureComponent {
   onSelectionChange = (e) => {   
@@ -37,6 +40,8 @@ class ContentListComponent extends React.PureComponent {
 			isLoader: false,
       globalFilter: '',
       contentList: [],
+      backupContentList:[],
+      categoryList:[],
       renderUI: false,
       openDeleteAppModal: false,
       isDisabled: false,
@@ -46,6 +51,7 @@ class ContentListComponent extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.props.fetchallcategoryList();
     let appData = JSON.parse(getItem('adminAppData'));
     if(appData !== null) {
       appData.application_id = appData.app_id;
@@ -66,11 +72,21 @@ class ContentListComponent extends React.PureComponent {
 
   componentWillReceiveProps(props) {
     console.log("props check", props)
+    if(props.allCategoryListRes){
+        if(props.allCategoryListRes.data.allCategoryList ){
+            if(props.allCategoryListRes.data.allCategoryList.success === true){
+                this.setState({
+                    categoryList: props.allCategoryListRes.data.allCategoryList.data
+                });
+            }
+        }
+    }
     if (props.contentListRes) {
 			if (props.contentListRes.data && props.contentListRes.data.contentList) {
 				if (props.contentListRes.data.contentList.status===true) {
           this.setState({
             contentList: props.contentListRes.data.contentList.data,
+            backupContentList:props.contentListRes.data.contentList.data,
             isLoader: false,
           },()=>{
             console.log(this.state.contentList)
@@ -78,16 +94,29 @@ class ContentListComponent extends React.PureComponent {
 				}
 			}
     }
-    if (props.doDeleteAppRes) {
-			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
-				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
+    if (props.doDeleteContentRes) {
+			if (props.doDeleteContentRes.data && props.doDeleteContentRes.data.doDeleteContentRes) {
+				if (isDelete) {
           isDelete = false;
           this.setState({
             openDeleteAppModal: false,
+            isLoader: false,
             isDisabled: false,
           });
-          this.props.fetchAllApplication();
+          this.props.fetchcontentList();
 				}
+			}
+    }
+    if (props.doStatusContentRes) {
+			if (props.doStatusContentRes.data && props.doStatusContentRes.data.doStatusContentRes) {
+        if(isUpdate){
+          isUpdate = false;
+          this.setState({
+            isLoader: false,
+          })
+          this.props.fetchcontentList();
+        }
+				
 			}
     }
   }
@@ -100,16 +129,30 @@ class ContentListComponent extends React.PureComponent {
         </button>
         <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
-        </button>      
+        </button> 
+      {
+        rowData.status != 'draft' && rowData.status == 'pendding' &&
+        <button className="btn btn-success-customer" onClick={()=> this.ChangeStatus(rowData.contant_id)}>
+          <i className="fa fa-toggle-off" aria-hidden="true"></i>
+        </button> 
+      }
+      {
+        rowData.status != 'draft' && rowData.status == 'active'&&
+        <button className="btn btn-delete-customer" >
+          <i className="fa fa-toggle-on" aria-hidden="true"></i>
+        </button> 
+      }
+        
+        
       </div>
     );
   }
 
   goUpdateApplication = (rowData) => {
-    this.props.history.push({
-      pathname: '/update-content',
-      state: {appData: rowData}
-    })
+    // this.props.history.push({
+    //   pathname: '/update-content',
+    //   state: {appData: rowData}
+    // })
   }
 
 
@@ -120,19 +163,32 @@ class ContentListComponent extends React.PureComponent {
   
 
   deleteApp = () => {
+    console.log(this.state.contant_id)
     this.setState({
       isDisabled: true,
+      isLoader:true,
     });
     isDelete = true;
     let payload = {
-      app_id: this.state.appId
+      contant_id: this.state.contant_id
     }
     this.props.deleteContentListRecord(payload);
   }
 
+  ChangeStatus = (e) => {
+    isUpdate = true;
+    let payload = {
+      contant_id: e
+    }
+    this.setState({
+      isLoader:true
+    })
+    this.props.statusContentListRecord(payload);
+  }
+
   openDeleteApp = (rowData) => {
     this.setState({
-      appId: rowData.application_id,
+      contant_id: rowData.contant_id,
       openDeleteAppModal: true,
     });
   }
@@ -144,29 +200,67 @@ class ContentListComponent extends React.PureComponent {
   }
 
   actionIconTemplate = (data) => {
-    return (
-      <div>
-        {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-        <img src={logoImg} alt='icon' className="image_icons_content" />
-      </div>
-    );
+    let conts = JSON.parse(data.contant)
+    let icon = '';
+    for(let item of conts){
+      if(item.type == 'uploader'){
+        icon = item.name;
+      }
+    }
+    if(icon == ''){
+      return (
+        <div>
+          {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
+          <img src={logoImg} alt='icon' className="image_icons_content" />
+        </div>
+      );
+    }else{
+      return (
+        <div>
+          {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
+          <img src={icon} alt='icon' className="image_icons_content" />
+        </div>
+      );
+    }
+    
   }
 
   actionStatusTemplate = (data) => {
-    return (
-      <div className="status_main_bx">
-        <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
-          Draft
-        </button>         
-      </div>
-    );
+    if(data.status == 'draft'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
+           Draft
+          </button>         
+        </div>
+      );
+    }else
+    if(data.status == 'pending'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn btn-danger" onClick={this.toggleBox}>
+            Pending
+          </button>         
+        </div>
+      );
+    }else
+    if(data.status == 'active'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn btn-success" onClick={this.toggleBox}>
+            Active
+          </button>         
+        </div>
+      );
+    }
+    
   }
   actionTypeTemplate = (data) => {
-    let cat =data.categories.split(',');
+    let cat =data.categories_name.split(',');
     return (
       <ul className="status_main_bx">
           {cat.map((item) => 
-            <li>{item}</li>
+            <li onClick={() => this.selectCatButton(item)}>{item}</li>
           )}    
       </ul>
     );
@@ -188,7 +282,51 @@ class ContentListComponent extends React.PureComponent {
     //   applicationData: data
     // })
   }
+  selectCatButton = (e)=>{
+    const cats = [];
+    console.log(e)
+    if(e == ''){
+      this.setState({
+        contentList:this.state.backupContentList
+      })
+    }else{
+      for(let item of this.state.contentList){
+        let vals = item.categories_name.split(',');
+        console.log(vals)
+        if(vals.includes(e)){
+          cats.push(item);
+        }
+        this.setState({
+          contentList:cats
+        })
+      }
+    }
+  }
+  selectCatChange = (e) =>{
+    const cats = [];
+    console.log(e.target.value)
+    if(e.target.value == ''){
+      this.setState({
+        contentList:this.state.backupContentList
+      })
+    }else{
+      for(let item of this.state.contentList){
+        let vals = item.categories.split(',');
+        console.log(vals)
+        if(vals.includes(e.target.value)){
+          cats.push(item);
+        }
+        this.setState({
+          contentList:cats
+        })
+      }
+    }
+    
+    this.setState({allSection: e.target.value})
 
+
+
+  }
   render() {
     const allContent = [
       {name: 'All Articles'},
@@ -242,9 +380,33 @@ class ContentListComponent extends React.PureComponent {
                       }
                     </div>
 
-                    <Dropdown className="all_sec_dropdown" optionLabel="name" value={this.state.allContent} options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content"/>
-
-                    <Dropdown className="all_sec_dropdown all_section_tab" optionLabel="name" value={this.state.allSection} options={allSection} onChange={(e) => {this.setState({allSection: e.value})}} placeholder="All Section"/>
+                    
+                    <select className="all_sec_dropdown form-control" onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content">
+                      {
+                        allContent.map((item) =>
+                          <option value={item.name}>{item.name}</option>
+                        )
+                      }
+                    </select> 
+                    <select className="all_sec_dropdown form-control" name="filterCat" onChange={this.selectCatChange} placeholder="Select Category">
+                    <option  value="">All</option>
+                    {
+                      this.state.categoryList.map((item) => 
+                        item.parent_id == 0 &&                                            
+                        <optgroup>
+                        <option className="optionGroup" value={item.id}>{item.name}
+                        </option>    
+                        {
+                          this.state.categoryList.map((itemsub) => 
+                          itemsub.parent_id == item.id &&
+                          <option className="optionChild" value={itemsub.id}>{itemsub.name}</option>
+                          )
+                        }
+                        </optgroup>
+                      )
+                    }
+                      
+                    </select>
 
                     
                     <div className="row pl-pr-15px xs-pl-pr-0px">
@@ -308,18 +470,23 @@ class ContentListComponent extends React.PureComponent {
 
 ContentListComponent.propTypes = {
 	contentListRes: PropTypes.any,
-	doDeleteAppRes: PropTypes.any,
+	doDeleteContentRes: PropTypes.any,
+	doStatusContentRes: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
   contentListRes: getcontentListRes,
-	doDeleteAppRes: doDeleteAppRes,
+	doDeleteContentRes: doDeleteContentRes,
+	doStatusContentRes: doStatusContentRes,
+  allCategoryListRes:getallcategoryListRes
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetchallcategoryList: () => dispatch(fetchallcategoryList()),
 		fetchcontentList: () => dispatch(fetchcontentList()),
 		deleteContentListRecord: (data) => dispatch(deleteContentListRecord(data)),
+		statusContentListRecord: (data) => dispatch(statusContentListRecord(data)),
   };
 }
 

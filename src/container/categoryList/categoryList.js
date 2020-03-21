@@ -113,7 +113,7 @@ class CategoryListComponent extends React.PureComponent {
 
 
   createApp(){
-    this.props.history.push('/create-category')
+    this.props.history.push('/novus-bi-create')
   }
 
   deleteApp = () => {

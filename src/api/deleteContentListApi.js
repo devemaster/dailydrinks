@@ -15,7 +15,7 @@ class DeleteContentListApi {
                 headers: ajaxRequestHeaders,
                 body: JSON.stringify(data)
             }
-            return fetch(BASE_URL + '/admin_delete_application', body).then(response => {
+            return fetch(BASE_URL + '/deleteContant', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';

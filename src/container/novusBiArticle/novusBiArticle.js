@@ -123,8 +123,8 @@ class NovusBiArticleComponent extends React.PureComponent {
         }
       }
     selectAuthor = (event) => {
-        console.log(event.value)
-        if(event.value.name === 'Other'){
+        console.log(event)
+        if(event.name === 'Other'){
             this.setState({
                 authorInput:true,
                 authorSelect:false
@@ -133,11 +133,15 @@ class NovusBiArticleComponent extends React.PureComponent {
             this.setState({
                 authorInput:false,
                 authorSelect:true,
-                author:event.value.name
+                author:event.name,
+                authorVal:event
             })
         }
     }
     onBasicUploadAuto(event) {
+        this.setState({
+            isLoader:false
+        })
         let response = JSON.parse(event.xhr.response)
         if(response.success === true){
             this.setState({
@@ -162,6 +166,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         });
     }
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
         if(nextProps.allCategoryListRes){
             if(nextProps.allCategoryListRes.data.allCategoryList ){
                 if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
@@ -200,7 +205,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         }
         if(nextProps.ArticleAppRes){
             if(nextProps.ArticleAppRes.data.ArticleApplication ){
-                if(nextProps.ArticleAppRes.data.ArticleApplication.success === true){
+                if(nextProps.ArticleAppRes.data.novusBiArticle.success === true){
                     console.log("success")
                     this.setState({
                         isLoader: false
@@ -231,11 +236,13 @@ class NovusBiArticleComponent extends React.PureComponent {
     handleSubmit = () => {
         
         const categories = [];
+        const catName = [];
         for(let item of this.state.category){
             categories.push(item.id)
+            catName.push(item.name)
         }
         const vals = categories.join(',');
-
+        const valsName = catName.join(',');
         this.setState({
           isSubmited: true,
         }, () => { });
@@ -247,8 +254,9 @@ class NovusBiArticleComponent extends React.PureComponent {
             let payloadReq = {
                 title: this.state.mainTitle,
                 content: this.state.editorArray,
-                type:this.state.type,
+                type:this.state.type.name,
                 category:vals,
+                categories_name:valsName,
                 date:this.state.date,
                 author:this.state.author,
                 heighlight:this.state.heighlight,
@@ -279,7 +287,17 @@ class NovusBiArticleComponent extends React.PureComponent {
           });
         this.setState({ editorArray: this.state.editorArray });
     }
+    fileUploadProcess= () =>{
+        console.log("hello");
+        this.setState({
+            isLoader:true
+        })
+    }
     contentUploadImage(event,index) {
+        this.setState({
+            isLoader:false
+        })
+        console.log("done")
         let response = JSON.parse(event.xhr.response)
         if(response.success === true){            
             this.state.editorArray.map((editor, sidx) => {
@@ -439,7 +457,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                                 <img src={editorVal.name} style={{"maxWidth":"200px"}} />
                                                             }
                                                             <br /><br />
-                                                            <FileUpload mode="basic" name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
+                                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
                                                             
                                                         </div>
                                                         
@@ -508,7 +526,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => {this.setState({type: e.value.name})}} placeholder="All Content"/>
+                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => {this.setState({type: e.value})}} placeholder="All Content"/>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -527,12 +545,12 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label>Author:</label>
                                                     {this.state.authorSelect && 
-                                                        <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.author} options={authorSection} onChange={(e) => this.selectAuthor(e)} placeholder="Author"/>
+                                                        <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.authorVal} options={authorSection} onChange={(e) => this.selectAuthor(e.value)} placeholder="Author"/>
                                                     }
 
                                                     {this.state.authorInput && 
                                                         <div className="p-inputgroup">
-                                                            <InputText className="all_sec_dropdown form-control" placeholder="Type Author Name" name="authorName" onChange={(e) => {this.setState({author: e.value})}} />
+                                                            <InputText className="all_sec_dropdown form-control" placeholder="Type Author Name" name="authorName" onChange={(e) => {this.setState({author: e.target.value})}} />
                                                             <Button icon="pi pi-times" className="p-button-danger" onClick={() => this.setState({
                                                                 authorInput:false,
                                                                 authorSelect:true})}/>
@@ -565,7 +583,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
                                                     
-                                                    <FileUpload mode="basic" name="pdf" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.pdfName} />
+                                                    <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="pdf" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.pdfName} />
                                                     {
                                                         this.state.pdfError !== '' &&
                                                         <span style={{'color':'red'}}>{this.state.pdfError}</span>

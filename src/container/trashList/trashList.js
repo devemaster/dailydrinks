@@ -9,13 +9,14 @@ import { Column } from 'primereact/components/column/Column';
 import './trashList.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchtrashList, gettrashListRes } from '../../action/trashListActions';
-import { deleteApplicationRecord, doDeleteAppRes } from '../../action/deleteApplicationActions';
+import { deleteContentListRecord, doDeleteContentRes } from '../../action/deleteContentListActions';
 // import Swal from 'sweetalert2';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
+import moment from 'moment';
 import logoImg from '../../assets/images/novusone-logo.png';
 
 
@@ -61,10 +62,11 @@ class TrashListComponent extends React.PureComponent {
   }
 
   componentWillReceiveProps(props) {
+    
     console.log("props check", props)
     if (props.trashListRes) {
 			if (props.trashListRes.data && props.trashListRes.data.trashList) {
-				if (props.trashListRes.data.trashList.success===true) {
+				if (props.trashListRes.data.trashList.status===true) {
           this.setState({
             trashListList: props.trashListRes.data.trashList.data,
             isLoader: false,
@@ -72,33 +74,92 @@ class TrashListComponent extends React.PureComponent {
 				}
 			}
     }
-    if (props.doDeleteAppRes) {
-			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
-				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
+    if (props.doDeleteContentRes) {
+			if (props.doDeleteContentRes.data && props.doDeleteContentRes.data.doDeleteContentRes) {
+				if (isDelete) {
           isDelete = false;
           this.setState({
             openDeleteAppModal: false,
             isDisabled: false,
           });
-          this.props.fetchAllApplication();
+          this.props.fetchtrashList();
 				}
 			}
     }
   }
-
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" onClick={()=> this.goUpdateApplication(rowData)}>
-          Restore
+        <button className="btn btn-edit-customer" data-toggle="tooltip" data-placement="top" title="Restore" onClick={()=> this.goUpdateApplication(rowData)}>
+        <i class="fa fa-recycle" aria-hidden="true"></i>
         </button>
-        <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
+        <button className="btn btn-delete-customer" data-toggle="tooltip" data-placement="top" title="Permanent Delete" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button>      
       </div>
     );
   }
 
+  actionIconTemplate = (data) => {
+    return (
+      <div>
+        {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
+        <img src={logoImg} alt='icon' className="image_icons_content" />
+      </div>
+    );
+  }
+
+  actionStatusTemplate = (data) => {
+    if(data.status == 'draft'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
+           Draft
+          </button>         
+        </div>
+      );
+    }else
+    if(data.status == 'pending'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn btn-danger" onClick={this.toggleBox}>
+            Pending
+          </button>         
+        </div>
+      );
+    }else
+    if(data.status == 'active'){
+      return (
+        <div className="status_main_bx">
+          <button className="btn btn-success" onClick={this.toggleBox}>
+            Active
+          </button>         
+        </div>
+      );
+    }
+    
+  }
+  actionTypeTemplate = (data) => {
+    let cat =data.categories.split(',');
+    return (
+      <ul className="status_main_bx">
+          {cat.map((item) => 
+            <li>{item}</li>
+          )}    
+      </ul>
+    );
+  }
+
+  adminActionTemplate = (rowData) => {
+    let date =moment(rowData.date).format('DD/MM/YYYY HH:mm');
+    return (
+      <div className="date_field" style={{textAlign: 'center'}}>
+        <p onClick={()=> this.goToAdmin(rowData)}>
+          {date}
+        </p>    
+      </div>
+    );
+  }
   goUpdateApplication = (rowData) => {
     // this.props.history.push({
     //   pathname: '/novus-bi-create',
@@ -114,19 +175,20 @@ class TrashListComponent extends React.PureComponent {
   
 
   deleteApp = () => {
+    console.log(this.state.contant_id)
     this.setState({
       isDisabled: true,
     });
     isDelete = true;
     let payload = {
-      app_id: this.state.appId
+      contant_id: this.state.contant_id
     }
-    this.props.deleteApplicationRecord(payload);
+    this.props.deleteContentListRecord(payload);
   }
 
   openDeleteApp = (rowData) => {
     this.setState({
-      appId: rowData.application_id,
+      contant_id: rowData.contant_id,
       openDeleteAppModal: true,
     });
   }
@@ -201,17 +263,18 @@ class TrashListComponent extends React.PureComponent {
                     <div className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-12 tableheight advisor-tab-tableheight" style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 15 }}>
                         <DataTable value={trashListList} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.wmsList} onSelectionChange={this.onSelectionChange} className="novus_datatable">
-                        <Column selectionMode="multiple" style={{width:'2em'}}/>
+                          <Column selectionMode="multiple" style={{width:'2em'}}/>
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
-                          <Column className="tableCols" field="application_name" header="Title" sortable style={{width: '120px'}}/>
+                          <Column className="tableCols" field="title" header="Title" sortable style={{width: '120px'}}/>
                           {
                             userRole == '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
+                          <Column className="tableCols" field="" header="Type / Sections" style={{width: '120px'}} body={this.actionTypeTemplate} />
                           <Column className="tableCols" field="" header="Status" style={{width: '120px'}} body={this.actionStatusTemplate} />
                           {
                             userRole == '1' &&
-                            <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
+                            <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>
                       </div>
@@ -263,13 +326,13 @@ TrashListComponent.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   trashListRes: gettrashListRes,
-	doDeleteAppRes: doDeleteAppRes,
+	doDeleteContentRes: doDeleteContentRes,
 });
 
 function mapDispatchToProps(dispatch) {
   return {
 		fetchtrashList: () => dispatch(fetchtrashList()),
-		deleteApplicationRecord: (data) => dispatch(deleteApplicationRecord(data)),
+		deleteContentListRecord: (data) => dispatch(deleteContentListRecord(data)),
   };
 }
 

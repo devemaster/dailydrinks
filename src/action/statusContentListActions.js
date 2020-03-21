@@ -1,29 +1,29 @@
 import * as types from './actionTypes';
 import {logout} from '../helper/helper';
-import DeleteContentListApi from '../api/deleteContentListApi';
+import StatusContentListApi from '../api/statusContentListApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
-export function doDeleteApp(data) {
+export function doStatusApp(data) {
   return {
-    type: types.DELETE_CONTENTLIST,
+    type: types.STATUS_CONTENTLIST,
     data
   };
 }
 
-export function doDeleteContentRes(data) {
+export function doStatusContentRes(data) {
   return {
-    type: types.DELETE_CONTENTLIST_RES, 
+    type: types.STATUS_CONTENTLIST_RES, 
     data
   };
 }
 
-export function deleteContentListRecord(data) {
+export function statusContentListRecord(data) {
   const TOKEN = getItem('auth_token');
 
   if(TOKEN){
     return function(dispatch) {
-      DeleteContentListApi.doDeleteApp(data).then(data => {
-        dispatch(doDeleteContentRes(data));
+      StatusContentListApi.doStatusApp(data).then(data => {
+        dispatch(doStatusContentRes(data));
         if(data.error){
           Swal.fire({
             title: data.message,

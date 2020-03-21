@@ -25,7 +25,6 @@ export function submitnovusBiArticle(data) {
       novusBiArticleApi.donovusBiArticle(data).then(data => {
         
         dispatch(donovusBiArticleRes(data));
-        dispatch(donovusBiArticleRes(null));
         if(data.success === true){
           Swal.fire({
             title: data.message,

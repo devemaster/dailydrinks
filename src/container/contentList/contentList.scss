@@ -55,6 +55,13 @@ ul.status_main_bx {
         color: #fff !important;
         margin-left: 10px !important;
     }
+    .btn-success-customer{
+        margin-top: 0px;
+        background-color: rgb(51, 255, 0) !important;
+        border-color: rgb(51, 255, 0) !important;
+        color: #fff !important;
+        margin-left: 10px !important;
+    }
     .btn-edit-customer{
         background-color: #00395A !important;
         border-color: #00395A !important;
@@ -177,6 +184,14 @@ body .novus_datatable.p-datatable .p-datatable-tbody > tr {
     outline: none !important;
     box-shadow: none;
 }
+.application-list_content .novus_datatable .btn-success-customer {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: rgb(51, 255, 0) !important;
+    font-size: 20px;
+    outline: none !important;
+    box-shadow: none;
+}
 .all_section_bx{
     position: relative;
     display: inline-block;
@@ -272,4 +287,24 @@ button.button_drop_main i {
 }
 body div .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
     background-color: #00395a;
+}
+.optionGroup {
+    font-weight: bold;
+    font-size:120%
+}
+    
+.optionChild {
+    padding-left: 15px;
+}
+select.all_sec_dropdown.form-control {
+    max-width: 200px;
+    display: inline;
+    margin-left: 10px;
+}
+.status_main_bx li {
+    background: lightgray;
+    padding: 4px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 10px;
 }
