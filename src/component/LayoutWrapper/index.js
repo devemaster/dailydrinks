@@ -124,13 +124,13 @@ class LayoutWrapper extends React.PureComponent {
                                                 <span className="content-name">Notification</span>
                                             </NavLink>
                                         </div>
-                                        <div className="nav-item dropdown pd-20 layout_left drop_down_cls">
+                                        <div  className={(page[1]==='novus-bi-article' || page[1]==='novus-bi-create' || page[1]==='subcategory-list')  ? 'show nav-item dropdown pd-20 layout_left drop_down_cls': 'nav-item dropdown pd-20 layout_left drop_down_cls'}>
                                             <a className="nav-link dropdown-toggle link_clr" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i className="fa fa-dashboard" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                             <span className="content-name">Novus Bi</span>
                                             </a>
-                                            <div className="dropdown-menu menu_fontSze" aria-labelledby="navbarDropdown" style={page[1]==='novus-bi-article' ? {'display':'block'}:{'background':'#fff'} }>
-                                                <div className={page[1]==='category-list' ? 'active' : 'no-class'}>
+                                            <div className="dropdown-menu menu_fontSze" aria-labelledby="navbarDropdown" >
+                                                <div className={(page[1]==='category-list' || page[1]==='novus-bi-create' || page[1]==='subcategory-list' ) ? 'active' : 'no-class'}>
                                                     <NavLink to={"/category-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-newspaper" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Sections</span>

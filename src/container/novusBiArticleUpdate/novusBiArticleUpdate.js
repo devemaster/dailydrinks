@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import './novusBiArticle.css';
+import './novusBiArticleUpdate.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/novusBiArticleActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions'; 
-import { submitnovusBiArticle, donovusBiArticleRes } from '../../action/novusBiArticleActions';
+import { submitnovusBiUpdateArticle, donovusBiUpdateArticleRes } from '../../action/novusBiArticleUpdateActions';
 import { fetchallcategoryList, getallcategoryListRes } from '../../action/allCategoryListActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
@@ -17,10 +17,7 @@ import validate from './formValidation';
 import Select from 'react-select';
 import {Editor} from "primereact/editor";
 import {Button} from "primereact/button";
-import ImagesUploader from 'react-images-uploader';
-import 'react-images-uploader/styles.css';
 import 'react-images-uploader/font.css';
-import { Link } from 'react-router-dom';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from 'primereact/dropdown';
 import {Calendar} from 'primereact/calendar';
@@ -33,7 +30,7 @@ import {FileUpload} from 'primereact/fileupload';
 
 import {Growl} from 'primereact/growl';
 const editorArray = [{'type':"editor",'name':""}];
-class NovusBiArticleComponent extends React.PureComponent {
+class NovusBiArticleUpdateComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
         super(props);
@@ -156,18 +153,21 @@ class NovusBiArticleComponent extends React.PureComponent {
                 appData: appDetails,
             }, () => {
                 this.setState({
-                    cat_id: this.state.appData.contant_id,
+                    contant_id: this.state.appData.contant_id,
                     mainTitle:this.state.appData.title,
                     editorArray:JSON.parse(this.state.appData.contant),
                     type:this.state.appData.type,
                     categories:this.state.appData.categories.split(','),
                     date:this.state.appData.date,
                     author:this.state.appData.author,
-                    heighlight:this.state.appData.higlight,
+                    heighlight:this.state.appData.higlight == 'true'?true:false,
                     resume:this.state.appData.resume,
-                    comment:parseInt(this.state.appData.comment),
-                    authorShow:true
+                    comment:this.state.appData.comment == 'true'?true:false,
+                    authorShow:true,
+                    pdf:this.state.appData.pdf,
                     // countries: this.state.appData.selected_countries
+                },()=>{
+                    console.log(this.state.comment)
                 })
                 
             });
@@ -232,9 +232,9 @@ class NovusBiArticleComponent extends React.PureComponent {
 				}
 			}
         }
-        if(nextProps.ArticleAppRes){
-            if(nextProps.ArticleAppRes.data.ArticleApplication ){
-                if(nextProps.ArticleAppRes.data.novusBiArticle.success === true){
+        if(nextProps.ArticleUpdateAppRes){
+            if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate ){
+                if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate.success === true){
                     console.log("success")
                     this.setState({
                         isLoader: false
@@ -281,6 +281,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         // if (Object.keys(errors).length === 0) {
             
             let payloadReq = {
+                contant_id:this.state.contant_id,
                 title: this.state.mainTitle,
                 content: this.state.editorArray,
                 type:this.state.type.name,
@@ -444,7 +445,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
                                     <span className="createprofile_go_back">Back to Content List</span>
                                 </div>
-                                <span className="offering_detail_title">Add Content</span>
+                                <span className="offering_detail_title">Edit Content</span>
                             </div>
                             
                                              
@@ -638,9 +639,9 @@ class NovusBiArticleComponent extends React.PureComponent {
     }
 }
 
-NovusBiArticleComponent.propTypes = {
+NovusBiArticleUpdateComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
-    ArticleAppRes: PropTypes.any,
+    ArticleUpdateAppRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
     allUsersRes: PropTypes.any,
     doUploadAppIconRes: PropTypes.any,
@@ -648,7 +649,7 @@ NovusBiArticleComponent.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-    ArticleAppRes: donovusBiArticleRes,
+    ArticleUpdateAppRes: donovusBiUpdateArticleRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes,
@@ -658,7 +659,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
     return {
         fetchallcategoryList: () => dispatch(fetchallcategoryList()),
-        handleFormSubmit: (data) => dispatch(submitnovusBiArticle(data)),
+        handleFormSubmit: (data) => dispatch(submitnovusBiUpdateArticle(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
@@ -666,4 +667,4 @@ function mapDispatchToProps(dispatch) {
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(NovusBiArticleComponent);
+export default compose(withConnect)(NovusBiArticleUpdateComponent);

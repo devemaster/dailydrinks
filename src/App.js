@@ -26,6 +26,7 @@ import UpdateContent from './container/updateContent/updateContent';
 import UpdateCategory from './container/updateCategory/updateCategory';
 import UpdateSubCategory from './container/updateSubCategory/updateSubCategory';
 import CreateCategory from './container/createCategory/createCategory';
+import NovusBiArticleUpdateComponent from './container/novusBiArticleUpdate/novusBiArticleUpdate';
 
 class App extends React.PureComponent {
   
@@ -62,6 +63,7 @@ class App extends React.PureComponent {
                 <Route path="/create-admin" component={CreateAdminComponent} />
                 <Route path="/novus-bi" component={NovusBiComponent} />
                 <Route path="/novus-bi-create" component={NovusBiCreateComponent} />
+                <Route path="/novus-bi-article-update" component={NovusBiArticleUpdateComponent} />
                 <Route path="/novus-bi-article" component={NovusBiArticleComponent} />
                 <Route path="/content-list" component={ContentListComponent} />
                 <Route path="/category-list" component={CategoryListComponent} />   

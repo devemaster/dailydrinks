@@ -38,6 +38,7 @@ import deleteCategoryListReducer from './deleteCategoryListReducer';
 import allCategoryListReducer from './allCategoryListReducer';
 import deleteContentReducer from './deleteContentReducer';
 import statusContentReducer from './statusContentReducer';
+import novusBiArticleUpdateReducer from './novusBiArticleUpdateReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -65,6 +66,7 @@ export default combineReducers({
   novusBi: novusBiReducer,
   novusBiCreate: novusBiCreateReducer,
   novusBiArticle: novusBiArticleReducer,
+  novusBiArticleUpdate: novusBiArticleUpdateReducer,
   contentList: contentListReducer,
   categoryList: categoryListReducer,
   commentList: commentListReducer,
