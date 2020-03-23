@@ -284,7 +284,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 contant_id:this.state.contant_id,
                 title: this.state.mainTitle,
                 content: this.state.editorArray,
-                type:this.state.type.name,
+                type:this.state.type,
                 category:vals,
                 categories_name:valsName,
                 date:this.state.date,
@@ -556,7 +556,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => {this.setState({type: e.value})}} placeholder="All Content"/>
+                                                    <h3>{this.state.type}</h3>
                                                 </div>
                                             </div>
                                             <div className="row">

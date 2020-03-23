@@ -131,7 +131,7 @@ class ContentListComponent extends React.PureComponent {
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button> 
       {
-        rowData.status != 'draft' && rowData.status == 'pendding' &&
+        rowData.status != 'draft' && rowData.status == 'pending' &&
         <button className="btn btn-success-customer" onClick={()=> this.ChangeStatus(rowData.contant_id)}>
           <i className="fa fa-toggle-off" aria-hidden="true"></i>
         </button> 
