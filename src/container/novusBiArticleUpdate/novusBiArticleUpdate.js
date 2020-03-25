@@ -63,7 +63,9 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             uploadUrl:'',
             UploaderError: '',
             authorShow:false,
-            categories:[]
+            categories:[],
+            soundShow:false,
+            articleShow:true,
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -168,6 +170,17 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     // countries: this.state.appData.selected_countries
                 },()=>{
                     console.log(this.state.comment)
+                    if(this.state.type.name =='All Sounds'){
+                        this.setState({
+                            soundShow:true,
+                            articleShow:false,
+                        })
+                    }else{
+                        this.setState({
+                            soundShow:false,
+                            articleShow:true,
+                        })
+                    }
                 })
                 
             });
@@ -344,6 +357,24 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
+    contentUploadAudio = (e) => {
+        this.setState({
+            isLoader:false
+        })
+        let response = JSON.parse(e.xhr.response)
+        console.log(response)
+        if(response.success === true){ 
+               this.state.editorArray.push({
+                   name:response.imageurl,
+                   
+               })    
+                this.setState({ 
+                editorArray: this.state.editorArray,
+                quote:!this.state.quote });
+        }else{
+            
+        } 
+    }
 
     handleChange = (e) => {
         this.setState({
@@ -380,6 +411,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             quote:!this.state.quote
         }) 
     }
+    
     renderHeader() {
         return (
             <span className="ql-formats">
@@ -462,7 +494,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                         </div>
                                     </div>
                                     
-                                    {this.state.editorArray.map((editorVal, index) => (
+                                    {this.state.articleShow && this.state.editorArray.map((editorVal, index) => (
                                     <div className="editprofile_content " key={index}>
                                         <div className="form_content_editprofile edit_profile_form_fields_wrapper">
                                         
@@ -538,7 +570,18 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    ))}   <br />                         
+                                    ))}
+                                    {
+                                        this.state.soundShow && <div className="col-12">
+                                        <div className="image_uploader_main">
+                                            <i className="fa fa-music upload_icon"></i>
+                                            <br /><br />
+                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                            
+                                        </div>
+                                        
+                                    </div>  
+                                    }   <br />                         
                                     <div className="row">
                                         <div className="col-12">
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>

@@ -60,13 +60,16 @@ class NovusBiArticleComponent extends React.PureComponent {
             comment:true,
             editorArray:editorArray,
             mainTitle:'',
+            pdf:'',
             pdfName:'Search for',
             pdfError:'',
             uploadName:'Upload Here',
             uploadUrl:'',
             UploaderError: '',
             authorShow:false,
-            categories:[]
+            categories:[],
+            soundShow:false,
+            articleShow:true,
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -337,11 +340,30 @@ class NovusBiArticleComponent extends React.PureComponent {
               });
             this.setState({ 
                 editorArray: this.state.editorArray,
+                uploadName:response.path,
                 quote:!this.state.quote });
         }else{
             
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+    }
+    contentUploadAudio = (e) => {
+        this.setState({
+            isLoader:false
+        })
+        let response = JSON.parse(e.xhr.response)
+        console.log(response)
+        if(response.success === true){ 
+               this.state.editorArray.push({
+                   name:response.imageurl,
+                   
+               })    
+                this.setState({ 
+                editorArray: this.state.editorArray,
+                quote:!this.state.quote });
+        }else{
+            
+        } 
     }
 
     handleChange = (e) => {
@@ -371,6 +393,21 @@ class NovusBiArticleComponent extends React.PureComponent {
             selectedUser: item
         });
 
+    }
+    typeSelect = (e) =>{
+        console.log(e.value.name)
+        this.setState({type: e.value})
+        if(e.value.name ==  'All Sounds'){
+            this.setState({
+                soundShow:true,
+                articleShow:false,
+            })
+        }else{
+            this.setState({
+                soundShow:false,
+                articleShow:true,
+            })
+        }
     }
     remove = (index) =>{
         editorArray.splice(index,1);
@@ -461,7 +498,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                         </div>
                                     </div>
                                     
-                                    {this.state.editorArray.map((editorVal, index) => (
+                                    {this.state.articleShow && this.state.editorArray.map((editorVal, index) => (
                                     <div className="editprofile_content " key={index}>
                                         <div className="form_content_editprofile edit_profile_form_fields_wrapper">
                                         
@@ -537,7 +574,18 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    ))}   <br />                         
+                                    ))}  
+                                    {
+                                        this.state.soundShow && <div className="col-12">
+                                        <div className="image_uploader_main">
+                                            <i className="fa fa-music upload_icon"></i>
+                                            <br /><br />
+                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                            
+                                        </div>
+                                        
+                                    </div>  
+                                    } <br />                         
                                     <div className="row">
                                         <div className="col-12">
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
@@ -555,7 +603,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => {this.setState({type: e.value})}} placeholder="All Content"/>
+                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => this.typeSelect(e)} placeholder="All Content"/>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -612,6 +660,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 </div>
                                             </div>
                                             
+                                           { this.state.soundShow &&
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
@@ -625,6 +674,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                     
                                                 </div>
                                             </div>
+                                            }
                                             
                                         </div>
                                     </div>
