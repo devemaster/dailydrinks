@@ -660,7 +660,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                 </div>
                                             </div>
                                             
-                                           { this.state.soundShow &&
+                                           { this.state.articleShow &&
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
