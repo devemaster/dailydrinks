@@ -8,7 +8,7 @@ import './updateSubCategory.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllCountry, doAllCountryRes } from '../../action/createUserActions';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { submitUpdateCategory, doUpdateAppRes } from '../../action/updateCategoryActions';
+import { submitUpdateSubCategory, doUpdateSubAppRes } from '../../action/updateSubCategoryActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -40,7 +40,8 @@ class UpdateSubCategoryComponent extends React.PureComponent {
             this.setState({
                 category_name: this.state.appData.subcategory_name,
                 icon: this.state.appData.icon,
-                cat_id:this.state.appData.cat_id
+                cat_id:this.state.appData.cat_id,
+                subcat_id:this.state.appData.subcat_id
             })
         });
         this.setState({
@@ -53,14 +54,15 @@ class UpdateSubCategoryComponent extends React.PureComponent {
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
                     this.setState({
-                        icon: nextProps.doUploadAppIconRes.data.uploadAppIcon.imageurl
+                        icon: nextProps.doUploadAppIconRes.data.uploadAppIcon.imageurl,
+                        iconName:nextProps.doUploadAppIconRes.data.uploadAppIcon.path
                     });
 				}
 			}
         }
         if(nextProps.updateAppRes){       
-            if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateCategory ){
-                if(nextProps.updateAppRes.data.updateCategory && nextProps.updateAppRes.data.updateCategory.success === true){
+            if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateSubCategory ){
+                if(nextProps.updateAppRes.data.updateSubCategory && nextProps.updateAppRes.data.updateSubCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
@@ -77,20 +79,24 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         }
     }
     handleBack = () => {
-        this.props.history.push('/subcategory-list');
+        this.props.history.push({
+            pathname: '/subcategory-list',
+            state: {appData: this.state.cat_id}
+          });
     }
 
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
+          isLoader:true
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
             let payloadReq = {
-                parent_id: this.state.cat_id,
-                category_name: this.state.category_name,
-                icon: this.state.icon,
+                subcat_id: this.state.subcat_id,
+                subcategory_name: this.state.category_name,
+                icon: this.state.icon
             }
             this.props.handleFormSubmit(payloadReq);
         }
@@ -165,6 +171,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
                                                     </div>
                                                     <div className="col-4">
                                                         <img src={this.state.icon} style={{width: 60, height: 60}} alt=""/>
+                                                        <span>{this.state.iconName}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -206,7 +213,7 @@ UpdateSubCategoryComponent.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-    updateAppRes: doUpdateAppRes,
+    updateAppRes: doUpdateSubAppRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
@@ -214,7 +221,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitUpdateCategory(data)),
+        handleFormSubmit: (data) => dispatch(submitUpdateSubCategory(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),

@@ -3,14 +3,14 @@ import {logout} from '../helper/helper';
 import UpdateSubCategoryApi from '../api/updateSubCategoryApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
-export function doUpdateApp(data) {
+export function doUpdateSubApp(data) {
   return {
     type: types.UPDATE_SUBCATEGORY,
     data
   };
 }
 
-export function doUpdateAppRes(data) {
+export function doUpdateSubAppRes(data) {
   return {
     type: types.UPDATE_SUBCATEGORY_RES,
     data
@@ -23,8 +23,7 @@ export function submitUpdateSubCategory(data) {
   if(TOKEN){
     return function(dispatch) {
       UpdateSubCategoryApi.doUpdateApp(data).then(data => {
-        dispatch(doUpdateAppRes(data));
-        dispatch(doUpdateAppRes(null));
+        dispatch(doUpdateSubAppRes(data));
         if(data.success === true){
           Swal.fire({
               title: 'Sub Category updated successfully',

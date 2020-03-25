@@ -24,7 +24,6 @@ export function uploadAppIcon(data) {
     return function(dispatch) {
       UploadAppIconApi.doUploadAppIcon(data).then(data => {
         dispatch(doUploadAppIconRes(data));
-        dispatch(doUploadAppIconRes(null));
         if(data.error){
           Swal.fire({
             title: data.message,

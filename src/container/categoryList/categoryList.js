@@ -67,6 +67,9 @@ class CategoryListComponent extends React.PureComponent {
         categoryList: itemArr
       });
     } else {
+      this.setState({
+        isLoader:true
+      });
       this.props.fetchcategoryList();
     }
   }
@@ -80,32 +83,24 @@ class CategoryListComponent extends React.PureComponent {
             categoryList: props.categoryListRes.data.categoryList.data,
             isLoader: false,
           });
-				}
+				}else{
+          this.setState({
+            categoryList: [],
+            isLoader: false,
+          });
+        }
 			}
     }
-    // if(props.doDeleteAppRes){
-      // if(props.doDeleteAppRes && props.doDeleteAppRes.data){
-      //   if(props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteCategoryList){
-      //     if(props.doDeleteAppRes.data.deleteCategoryList && props.doDeleteAppRes.data.deleteCategoryList.success===true && isDelete){
-      //       isDelete = false;
-      //       this.setState({
-      //         openDeleteAppModal: false,
-      //         isDisabled: false,
-      //       });
-      //       this.props.fetchAllApplication();
-      //     }
-      //   }
-      // }
-    // }
     if (props.doDeleteAppRes) {
-			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
-				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
+			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteCategoryList) {
+				if (props.doDeleteAppRes.data.deleteCategoryList.success && isDelete) {
           isDelete = false;
           this.setState({
             openDeleteAppModal: false,
             isDisabled: false,
+            isLoader:false
           });
-          this.props.fetchAllApplication();
+          this.props.fetchcategoryList();
 				}
 			}
     }
@@ -119,10 +114,11 @@ class CategoryListComponent extends React.PureComponent {
   deleteApp = () => {
     this.setState({
       isDisabled: true,
+      isLoader:true
     });
     isDelete = true;
     let payload = {
-      cat_id: this.state.cat_id
+      id: this.state.cat_id
     }
     this.props.deleteCategoryListRecord(payload);
   }

@@ -62,6 +62,9 @@ class SubCategoryListComponent extends React.PureComponent {
          let payloadReq = {
           cat_id: this.state.appData
         }
+        this.setState({
+          isLoader:true
+        })
         this.props.fetchsubCategoryList(payloadReq);
       });
     }else{
@@ -73,7 +76,10 @@ class SubCategoryListComponent extends React.PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    console.log("props check", props)
+    console.log("props check", props);
+    // this.setState({
+    //   isLoader:false
+    // })
     if (props.subCategoryListRes) {
 			if (props.subCategoryListRes.data && props.subCategoryListRes.data.subCategoryList) {
 				if (props.subCategoryListRes.data.subCategoryList.success===true) {
@@ -81,18 +87,29 @@ class SubCategoryListComponent extends React.PureComponent {
             subCategoryList: props.subCategoryListRes.data.subCategoryList.data,
             isLoader: false,
           });
-				}
+				}else{
+          this.setState({
+            isLoader:false,
+            subCategoryList:[]
+          })
+        }
 			}
     }
     if (props.doDeleteAppRes) {
-			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
-				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
+			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteCategoryList) {
+				if (props.doDeleteAppRes.data.deleteCategoryList.success && isDelete) {
           isDelete = false;
           this.setState({
             openDeleteAppModal: false,
             isDisabled: false,
           });
-          this.props.fetchAllApplication();
+          this.setState({
+            isLoader:true
+          })
+          let payloadReq = {
+            cat_id: this.state.appData
+          }
+          this.props.fetchsubCategoryList(payloadReq);
 				}
 			}
     }
@@ -130,14 +147,14 @@ class SubCategoryListComponent extends React.PureComponent {
     });
     isDelete = true;
     let payload = {
-      app_id: this.state.appId
+      id: this.state.appId
     }
-    this.props.deleteApplicationRecord(payload);
+    this.props.deleteSubCategoryListRecord(payload);
   }
 
   openDeleteApp = (rowData) => {
     this.setState({
-      appId: rowData.application_id,
+      appId: rowData.subcat_id,
       openDeleteAppModal: true,
     });
   }
@@ -187,12 +204,6 @@ class SubCategoryListComponent extends React.PureComponent {
                       <div className="col-sm-12 col-md-6">
                         <div className="heading_title">Sub Category List</div>
                       </div>
-                      {
-                        userRole == '1' &&
-                        <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
-                          <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Add</button>
-                        </div> 
-                      }
                     </div>
                     
                     <div className="row pl-pr-15px xs-pl-pr-0px">

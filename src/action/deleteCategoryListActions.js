@@ -24,7 +24,6 @@ export function deleteCategoryListRecord(data) {
     return function(dispatch) {
       DeleteCategoryListApi.doDeleteApp(data).then(data => {
         dispatch(doDeleteAppRes(data));
-        dispatch(doDeleteAppRes(null));
         if(data.error){
           Swal.fire({
             title: data.message,

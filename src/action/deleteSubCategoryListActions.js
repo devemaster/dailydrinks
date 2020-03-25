@@ -5,14 +5,14 @@ import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
 export function doDeleteApp(data) {
   return {
-    type: types.DELETE_SUBCATEGORYLIST,
+    type: types.DELETE_CATEGORYLIST,
     data
   };
 }
 
 export function doDeleteAppRes(data) {
   return {
-    type: types.DELETE_SUBCATEGORYLIST_RES,
+    type: types.DELETE_CATEGORYLIST_RES,
     data
   };
 }
@@ -24,7 +24,6 @@ export function deleteSubCategoryListRecord(data) {
     return function(dispatch) {
       DeleteSubCategoryListApi.doDeleteApp(data).then(data => {
         dispatch(doDeleteAppRes(data));
-        dispatch(doDeleteAppRes(null));
         if(data.error){
           Swal.fire({
             title: data.message,

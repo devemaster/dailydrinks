@@ -15,7 +15,7 @@ class UpdateSubCategoryApi {
                 headers: ajaxRequestHeaders,
                 body: JSON.stringify(data)
             }
-            return fetch(BASE_URL + '/updateCategories', body).then(response => {
+            return fetch(BASE_URL + '/updateSubCategories', body).then(response => {
                 if (response.status === 401) {
                     localStorage.clear();
                     window.location.href = '/';

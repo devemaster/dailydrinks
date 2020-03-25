@@ -393,7 +393,7 @@ class ContentListComponent extends React.PureComponent {
                     {
                       this.state.categoryList.map((item) => 
                         item.parent_id == 0 &&                                            
-                        <optgroup>
+                        <optgroup class="optGroupTop">
                         <option className="optionGroup" value={item.id}>{item.name}
                         </option>    
                         {

@@ -39,6 +39,7 @@ class UpdateCategoryComponent extends React.PureComponent {
             appData: appDetails, 
         }, () => {
             this.setState({
+                cat_id:this.state.appData.cat_id,
                 category_name: this.state.appData.category_name,
                 icon: this.state.appData.icon,
                 // countries: this.state.appData.selected_countries
@@ -50,34 +51,9 @@ class UpdateCategoryComponent extends React.PureComponent {
     }
     componentWillReceiveProps(nextProps) {
         console.log("Props cat", nextProps)
-        // if(nextProps.doAllCountryRes){
-        //     if(nextProps.doAllCountryRes.data.countryList ){
-        //         if(nextProps.doAllCountryRes.data.countryList.success === true){
-        //             this.setState({
-        //                 countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-        //             }, () => {
-        //                 // if (this.state.countries !== '') {
-        //                 //     let selectedcn = [];
-        //                 //     let countryD = this.state.countries.split(',');
-        //                 //     for (let item of this.state.countryList) {
-        //                 //         for (let cn of countryD) {
-        //                 //             if (cn === item.country_name) {
-        //                 //                 selectedcn.push({
-        //                 //                     value: item.country_name,
-        //                 //                     label: item.country_name,
-        //                 //                     original: item
-        //                 //                 })
-        //                 //             }
-        //                 //         }
-        //                 //     }
-        //                 //     this.setState({
-        //                 //         selectedCountry: selectedcn,
-        //                 //     });
-        //                 // }
-        //             });
-        //         }
-        //     }
-        // }
+        this.setState({
+            isLoader:false
+        })
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -108,12 +84,13 @@ class UpdateCategoryComponent extends React.PureComponent {
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
+          isLoader:true
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
         if (Object.keys(errors).length === 0) {
             let payloadReq = {
-                parent_id: 0,
+                cat_id: this.state.cat_id,
                 category_name: this.state.category_name,
                 icon: this.state.icon,
             }
@@ -126,6 +103,9 @@ class UpdateCategoryComponent extends React.PureComponent {
         });
     }
     handleFileChange = (e) => {
+        this.setState({
+            isLoader:true
+        })
         this.setState({
             file: e.target.files
         });
