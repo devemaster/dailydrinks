@@ -15,6 +15,8 @@ import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
+
+import {FileUpload} from 'primereact/fileupload';
 class UpdateCategoryComponent extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -28,7 +30,8 @@ class UpdateCategoryComponent extends React.PureComponent {
             usersList: [],
             selectedCountry: null,
             file: null,
-            appData: null
+            appData: null,
+            iconName:'Choos Icon'
         }
     }
     componentDidMount() {
@@ -38,10 +41,13 @@ class UpdateCategoryComponent extends React.PureComponent {
         this.setState({
             appData: appDetails, 
         }, () => {
+             let iconNameArr =    this.state.appData.icon.split('/');
+             console.log(iconNameArr)
             this.setState({
                 cat_id:this.state.appData.cat_id,
                 category_name: this.state.appData.category_name,
                 icon: this.state.appData.icon,
+                iconName:iconNameArr[3]
                 // countries: this.state.appData.selected_countries
             })
         });
@@ -111,6 +117,30 @@ class UpdateCategoryComponent extends React.PureComponent {
         });
         this.props.uploadImage(e.target.files);
     }
+    fileUploadProcess= () =>{
+        console.log("hello");
+        this.setState({
+            isLoader:true
+        })
+    }
+    onBasicUploadAuto = (event) => {
+        this.setState({
+            isLoader:false
+        })
+        let response = JSON.parse(event.xhr.response)
+        if(response.success === true){
+            this.setState({
+                iconName:response.path,
+                icon:response.imageurl,
+                iconError: ''
+            })
+        }else{
+            this.setState({
+                iconError:response.message
+            })
+        }
+        // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+    }
     // countryChange = (item) => {
     //     this.setState({
     //         selectedCountry: item,
@@ -163,7 +193,8 @@ class UpdateCategoryComponent extends React.PureComponent {
                                                     <div className="col-8">
                                                         <div className="mt-2">
                                                             <div className="form-group">
-                                                                <input type="file" className="form-control" name="icon" accept="image/*" onChange={(e) => this.handleFileChange(e)} />
+                                                                <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="icon" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.iconName} />
+                                                                
                                                                 {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
                                                             </div>
                                                         </div>

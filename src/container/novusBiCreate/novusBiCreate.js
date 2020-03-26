@@ -12,6 +12,7 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
+import {FileUpload} from 'primereact/fileupload';
 import Select from 'react-select';
 class NovusBiCreateComponent extends React.PureComponent {
     _isMounted = false;
@@ -28,7 +29,8 @@ class NovusBiCreateComponent extends React.PureComponent {
             selectedCountry: null,
             selectedUser: null,
             file: null,
-            categoryTitle:'Create Category'
+            categoryTitle:'Create Category',
+            iconName:'Choos Icon'
         }
     }
     componentDidMount() {
@@ -53,6 +55,9 @@ class NovusBiCreateComponent extends React.PureComponent {
         });
     }
     componentWillReceiveProps(nextProps) {
+        this.setState({
+            isLoader: false
+        });
         console.log("Check nextProps", nextProps)
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
@@ -95,6 +100,7 @@ class NovusBiCreateComponent extends React.PureComponent {
         console.log("hello")
         this.setState({
           isSubmited: true,
+          isLoader:true
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
@@ -106,6 +112,30 @@ class NovusBiCreateComponent extends React.PureComponent {
             }
             this.props.handleFormSubmit(payloadReq);
         // }
+    }
+    fileUploadProcess= () =>{
+        console.log("hello");
+        this.setState({
+            isLoader:true
+        })
+    }
+    onBasicUploadAuto = (event) => {
+        this.setState({
+            isLoader:false
+        })
+        let response = JSON.parse(event.xhr.response)
+        if(response.success === true){
+            this.setState({
+                iconName:response.path,
+                icon:response.imageurl,
+                iconError: ''
+            })
+        }else{
+            this.setState({
+                iconError:response.message
+            })
+        }
+        // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
     handleChange = (e) => {
         this.setState({
@@ -169,10 +199,17 @@ class NovusBiCreateComponent extends React.PureComponent {
                                                 </div>
                                             </div>
                                             <div className="col-6">
-                                                <div className="mt-2">
-                                                    <div className="form-group">
-                                                        <input type="file" className="form-control" name="icon" accept="image/*" onChange={(e) => this.handleFileChange(e)} />
-                                                        {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
+                                                <div className="row">
+                                                    <div className="col-8">
+                                                        <div className="mt-2">
+                                                            <div className="form-group">
+                                                            <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="icon" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.iconName} />
+                                                            {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-4">
+                                                        <img src={this.state.icon} style={{width: 60, height: 60}} alt=""/>
                                                     </div>
                                                 </div>
                                             </div>
