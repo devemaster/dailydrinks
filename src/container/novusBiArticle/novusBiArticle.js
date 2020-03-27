@@ -236,7 +236,7 @@ class NovusBiArticleComponent extends React.PureComponent {
 			}
         }
         if(nextProps.ArticleAppRes){
-            if(nextProps.ArticleAppRes.data.ArticleApplication ){
+            if(nextProps.ArticleAppRes.data.novusBiArticle ){
                 if(nextProps.ArticleAppRes.data.novusBiArticle.success === true){
                     console.log("success")
                     this.setState({
