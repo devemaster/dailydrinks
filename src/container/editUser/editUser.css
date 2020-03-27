@@ -102,3 +102,6 @@
     margin-top: 40px;
     font-weight: 500;
 }
+td.tableCols {
+    text-align: center !important;
+}

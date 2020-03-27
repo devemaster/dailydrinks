@@ -305,7 +305,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 heighlight:this.state.heighlight,
                 resume:this.state.resume,
                 comment:this.state.comment,
-                pdf:this.state.pdf
+                pdf:this.state.pdf,
+                pdfName:this.state.pdf
             }
             this.props.handleFormSubmit(payloadReq);
         // }

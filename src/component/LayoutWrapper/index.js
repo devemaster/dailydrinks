@@ -10,10 +10,26 @@ import { getItem } from '../../utils/localStore';
 // import loaderImg from '../../assets/images/loader-example.gif';
 import logoImg from '../../assets/images/novusone-logo.png';
 import { doUserAllRes } from '../../action/userActions';
+import Swal from 'sweetalert2';
 
 export function logout() {
-    localStorage.clear();
-    window.location.href = '/';
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to be signout",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.value) {
+
+          localStorage.clear();
+            window.location.href = '/';
+        }
+      })
+
+    
 }
 
 let page="";

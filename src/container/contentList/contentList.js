@@ -259,11 +259,23 @@ class ContentListComponent extends React.PureComponent {
     let cat =data.categories_name.split(',');
     return (
       <ul className="status_main_bx">
-          {cat.map((item) => 
-            <li onClick={() => this.selectCatButton(item)}>{item}</li>
+          {cat.map((item,key) => 
+            <li key={key} onClick={() => this.selectCatButton(item)}>{item}</li>
           )}    
       </ul>
     );
+  }
+
+  catTemplate = (option) =>{
+    if(option.parent_id == 0 ){
+      return (<div className="p-clearfix optionGroup">
+          <span style={{float:'left',fontWeight:'bold', margin:'.5em .25em 0 0'}}>{option.name}</span>
+      </div>)
+    }if(option.parent_id != 0 ){
+      return (<div className="p-clearfix optionChild">
+          <span style={{float:'left', margin:'.5em .25em 0 0'}}>{option.name}</span>
+      </div>)
+    }
   }
 
   adminActionTemplate = (rowData) => {
@@ -380,33 +392,9 @@ class ContentListComponent extends React.PureComponent {
                       }
                     </div>
 
+                    <Dropdown  className="all_sec_dropdown"  optionLabel="name" optionValue="name"  options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="Select a Type"/>
                     
-                    <select className="all_sec_dropdown form-control" onChange={(e) => {this.setState({allContent: e.value})}} placeholder="All Content">
-                      {
-                        allContent.map((item) =>
-                          <option value={item.name}>{item.name}</option>
-                        )
-                      }
-                    </select> 
-                    <select className="all_sec_dropdown form-control" name="filterCat" onChange={this.selectCatChange} placeholder="Select Category">
-                    <option  value="">All</option>
-                    {
-                      this.state.categoryList.map((item) => 
-                        item.parent_id == 0 &&                                            
-                        <optgroup class="optGroupTop">
-                        <option className="optionGroup" value={item.id}>{item.name}
-                        </option>    
-                        {
-                          this.state.categoryList.map((itemsub) => 
-                          itemsub.parent_id == item.id &&
-                          <option className="optionChild" value={itemsub.id}>{itemsub.name}</option>
-                          )
-                        }
-                        </optgroup>
-                      )
-                    }
-                      
-                    </select>
+                    <Dropdown  className="all_sec_dropdown "   optionLabel="name" optionValue="id"  options={this.state.categoryList} onChange={this.selectCatChange} itemTemplate={this.catTemplate} placeholder="Select a Category"/>
 
                     
                     <div className="row pl-pr-15px xs-pl-pr-0px">
