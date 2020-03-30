@@ -520,7 +520,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                                 <img src={editorVal.name} style={{"maxWidth":"200px"}} />
                                                             }
                                                             <br /><br />
-                                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
+                                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
                                                             
                                                         </div>
                                                         
@@ -577,7 +577,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                         <div className="image_uploader_main">
                                             <i className="fa fa-music upload_icon"></i>
                                             <br /><br />
-                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
                                             
                                         </div>
                                         
@@ -661,7 +661,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
                                                     
-                                                    <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="pdf" url="http://13.90.215.196:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.pdfName} />
+                                                    <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="pdf" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.pdfName} />
                                                     {
                                                         this.state.pdfError !== '' &&
                                                         <span style={{'color':'red'}}>{this.state.pdfError}</span>

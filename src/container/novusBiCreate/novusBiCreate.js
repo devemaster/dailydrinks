@@ -203,7 +203,7 @@ class NovusBiCreateComponent extends React.PureComponent {
                                                     <div className="col-8">
                                                         <div className="mt-2">
                                                             <div className="form-group">
-                                                            <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="icon" url="http://13.90.215.196:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.iconName} />
+                                                            <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="icon" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadAuto} auto={true} chooseLabel={this.state.iconName} />
                                                             {errors && isSubmited && <span className="error-message">{errors.icon}</span>}
                                                             </div>
                                                         </div>
