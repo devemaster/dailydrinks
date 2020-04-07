@@ -120,4 +120,7 @@
         text-align: center;
         border-top: 0 none
     }
+    td.tableCols, th.tableCols {
+        text-align: left !important;
+    }
 }

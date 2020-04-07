@@ -7,6 +7,8 @@ import { compose } from 'redux';
 import { DataTable } from 'primereact/components/datatable/DataTable';
 import { Column } from 'primereact/components/column/Column';
 import './subCategoryList.scss';
+
+import BackIcon from '../../assets/images/icon-left.svg';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchsubCategoryList, getsubCategoryListRes } from '../../action/subCategoryListActions';
 import { deleteSubCategoryListRecord, doDeleteAppRes } from '../../action/deleteSubCategoryListActions';
@@ -133,7 +135,9 @@ class SubCategoryListComponent extends React.PureComponent {
       state: {appData: rowData}
     })
   }
-
+  handleBack = () => {
+    this.props.history.push('/category-list');
+}
 
   createApp(){
     this.props.history.push('/novus-bi-create')
@@ -201,6 +205,12 @@ class SubCategoryListComponent extends React.PureComponent {
                 <div className="col-md-12 customertabpanel">
                   <div className="administration_tab">
                     <div  className="row pl-pr-15px xs-pl-pr-0px">
+                      <div className="col-sm-12 col-md-6">
+                        <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
+                            <img src={BackIcon} alt="" className="createprofile_back_icon" />
+                            <span className="createprofile_go_back">Back to Category</span>
+                        </div>
+                      </div>
                       <div className="col-sm-12 col-md-6">
                         <div className="heading_title">Sub Category List</div>
                       </div>

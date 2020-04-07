@@ -178,7 +178,7 @@ class NovusBiCreateComponent extends React.PureComponent {
                 <LayoutWrapper title="Create Category" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
                         <div className="edit_profile_content_wrapper">
-                            <div className="createprofile_heading">
+                            <div className="createprofile_heading"> 
                                 <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
                                     <img src={BackIcon} alt="" className="createprofile_back_icon" />
                                     <span className="createprofile_go_back">Back to Category</span>

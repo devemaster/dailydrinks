@@ -45,6 +45,7 @@ class ContentListComponent extends React.PureComponent {
       renderUI: false,
       openDeleteAppModal: false,
       isDisabled: false,
+      dumCat:[]
 
     }
     this.actionTemplate = this.actionTemplate.bind(this);
@@ -76,7 +77,30 @@ class ContentListComponent extends React.PureComponent {
         if(props.allCategoryListRes.data.allCategoryList ){
             if(props.allCategoryListRes.data.allCategoryList.success === true){
                 this.setState({
-                    categoryList: props.allCategoryListRes.data.allCategoryList.data
+                  dumCat: props.allCategoryListRes.data.allCategoryList.data
+                },()=>{
+                  let cats = [];
+                  let mats = []
+                  for(let c of this.state.dumCat){
+                      if(c.parent_id == '0'){
+                        cats.push(c)
+                      }else{
+                        mats.push(c)
+                      }
+                  }
+                  for(let c of cats){
+                    let dts = []
+                    for(let k of mats){
+                      if(c.id == k.parent_id){
+                        dts.push(k);
+                      }
+                    }
+                    c.child = dts;
+                  }
+                  this.setState({
+                    categoryList : cats
+                  })
+                  console.log(this.state.categoryList)
                 });
             }
         }
@@ -267,15 +291,20 @@ class ContentListComponent extends React.PureComponent {
   }
 
   catTemplate = (option) =>{
-    if(option.parent_id == 0 ){
-      return (<div className="p-clearfix optionGroup">
+    return (
+      <div>
+        <div className="p-clearfix optionGroup">
           <span style={{float:'left',fontWeight:'bold', margin:'.5em .25em 0 0'}}>{option.name}</span>
-      </div>)
-    }if(option.parent_id != 0 ){
-      return (<div className="p-clearfix optionChild">
-          <span style={{float:'left', margin:'.5em .25em 0 0'}}>{option.name}</span>
-      </div>)
-    }
+        </div>
+        {option.child.map((item)=>
+          <div className="p-clearfix optionChild">
+          <span style={{float:'left', margin:'.5em .25em 0 0'}}>{item.name}</span>
+        </div>
+          )
+        }
+    </div>
+    
+    )
   }
 
   adminActionTemplate = (rowData) => {
