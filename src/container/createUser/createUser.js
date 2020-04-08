@@ -403,7 +403,7 @@ class CreateUserComponent extends React.PureComponent {
         });
       };
     notifydelete = () => {  
-        console.log("&&&&&&&&")
+        // console.log("&&&&&&&&")+
     toast.success("User couldn't access this app", {
         position: toast.POSITION.BOTTOM_RIGHT,
     });
