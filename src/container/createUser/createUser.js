@@ -55,6 +55,8 @@ class CreateUserComponent extends React.PureComponent {
             selectedUserList: [],
             openErrorModal: false,
             showPasshword: false, 
+            openDeleteAppModal:false,
+            isDisabled:false
         }
         this.handleKeypress = this.handleKeypress.bind(this)
     }
@@ -146,6 +148,8 @@ class CreateUserComponent extends React.PureComponent {
             if(nextProps.checkUserRes.data.checkUser ){
                 if(nextProps.checkUserRes.data.checkUser.success === true && isUserAvailable) {
                     isUserAvailable = false;
+                    console.log("hello")
+                    this.notify();
                     this.setState({
                         isLoader: false
                     });
@@ -252,6 +256,10 @@ class CreateUserComponent extends React.PureComponent {
                     });
                 }
             } else {
+                console.log("hello")
+                toast.success("User can now access this app", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                  });
                 setTimeout(() => { this.setState({
                     isLoader: false
                 }); }, 3000);
@@ -364,19 +372,36 @@ class CreateUserComponent extends React.PureComponent {
             
         }
     }
+    cancelDeleteApp = () => {
+        this.setState({
+          openDeleteAppModal: false,
+        });
+      }
+    openDeleteApp = (rowData) => {
+        this.setState({
+            remData: rowData,
+            openDeleteAppModal: true,
+        });
+    }
 
     removeApproved = (data) => {
         if(this.state.selectedUserList.length == 1){
             this.setState({ 
-                selectedUserList: []
-            },()=>{ })
-        }else{
+                selectedUserList: [],
+                openDeleteAppModal:false
+            },()=>{
+                this.notifydelete()
+             })
+        } else {
+            var index = this.state.selectedUserList.indexOf(this.state.remData)
+            let removeData = this.state.selectedUserList.slice(0, index).concat(this.state.selectedUserList.slice(index + 1, this.state.selectedUserList.length));
             
-            var index = this.state.selectedUserList.indexOf(data);
-            let filteredItems = this.state.selectedUserList.slice(0, index).concat(this.state.selectedUserList.slice(index + 1, this.state.selectedUserList.length));
             this.setState({ 
-                selectedUserList: filteredItems
-            },()=>{ });
+                selectedUserList: removeData,
+                openDeleteAppModal:false
+            },()=>{ 
+                this.notifydelete()
+            })
         }
     }
 
@@ -398,16 +423,17 @@ class CreateUserComponent extends React.PureComponent {
         },()=>{ })
     }
     notify = () => {  
+        
         toast.success("User can now access this app", {
-          position: toast.POSITION.BOTTOM_RIGHT,
+            position: toast.POSITION.BOTTOM_RIGHT,
         });
-      };
-    notifydelete = () => {  
-        console.log("&&&&&&&&")
-    toast.success("User couldn't access this app", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-    });
     };
+  notifydelete = () => {  
+      console.log("&&&&&&&&")
+  toast.error("User couldn't access this app", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+  });
+  };
     render() {
         const Header = (<div className="offer_head">Create User</div>);
         
@@ -663,6 +689,34 @@ class CreateUserComponent extends React.PureComponent {
                                             </div>
                                         </div>
                                     </Modal>
+                                    <Modal open={this.state.openDeleteAppModal} onClose={this.cancelDeleteApp} center>
+                                    <div className="delete-user-modal">
+                                    <div className="row" >
+                                        <div className="delete-user-header"> Are you sure you want to delete </div>
+                                    </div>
+                                    <div className="row" style={{width: 500}}>
+                                    </div>
+                                    <div className="row text_center" style={{marginTop: 30}}>
+                                        <div className="col-6 col-md-6 col-sm-6" style={{textAlign: 'right'}}>
+                                        <button
+                                            className="btn delete-user-yes-btn"
+                                            onClick={() => this.removeApproved() }
+                                            disabled={this.state.isDisabled}
+                                        >
+                                            Yes
+                                        </button>
+                                        </div>
+                                        <div className="col-6 col-md-6 col-sm-6">
+                                        <button
+                                            className="btn delete-user-no-btn"
+                                            onClick={() => this.cancelDeleteApp() }
+                                        >
+                                            No
+                                        </button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </Modal>
                                     <div>
                                         <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
                                     </div>

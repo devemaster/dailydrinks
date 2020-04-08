@@ -10,7 +10,7 @@ import Modal from "react-responsive-modal";
 import './users.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { getAllUsers, doUserAllRes } from '../../action/userActions';
-import { updateUserStatus, doUserApprovedRes } from '../../action/approvedUserActions';
+import { updateUserStatus, doUserApprovedRes } from '../../action/approvedUserActions'; 
 import { deleteUserDetails, doDeleteUserRes } from '../../action/deleteUserActions';
 import { fetchAllApplication, getAllApplicationRes } from '../../action/applicationActions';
 import { approveAppUser, doUserApproveAppRes } from '../../action/approveUserAppActions';
