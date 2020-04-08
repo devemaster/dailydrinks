@@ -408,7 +408,7 @@ class CreateUserComponent extends React.PureComponent {
     actionTemplate = (rowData) => {
         return (
             <div style={{textAlign: 'center'}}>
-                <button className="btn btn-delete-create-user" onClick={() => this.removeApproved(rowData) && this.notifydelete()} 
+                <button className="btn btn-delete-create-user" onClick={() => this.openDeleteApp(rowData) } 
 
                  >
                     <i className="fa fa-trash" aria-hidden="true"></i>
@@ -650,7 +650,7 @@ class CreateUserComponent extends React.PureComponent {
                                                         <button
                                                         onClick={() => {
                                                             this.addApproved();
-                                                            this.notify();
+                                                            // this.notify();
                                                         }} 
                                                         className="btn addmore-btn mt0">ADD</button>
                                                     }
@@ -723,6 +723,8 @@ class CreateUserComponent extends React.PureComponent {
                                 </div>
                             </div>
                         </div>
+                        
+                    <ToastContainer />
                     </div>
                 </Loader>
             </LayoutWrapper>
