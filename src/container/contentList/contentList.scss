@@ -310,3 +310,42 @@ select.all_sec_dropdown.form-control {
     border: 1px solid #c8c8c8 !important;
     border-bottom: none !important;
 }
+ul.selectbox {
+    display: inline-flex;
+    list-style: none;
+    padding: 3px 5px 7px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    position:relative;
+}
+.selectbox >li>a > i.fa.fa-angle-down {
+    margin-left: 36px;
+    font-size: 25px;
+    color: gray;
+    font-weight: bold;
+}
+ul.subItem {
+    position: absolute;
+    z-index: 100;
+    background: #fff;
+    border: 1px solid lightgray;
+    margin-top: 8px;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    list-style: none;
+}
+ul.subSubItem {
+    list-style: none;
+    padding-left: 12px;
+}
+.subItem a {
+    border-bottom: 1px solid #f7f7f7;
+    display: block;
+    padding: 5px;
+    color: #565656 !important;
+    cursor: pointer;
+    font-size: 16px;
+}

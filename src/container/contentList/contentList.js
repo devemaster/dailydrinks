@@ -45,7 +45,8 @@ class ContentListComponent extends React.PureComponent {
       renderUI: false,
       openDeleteAppModal: false,
       isDisabled: false,
-      dumCat:[]
+      dumCat:[],
+      showSubCat:false
 
     }
     this.actionTemplate = this.actionTemplate.bind(this);
@@ -297,7 +298,7 @@ class ContentListComponent extends React.PureComponent {
           <span style={{float:'left',fontWeight:'bold', margin:'.5em .25em 0 0'}}>{option.name}</span>
         </div>
         {option.child.map((item)=>
-          <div className="p-clearfix optionChild">
+        <div className="p-clearfix optionChild">
           <span style={{float:'left', margin:'.5em .25em 0 0'}}>{item.name}</span>
         </div>
           )
@@ -326,13 +327,39 @@ class ContentListComponent extends React.PureComponent {
   selectCatButton = (e)=>{
     const cats = [];
     console.log(e)
+    this.setState({
+      contentList:this.state.backupContentList
+    },()=>{
+      if(e == ''){
+        this.setState({
+          contentList:this.state.backupContentList
+        })
+      }else{
+        for(let item of this.state.contentList){
+          let vals = item.categories_name.split(',');
+          console.log(vals)
+          if(vals.includes(e)){
+            cats.push(item);
+          }
+          this.setState({
+            contentList:cats
+          })
+        }
+      }
+    })
+    
+  }
+  selectCatChange = (e) =>{
+    const cats = [];
+    this.setState({showSubCat :false}) 
+    console.log(e)
     if(e == ''){
       this.setState({
         contentList:this.state.backupContentList
       })
     }else{
       for(let item of this.state.contentList){
-        let vals = item.categories_name.split(',');
+        let vals = item.categories.split(',');
         console.log(vals)
         if(vals.includes(e)){
           cats.push(item);
@@ -342,37 +369,25 @@ class ContentListComponent extends React.PureComponent {
         })
       }
     }
-  }
-  selectCatChange = (e) =>{
-    const cats = [];
-    console.log(e.target.value)
-    if(e.target.value == ''){
-      this.setState({
-        contentList:this.state.backupContentList
-      })
-    }else{
-      for(let item of this.state.contentList){
-        let vals = item.categories.split(',');
-        console.log(vals)
-        if(vals.includes(e.target.value)){
-          cats.push(item);
-        }
-        this.setState({
-          contentList:cats
-        })
-      }
-    }
     
-    this.setState({allSection: e.target.value})
+    this.setState({allSection: e})
 
 
 
+  }
+  toggleBox = () =>{
+    this.setState({showSubCat : !this.state.showSubCat}) 
+  }
+  selectContentType = (e) =>{
+    console.log(e.name)
   }
   render() {
     const allContent = [
       {name: 'All Articles'},
+      {name: 'All Content'},
       {name: 'All Sounds'},
   ];
+  const { showSubCat } = this.state;
 
   const allSection = [
       {name: 'News'},
@@ -403,7 +418,7 @@ class ContentListComponent extends React.PureComponent {
     return (
       <div className="active_drop_menus">
       <Loader show={this.state.isLoader} message={spinner}>
-        <LayoutWrapper title="List of Content" header={Header} >
+        <LayoutWrapper title="List of Content" header={Header} click={()=>{this.hideCats()}}>
           <div className="application-list_content">
             <div className="customer_inner_content">
               <div  className="row pl-pr-15px xs-pl-pr-0px">
@@ -421,11 +436,44 @@ class ContentListComponent extends React.PureComponent {
                       }
                     </div>
 
-                    <Dropdown  className="all_sec_dropdown"  optionLabel="name" optionValue="name"  options={allContent} onChange={(e) => {this.setState({allContent: e.value})}} placeholder="Select a Type"/>
-                    
-                    <Dropdown  className="all_sec_dropdown "   optionLabel="name" optionValue="id"  options={this.state.categoryList} onChange={this.selectCatChange} itemTemplate={this.catTemplate} placeholder="Select a Category"/>
-
-                    
+                    <Dropdown  className="all_sec_dropdown"  optionLabel="name" optionValue="name"  options={allContent} onChange={(e) => {this.selectContentType(e.value)}} placeholder="Select a Type"/>
+                    <ul className="selectbox">
+                      <li>
+                        <a onClick={this.toggleBox}>
+                          Select Category
+                          <i className="fa fa-angle-down"></i>  
+                        </a>                   
+                        
+                          {showSubCat &&
+                            <ul className="subItem" >
+                            <li>
+                              <a className="optionGroup" id="" onClick={(e) => {this.selectCatChange(e.target.id)}}>All</a>
+                            </li>
+                            {
+                              this.state.categoryList.map((item,key)=>
+                              <li key={key}>
+                                <a id={item.id} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target.id)}} >
+                                  {item.name}
+                                </a>
+                                <ul className="subSubItem">
+                                {
+                                  item.child && item.child.map((sub,skey)=>
+                                  <li key={skey}>
+                                    <a id={sub.id} onClick={(f) => {this.selectCatChange(f.target.id)}}>
+                                      {sub.name}
+                                    </a>
+                                  </li>
+                                  )
+                                }
+                                </ul>
+                              </li>
+                              
+                              )
+                            }
+                            </ul>
+                          }                    
+                      </li> 
+                    </ul>
                     <div className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-12 tableheight advisor-tab-tableheight" style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 15 }}>
                         <DataTable value={contentList} header={tableHeader} globalFilter={this.state.globalFilter} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found" sortMode="multiple" editable={false} selection={this.state.wmsList} onSelectionChange={this.onSelectionChange} className="novus_datatable">

@@ -430,9 +430,9 @@ a{
     height: calc(100% - 80px);
     overflow: hidden;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 0px;
-}
+} */
 
 /* Track */
 ::-webkit-scrollbar-track {
