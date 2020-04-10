@@ -377,14 +377,15 @@ class CreateUserComponent extends React.PureComponent {
           openDeleteAppModal: false,
         });
       }
-    openDeleteApp = (rowData) => {
+      openDeleteApp = (rowData) => {
         this.setState({
             remData: rowData,
             openDeleteAppModal: true,
         });
     }
 
-    removeApproved = (data) => {
+
+    removeApproved = () => {
         if(this.state.selectedUserList.length == 1){
             this.setState({ 
                 selectedUserList: [],
@@ -408,9 +409,7 @@ class CreateUserComponent extends React.PureComponent {
     actionTemplate = (rowData) => {
         return (
             <div style={{textAlign: 'center'}}>
-                <button className="btn btn-delete-create-user" onClick={() => this.openDeleteApp(rowData) } 
-
-                 >
+                <button className="btn btn-delete-create-user" onClick={() => this.openDeleteApp(rowData)} >
                     <i className="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </div>
@@ -422,18 +421,17 @@ class CreateUserComponent extends React.PureComponent {
             showPasshword: !this.state.showPasshword
         },()=>{ })
     }
-    notify = () => {  
-        
+    notify = () => {    
         toast.success("User can now access this app", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
     };
-  notifydelete = () => {  
-      console.log("&&&&&&&&")
-  toast.error("User couldn't access this app", {
-      position: toast.POSITION.BOTTOM_RIGHT,
-  });
-  };
+    notifydelete = () => {  
+        //   console.log("&&&&&&&&")
+    toast.error("User couldn't access this app", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+    });
+    };
     render() {
         const Header = (<div className="offer_head">Create User</div>);
         
@@ -650,8 +648,7 @@ class CreateUserComponent extends React.PureComponent {
                                                         <button
                                                         onClick={() => {
                                                             this.addApproved();
-                                                            // this.notify();
-                                                        }} 
+                                                              }} 
                                                         className="btn addmore-btn mt0">ADD</button>
                                                     }
                                                 </div>
@@ -668,7 +665,7 @@ class CreateUserComponent extends React.PureComponent {
                                                     <Column className="tableCols" field="action" header="Action" body={this.actionTemplate}                                                      
                                                     style={{width: '130px'}} />
                                                 </DataTable>
-                                                <ToastContainer autoClose={3000} />
+                                               
                                             </div>
                                         </div>
                                     }
@@ -726,6 +723,7 @@ class CreateUserComponent extends React.PureComponent {
                         
                     <ToastContainer />
                     </div>
+                    <ToastContainer />
                 </Loader>
             </LayoutWrapper>
         )

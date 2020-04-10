@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import './editUser.css';
+import './createUser.css';
 import LayoutWrapper from '../../component/LayoutWrapper/';
-import { submitUpdateUser, doEditUserRes } from '../../action/editUserActions';
-import { getAllCountry, getAllState, getAllCity, doAllCountryRes, doAllCityRes, doAllStateRes } from '../../action/createUserActions';
+import { submitCreateUser, doCreateUserRes, getAllCountry, getAllState, getAllCity, doAllCountryRes, doAllCityRes, doAllStateRes } from '../../action/createUserActions';
 import { checkUserName, doCheckUserRes } from '../../action/checkUserActions';
 import { fetchAllApplication, getAllApplicationRes } from '../../action/applicationActions';
 import loaderImg from '../../assets/images/loader-example.gif';
@@ -22,28 +21,20 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 
-let isCountry = false;
-let isState = false;
-let isCity = false;
-let isApplication = false;
 let userRole = getItem('userRoleId');
 let isUserAvailable = false;
+class CreateUserComponent extends React.PureComponent {
 
-class EditUserComponent extends React.PureComponent {
-
-    constructor() {
-        super();
-        isCountry = false;
-        isState = false;
-        isCity = false;
-        isApplication = false;
+    constructor(props) {
+        super(props);
         isUserAvailable = false;
         this.state = {
             isLoader: true,
-            userData: null,
             isSubmited: false,
+            isSubmitedUser: false,
             fullname: '',
             email: '',
+            password: '',
             company: '',
             address1: '',
             address2: '',
@@ -63,7 +54,7 @@ class EditUserComponent extends React.PureComponent {
             userName: '',
             selectedUserList: [],
             openErrorModal: false,
-            isSubmitedUser: false,
+            showPasshword: false, 
             openDeleteAppModal:false,
             isDisabled:false
         }
@@ -72,167 +63,78 @@ class EditUserComponent extends React.PureComponent {
     handleKeypress(e) {
         const characterCode = e.key
         if (characterCode === 'Backspace') return
-
+    
         const characterNumber = Number(characterCode)
         if (characterNumber >= 0 && characterNumber <= 9) {
             if (e.currentTarget.value && e.currentTarget.value.length) {
-            return
+              return
             } else if (characterNumber === 0) {
-            e.preventDefault()
+              e.preventDefault()
             }
             } else {
-            e.preventDefault()
+              e.preventDefault()
             }
         }
+        
     componentDidMount() {
         let userAppGroup = getItem('adminAppId');
         if (userAppGroup !== null) {
             this.setState({
+                isLoader: false,
                 applicationId: getItem('adminAppId'),
                 applicationName: getItem('adminAppName'),
+            });
+        } else {
+            this.setState({
+                isLoader: false,
             });
         }
         this.props.getAllCountry();
         this.props.fetchAllApplication();
-        isCountry = true;
-        isApplication = true;
-        const userDetails = this.props.location.state.userData;
-        this.setState({
-            userData: userDetails,
-        }, () => {
-            if (userRole == '2') {
-                if (this.state.userData.app_user.length > 0) {
-                    for (let item of this.state.userData.app_user) {
-                        item.application_name =  getItem('adminAppName');
-                    }
-                }
-            }
-            this.setState({
-                fullname: this.state.userData.fullname,
-                email: this.state.userData.email,
-                company: this.state.userData.company,
-                address1: this.state.userData.address1,
-                address2: this.state.userData.address2,
-                country: this.state.userData.country,
-                state: this.state.userData.state,
-                city: this.state.userData.city,
-                zipcode: this.state.userData.zipcode,
-                selectedUserList: this.state.userData.app_user,
-            })
-        });
-        this.setState({
-            isLoader: false,
-        });
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.allApplicationRes) {
 			if (nextProps.allApplicationRes.data && nextProps.allApplicationRes.data.applicationList) {
-				if (nextProps.allApplicationRes.data.applicationList.success===true  && isApplication) {
-                    isApplication = false;
+				if (nextProps.allApplicationRes.data.applicationList.success===true) {
                     this.setState({
                         applicationList: nextProps.allApplicationRes.data.applicationList.data
-                    }, () => {
-                        if (this.state.userData.app_user.length > 0) {
-                            let appUser = this.state.selectedUserList;
-                            for (let item of this.state.applicationList) {
-                                for (let items of appUser) {
-                                    if (Number(items.application_id) === item.application_id) {
-                                        items.application_name = item.application_name
-                                    }
-                                }
-                            }
-                            this.setState({
-                                selectedUserList: appUser,
-                            });
-                        }
                     });
                 }
             }
         }
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
-                if(nextProps.doAllCountryRes.data.countryList.success === true && isCountry){
-                    isCountry = false;
+                if(nextProps.doAllCountryRes.data.countryList.success === true){
                     this.setState({
                         countryList: nextProps.doAllCountryRes.data.countryList.countriesList
-                    }, () => {
-                        // this.state.countryList
-                        if (this.state.country !== '') {
-                            for (let item of this.state.countryList) {
-                                if (this.state.userData.country.toLowerCase() === item.country_name.toLowerCase()) {
-                                    const selectedCountryObject = {
-                                        value: item.id,
-                                        label: this.state.country,
-                                    };
-                                    this.setState({
-                                        selectedCountry: selectedCountryObject,
-                                    }, () => {});
-                                    this.props.getAllState(item.id);
-                                    isState = true;
-                                }
-                            }
-                        }
                     });
                 }
             }
         }
         if(nextProps.doAllStateRes){
             if(nextProps.doAllStateRes.data.stateList ){
-                if(nextProps.doAllStateRes.data.stateList.success === true && isState){
-                    isState = false;
+                if(nextProps.doAllStateRes.data.stateList.success === true){
                     this.setState({
                         stateList: nextProps.doAllStateRes.data.stateList.stateList
-                    }, () => {
-                        if (this.state.state !== '') {
-                            for (let item of this.state.stateList) {
-                                if (this.state.state.toLowerCase() === item.state_name.toLowerCase()) {
-                                    const selectedStateObject = {
-                                        value: item.state_id,
-                                        label: this.state.state,
-                                    };
-                                    this.setState({
-                                        selectedState: selectedStateObject,
-                                    }, () => {});
-                                    this.props.getAllCity(item.state_id)
-                                    isCity = true;
-                                }
-                            }
-                        }
                     });
                 }
             }
         }
         if(nextProps.doAllCityRes){
             if(nextProps.doAllCityRes.data.cityList ){
-                if(nextProps.doAllCityRes.data.cityList.success === true && isCity){
-                    isCity = false;
+                if(nextProps.doAllCityRes.data.cityList.success === true){
                     this.setState({
                         cityList: nextProps.doAllCityRes.data.cityList.citylist
-                    }, () => {
-                        if (this.state.city !== '') {
-                            for (let item of this.state.cityList) {
-                                if (this.state.city.toLowerCase() === item.city_name.toLowerCase()) {
-                                    const selectedCityObject = {
-                                        value: item.city_id,
-                                        label: this.state.city,
-                                    };
-                                    this.setState({
-                                        selectedCity: selectedCityObject,
-                                    }, () => {});
-                                }
-                            }
-                        }
                     });
                 }
             }
         }
-        if (nextProps.doEditUserRes) {
-			if (nextProps.doEditUserRes.data && nextProps.doEditUserRes.data.updateUser) {
-				if (nextProps.doEditUserRes.data.updateUser.success === true) {
+        if(nextProps.createUserRes){
+            if(nextProps.createUserRes.data.createUser ){
+                if(nextProps.createUserRes.data.createUser.success === true){
                     this.setState({
-                        isLoader: false,
+                        isLoader: false
                     });
                     this.props.history.push('/users');
                 } else {
@@ -242,13 +144,12 @@ class EditUserComponent extends React.PureComponent {
                 }
             }
         }
-        
         if(nextProps.checkUserRes){
             if(nextProps.checkUserRes.data.checkUser ){
                 if(nextProps.checkUserRes.data.checkUser.success === true && isUserAvailable) {
+                    isUserAvailable = false;
                     console.log("hello")
                     this.notify();
-                    isUserAvailable = false;
                     this.setState({
                         isLoader: false
                     });
@@ -267,7 +168,7 @@ class EditUserComponent extends React.PureComponent {
                                 }
                             }
                         }
-                        if (isTrue === 0) {
+                        if (isTrue == 0) {
                             let localArr = this.state.selectedUserList;
                             let appName = '';
                             if (userRole == '1') {
@@ -317,6 +218,7 @@ class EditUserComponent extends React.PureComponent {
                         } else {
                             appName = this.state.applicationName
                         }
+                        
                         localArr.push({
                             application_id: this.state.applicationId,
                             application_name: appName,
@@ -354,7 +256,10 @@ class EditUserComponent extends React.PureComponent {
                     });
                 }
             } else {
-                
+                console.log("hello")
+                toast.success("User can now access this app", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                  });
                 setTimeout(() => { this.setState({
                     isLoader: false
                 }); }, 3000);
@@ -368,21 +273,26 @@ class EditUserComponent extends React.PureComponent {
         });
     }
 
-    handleFormSubmit = () => {
+    handleBack = () => {
+        this.props.history.push('/users');
+    }
+
+    handleSubmit() {
         this.setState({
-            isSubmited: true,
+          isSubmited: true,
         }, () => { });
         validate(this.state);
         const errors = validate(this.state);
+        let selectedUsr = this.state.selectedUserList;
+        for (var i = 0; i < selectedUsr.length; i++) {
+            var o = selectedUsr[i];
+            delete o.application_name;
+          }
         if (Object.keys(errors).length === 0) {
-            let selectedUsr = this.state.selectedUserList;
-            for (var i = 0; i < selectedUsr.length; i++) {
-                var o = selectedUsr[i];
-                delete o.application_name;
-            }
             let payloadReq = {
-                user_id: this.state.userData.user_id,
                 fullname: this.state.fullname,
+                email: this.state.email,
+                password: this.state.password,
                 company: this.state.company,
                 address1: this.state.address1,
                 address2: this.state.address2,
@@ -390,16 +300,12 @@ class EditUserComponent extends React.PureComponent {
                 state: this.state.state,
                 city: this.state.city,
                 zipcode: this.state.zipcode,
-                create_user: selectedUsr,
+                create_user: selectedUsr
             }
             this.props.handleFormSubmit(payloadReq);
         }
     }
 
-    handleBack = () => {
-        this.props.history.goBack();
-    }
-    
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -409,25 +315,18 @@ class EditUserComponent extends React.PureComponent {
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
-            country: item.value,
-            selectedState:null,
-            selectedCity:null,
-            cityList:[],
-            stateList: []
+            country: item.value
         });
         this.props.getAllState(item.original.id)
-        isState = true; 
     }
 
     stateChange = (item) => {
         this.setState({
             selectedState: item,
-            state: item.value,
-            selectedCity:null,
-            cityList:[]
+            state: item.value
         });
         this.props.getAllCity(item.original.state_id)
-        isCity = true;
+
     }
 
     cityChange = (item) => {
@@ -445,14 +344,14 @@ class EditUserComponent extends React.PureComponent {
 
     validateUser(values) {
         const errors = {};
-        if (values.applicationId === '') {
+        if (values.applicationId == '') {
             errors.applicationId = 'Please select application';
         }
-        if (values.userName === '') {
+        if (values.userName == '') {
             errors.userName = 'Please enter username';
         }
         return errors;
-     }     
+    }
 
     addApproved = () => {
         this.setState({
@@ -460,7 +359,7 @@ class EditUserComponent extends React.PureComponent {
         }, () => { });
         this.validateUser(this.state);
         const errors = this.validateUser(this.state);
-
+          
         if (Object.keys(errors).length === 0) {
             let requestData = {
                 UserName: this.state.userName
@@ -471,7 +370,7 @@ class EditUserComponent extends React.PureComponent {
                 isLoader: true
             });
             
-        }        
+        }
     }
     cancelDeleteApp = () => {
         this.setState({
@@ -485,7 +384,7 @@ class EditUserComponent extends React.PureComponent {
         });
     }
 
-    removeApproved = () => {
+    removeApproved = (data) => {
         if(this.state.selectedUserList.length == 1){
             this.setState({ 
                 selectedUserList: [],
@@ -509,32 +408,41 @@ class EditUserComponent extends React.PureComponent {
     actionTemplate = (rowData) => {
         return (
             <div style={{textAlign: 'center'}}>
-                <button className="btn btn-delete-update-user" onClick={() => this.openDeleteApp(rowData)}>
+                <button className="btn btn-delete-create-user" onClick={() => this.openDeleteApp(rowData) } 
+
+                 >
                     <i className="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </div>
         )
     }
 
-    notify = () => {    
+    showHidePass = () => {
+        this.setState({
+            showPasshword: !this.state.showPasshword
+        },()=>{ })
+    }
+    notify = () => {  
+        
         toast.success("User can now access this app", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
     };
-    notifydelete = () => {  
-        //   console.log("&&&&&&&&")
-    toast.error("User couldn't access this app", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-    });
-    };
-
+  notifydelete = () => {  
+      console.log("&&&&&&&&")
+  toast.error("User couldn't access this app", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+  });
+  };
     render() {
-        const Header = (<div className="offer_head">Edit Customer</div>);        
+        const Header = (<div className="offer_head">Create User</div>);
+        
         const spinner = <span><img src={loaderImg} alt="" /></span>;
         const errors = validate(this.state);
         const errorsUser = this.validateUser(this.state);
         const { isSubmited, countryList, stateList, cityList, isSubmitedUser } = this.state;
 
+        // let countryListOptionsItems = [];
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -546,7 +454,6 @@ class EditUserComponent extends React.PureComponent {
                 );
             });
         }
-
         const stateListOptions = [];
         if (stateList && stateList.length > 0) {
             stateList.map((item) => {
@@ -558,7 +465,6 @@ class EditUserComponent extends React.PureComponent {
                 );
             });
         }
-
         const cityListOptions = [];
         if (cityList && cityList.length > 0) {
             cityList.map((item) => {
@@ -570,9 +476,8 @@ class EditUserComponent extends React.PureComponent {
                 );
             });
         }
-
         return (
-            <LayoutWrapper title="Update User" header={Header} >
+            <LayoutWrapper title="Create User" header={Header} >
                 <Loader show={this.state.isLoader} message={spinner}>
                     <div className="edit_profile_content_wrapper">
                         <div className="createprofile_heading">
@@ -580,17 +485,16 @@ class EditUserComponent extends React.PureComponent {
                                 <img src={BackIcon} alt="" className="createprofile_back_icon" />
                                 <span className="createprofile_go_back">Back to Users</span>
                             </div>
-                            <span className="offering_detail_title">Update User</span>
+                            <span className="offering_detail_title">Create User</span>
                         </div>
                         <div className="editprofile_content">
                             <div className="form_content_editprofile edit_profile_form_fields_wrapper">
-                                <div>
+                                <div >
                                     <div className="row">
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Full Name</label>
-                                                    <input type="text" className="form-control" placeholder="Enter full name" name="fullname" onChange={(e) => this.handleChange(e)} value={this.state.fullname} />
+                                                    <input type="text" className="form-control" placeholder="Enter full name" name="fullname" onChange={(e) => this.handleChange(e)} />
                                                     {errors && isSubmited && <span className="error-message">{errors.fullname}</span>}
                                                 </div>
                                             </div>
@@ -598,26 +502,47 @@ class EditUserComponent extends React.PureComponent {
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Email</label>
-                                                    <input type="email" className="form-control" placeholder="Enter email" name="email" onChange={(e) => this.handleChange(e)} value={this.state.email} disabled/>
+                                                    <input type="email" className="form-control" placeholder="Enter email" name="email" onChange={(e) => this.handleChange(e)} />
                                                     {errors && isSubmited && <span className="error-message">{errors.email}</span>}
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Company Name</label>
-                                                    <input type="text" className="form-control" placeholder="Enter company name" name="company" onChange={(e) => this.handleChange(e)} value={this.state.company} />
-                                                    {errors && isSubmited && <span className="error-message">{errors.company}</span>}
+                                                    <input type={this.state.showPasshword ? "text" : "password"} className="form-control" placeholder="Enter password" name="password" onChange={(e) => this.handleChange(e)} />
+                                                    {
+                                                        this.state.showPasshword &&
+                                                        <p onClick={this.showHidePass}>
+                                                            <i className="fa fa-eye eye_icon" aria-hidden="true"></i>
+                                                        </p>
+                                                    }
+                                                    {
+                                                        !this.state.showPasshword &&
+                                                        <span onClick={this.showHidePass}>
+                                                            <i className="fa fa-eye-slash eye_icon" aria-hidden="true"></i>
+                                                        </span>
+                                                    }
+                                                    {errors && isSubmited && <span className="error-message">{errors.password}</span>}
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Address 1</label>
-                                                    <input type="text" className="form-control" placeholder="Enter address 1" name="address1" onChange={(e) => this.handleChange(e)} value={this.state.address1}/>
+                                                    <input type="text" className="form-control" placeholder="Enter company name" name="company" onChange={(e) => this.handleChange(e)} />
+                                                    {errors && isSubmited && <span className="error-message">{errors.company}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <input type="text" className="form-control" placeholder="Enter address 1" name="address1" onChange={(e) => this.handleChange(e)} />
                                                     {errors && isSubmited && <span className="error-message">{errors.address1}</span>}
                                                 </div>
                                             </div>
@@ -625,26 +550,26 @@ class EditUserComponent extends React.PureComponent {
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Address 2</label>
-                                                    <input type="text" className="form-control" placeholder="Enter address 2" name="address2" onChange={(e) => this.handleChange(e)}  value={this.state.address2}/>
+                                                    <input type="text" className="form-control" placeholder="Enter address 2 (Optional)" name="address2" onChange={(e) => this.handleChange(e)} />
                                                     {errors && isSubmited && <span className="error-message">{errors.address2}</span>}
                                                 </div>
                                             
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Zip Code</label>
-                                                    <input type="number"  min='1' step='1' onKeyDown={this.handleKeypress} onkeydown="javascript: return event.keyCode == 69 ? false : true" className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} value={this.state.zipcode}/>
+                                                    <input type="number" min='1' step='1' onKeyDown={this.handleKeypress}className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} onkeydown="javascript: return event.keyCode == 69 ? false : true"/>
                                                     {errors && isSubmited && <span className="error-message">{errors.zipcode}</span>}
+                                                   
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>Country</label>
                                                     <Select
                                                         value={this.state.selectedCountry}
                                                         onChange={this.countryChange}
@@ -656,10 +581,11 @@ class EditUserComponent extends React.PureComponent {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>State</label>
                                                     <Select
                                                         value={this.state.selectedState}
                                                         onChange={this.stateChange}
@@ -674,7 +600,6 @@ class EditUserComponent extends React.PureComponent {
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <label>City</label>
                                                     <Select
                                                         value={this.state.selectedCity}
                                                         onChange={this.cityChange}
@@ -690,17 +615,7 @@ class EditUserComponent extends React.PureComponent {
                                     <div className="col-6 col-md-6 col-sm-12">
                                         <div className="row">
                                             <div className="col-5 col-md-5 col-sm-12">
-                                                {/* <div className="form-group">
-                                                    <select className="form-control" name="applicationId" onChange={(e) => this.createApproved(e)} value={this.state.applicationId}>
-                                                        <option value=''>Select Application</option>
-                                                        {
-                                                            (this.state.applicationList) && this.state.applicationList.map((opp, j) =>
-                                                                <option key={j} value={opp.application_id} disabled={opp.disabled}>{opp.application_name}</option>
-                                                            )
-                                                        }
-                                                    </select>
-                                                    {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.applicationId}</span>}
-                                                </div> */}
+                                                
                                                 {
                                                     userRole == '1' ?
                                                     <div className="form-group">
@@ -734,8 +649,9 @@ class EditUserComponent extends React.PureComponent {
                                                     {
                                                         <button
                                                         onClick={() => {
-                                                            this.addApproved()
-                                                        }}
+                                                            this.addApproved();
+                                                            // this.notify();
+                                                        }} 
                                                         className="btn addmore-btn mt0">ADD</button>
                                                     }
                                                 </div>
@@ -749,8 +665,10 @@ class EditUserComponent extends React.PureComponent {
                                                 <DataTable value={this.state.selectedUserList} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found">
                                                     <Column className="tableCols" field="application_name" header="Application Name" sortable style={{width: '280px'}}/>
                                                     <Column className="tableCols" field="user_name" header="User Name" sortable style={{width: '120px'}}/>
-                                                    <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '130px'}}/>
+                                                    <Column className="tableCols" field="action" header="Action" body={this.actionTemplate}                                                      
+                                                    style={{width: '130px'}} />
                                                 </DataTable>
+                                                <ToastContainer autoClose={3000} />
                                             </div>
                                         </div>
                                     }
@@ -758,7 +676,7 @@ class EditUserComponent extends React.PureComponent {
                                     <Modal open={this.state.openErrorModal} onClose={this.closeErrorModal} center>
                                         <div className="error-message-user-modal">
                                             <div className="row" >
-                                            {
+                                                {
                                                     userRole == '1' ?
                                                     <div className="error-message-user-header"> This application already selected please choose other application </div>
                                                     :
@@ -772,50 +690,51 @@ class EditUserComponent extends React.PureComponent {
                                         </div>
                                     </Modal>
                                     <Modal open={this.state.openDeleteAppModal} onClose={this.cancelDeleteApp} center>
-                                        <div className="delete-user-modal">
-                                        <div className="row" >
-                                            <div className="delete-user-header"> Are you sure you want to delete </div>
+                                    <div className="delete-user-modal">
+                                    <div className="row" >
+                                        <div className="delete-user-header"> Are you sure you want to delete </div>
+                                    </div>
+                                    <div className="row" style={{width: 500}}>
+                                    </div>
+                                    <div className="row text_center" style={{marginTop: 30}}>
+                                        <div className="col-6 col-md-6 col-sm-6" style={{textAlign: 'right'}}>
+                                        <button
+                                            className="btn delete-user-yes-btn"
+                                            onClick={() => this.removeApproved() }
+                                            disabled={this.state.isDisabled}
+                                        >
+                                            Yes
+                                        </button>
                                         </div>
-                                        <div className="row" style={{width: 500}}>
+                                        <div className="col-6 col-md-6 col-sm-6">
+                                        <button
+                                            className="btn delete-user-no-btn"
+                                            onClick={() => this.cancelDeleteApp() }
+                                        >
+                                            No
+                                        </button>
                                         </div>
-                                        <div className="row text_center" style={{marginTop: 30}}>
-                                            <div className="col-6 col-md-6 col-sm-6" style={{textAlign: 'right'}}>
-                                            <button
-                                                className="btn delete-user-yes-btn"
-                                                onClick={() => this.removeApproved() }
-                                                disabled={this.state.isDisabled}
-                                            >
-                                                Yes
-                                            </button>
-                                            </div>
-                                            <div className="col-6 col-md-6 col-sm-6">
-                                            <button
-                                                className="btn delete-user-no-btn"
-                                                onClick={() => this.cancelDeleteApp() }
-                                            >
-                                                No
-                                            </button>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </Modal>
+                                    </div>
+                                    </div>
+                                </Modal>
                                     <div>
-                                        <button onClick={() => this.handleFormSubmit()} className="btn btn-primary login_button" >Submit</button>
+                                        <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        
                     <ToastContainer />
+                    </div>
                 </Loader>
             </LayoutWrapper>
         )
     }
 }
 
-EditUserComponent.propTypes = {
+CreateUserComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
-    doEditUserRes: PropTypes.any,
+    createUserRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
     doAllCityRes: PropTypes.any,
     doAllStateRes: PropTypes.any,
@@ -824,17 +743,17 @@ EditUserComponent.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-    doEditUserRes: doEditUserRes,
+    createUserRes: doCreateUserRes,
     doAllCountryRes: doAllCountryRes,
     doAllCityRes: doAllCityRes,
     doAllStateRes: doAllStateRes,
-	allApplicationRes: getAllApplicationRes,
+    allApplicationRes: getAllApplicationRes,
     checkUserRes: doCheckUserRes,
 });
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleFormSubmit: (data) => dispatch(submitUpdateUser(data)),
+        handleFormSubmit: (data) => dispatch(submitCreateUser(data)),
         getAllCountry: () => dispatch(getAllCountry()),
         getAllState: (data) => dispatch(getAllState(data)),
         getAllCity: (data) => dispatch(getAllCity(data)),
@@ -844,4 +763,4 @@ function mapDispatchToProps(dispatch) {
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(EditUserComponent);
+export default compose(withConnect)(CreateUserComponent);

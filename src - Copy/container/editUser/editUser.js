@@ -516,17 +516,18 @@ class EditUserComponent extends React.PureComponent {
         )
     }
 
-    notify = () => {    
+    notify = () => {  
+        
         toast.success("User can now access this app", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
     };
-    notifydelete = () => {  
-        //   console.log("&&&&&&&&")
-    toast.error("User couldn't access this app", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-    });
-    };
+  notifydelete = () => {  
+      console.log("&&&&&&&&")
+  toast.error("User couldn't access this app", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+  });
+  };
 
     render() {
         const Header = (<div className="offer_head">Edit Customer</div>);        

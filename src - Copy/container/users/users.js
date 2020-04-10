@@ -337,7 +337,7 @@ class UsersComponent extends React.PureComponent {
 
   actionUpdateTemplate = (rowData) => {
     return (
-      <div style={{textAlign: 'left'}}>
+      <div style={{textAlign: 'center'}}>
         <button className="btn btn-edit-customer" onClick={() => { this.updateUser(rowData) }}><i className="fa fa-pencil" aria-hidden="true"></i></button>
         <button className="btn btn-delete-customer" onClick={() => { this.openDeleteModal(rowData) }}><i className="fa fa-trash" aria-hidden="true"></i></button>
       </div>
@@ -353,7 +353,7 @@ class UsersComponent extends React.PureComponent {
   }
 
   statusTemplate = (rowData) => {
-    return (<div style={{textAlign: 'left'}}>
+    return (<div style={{textAlign: 'center'}}>
       {
         rowData.status === 1 &&
         <div className="btn pending-status">Pending</div>
