@@ -319,12 +319,15 @@ ul.selectbox {
     margin-left: 5px;
     cursor: pointer;
     position:relative;
+    width: 210px;
 }
-.selectbox >li>a > i.fa.fa-angle-down {
-    margin-left: 36px;
-    font-size: 25px;
-    color: gray;
+.selectbox > li > a > i.fa.fa-caret-down {
+    font-size: 12px;
+    color: #000;
     font-weight: bold;
+    position: absolute;
+    right: 5px;
+    bottom: 12px;
 }
 ul.subItem {
     position: absolute;
@@ -348,4 +351,10 @@ ul.subSubItem {
     color: #565656 !important;
     cursor: pointer;
     font-size: 16px;
+}
+select.type_drop {
+    width: 160px;
+    padding: 2px 5px 8px;
+    border-color: lightgray;
+    border-radius: 3px;
 }

@@ -42,11 +42,14 @@ class ContentListComponent extends React.PureComponent {
       contentList: [],
       backupContentList:[],
       categoryList:[],
+      backupCat:[],
       renderUI: false,
       openDeleteAppModal: false,
       isDisabled: false,
       dumCat:[],
-      showSubCat:false
+      showSubCat:false,
+      selectCategory:'Select Category',
+      typeContent:''
 
     }
     this.actionTemplate = this.actionTemplate.bind(this);
@@ -99,7 +102,8 @@ class ContentListComponent extends React.PureComponent {
                     c.child = dts;
                   }
                   this.setState({
-                    categoryList : cats
+                    categoryList : cats,
+                    backupCat: cats
                   })
                   console.log(this.state.categoryList)
                 });
@@ -281,6 +285,7 @@ class ContentListComponent extends React.PureComponent {
     
   }
   actionTypeTemplate = (data) => {
+    // console.log(data)
     let cat =data.categories_name.split(',');
     return (
       <ul className="status_main_bx">
@@ -353,7 +358,10 @@ class ContentListComponent extends React.PureComponent {
     const cats = [];
     this.setState({showSubCat :false}) 
     console.log(e)
-    if(e == ''){
+    this.setState({
+      selectCategory:e.name
+    })
+    if(e.id == ''){
       this.setState({
         contentList:this.state.backupContentList
       })
@@ -361,7 +369,7 @@ class ContentListComponent extends React.PureComponent {
       for(let item of this.state.contentList){
         let vals = item.categories.split(',');
         console.log(vals)
-        if(vals.includes(e)){
+        if(vals.includes(e.id)){
           cats.push(item);
         }
         this.setState({
@@ -370,7 +378,7 @@ class ContentListComponent extends React.PureComponent {
       }
     }
     
-    this.setState({allSection: e})
+    this.setState({allSection: e.id})
 
 
 
@@ -379,7 +387,67 @@ class ContentListComponent extends React.PureComponent {
     this.setState({showSubCat : !this.state.showSubCat}) 
   }
   selectContentType = (e) =>{
-    console.log(e.name)
+    console.log(e)
+    const cats = [];
+    const cont = [];
+    this.setState({
+      categoryList:this.state.backupCat,
+      contentList:this.state.backupContentList
+    },()=>{
+      if(e == 'All Sounds'){
+        for(let item of this.state.categoryList){
+          if(item.name == 'Podcast'){
+            cats.push(item);
+          }
+        }
+        for(let item of this.state.contentList){
+          if(item.type == 'All Sounds'){
+            cont.push(item)
+          }
+        }
+        
+        this.setState({
+          categoryList:cats,
+          contentList:cont,
+          selectCategory:'All',
+          typeContent:e.name
+        })
+      }else if(e == 'All Content'){
+        for(let item of this.state.categoryList){
+          if(item.name != 'Podcast'){
+            cats.push(item);
+          }
+        }
+        for(let item of this.state.contentList){
+          if(item.type == 'All Articles'){
+            cont.push(item)
+          }
+        }
+        
+        this.setState({
+          categoryList:cats,
+          contentList:cont,
+          selectCategory:'All',
+          typeContent:e.name
+        })
+      }else{
+        for(let item of this.state.categoryList){
+          cats.push(item);
+          
+        }
+        for(let item of this.state.contentList){
+            cont.push(item)
+        }
+        
+        this.setState({
+          categoryList:cats,
+          contentList:cont,
+          selectCategory:'All',
+          typeContent:e.name
+        })
+      }
+    })
+    
   }
   render() {
     const allContent = [
@@ -436,30 +504,36 @@ class ContentListComponent extends React.PureComponent {
                       }
                     </div>
 
-                    <Dropdown  className="all_sec_dropdown"  optionLabel="name" optionValue="name"  options={allContent} onChange={(e) => {this.selectContentType(e.value)}} placeholder="Select a Type"/>
+                    <select  className="type_drop"  onChange={(e) => {this.selectContentType(e.target.value)}} placeholder="Select a Type">
+                      {
+                        allContent.map((item,key)=>
+                        <option value={item.name} key={key}>{item.name}</option>
+                        )
+                      }
+                    </select>
                     <ul className="selectbox">
                       <li>
                         <a onClick={this.toggleBox}>
-                          Select Category
-                          <i className="fa fa-angle-down"></i>  
+                          {this.state.selectCategory}
+                          <i className="fa fa-caret-down"></i>  
                         </a>                   
                         
                           {showSubCat &&
                             <ul className="subItem" >
                             <li>
-                              <a className="optionGroup" id="" onClick={(e) => {this.selectCatChange(e.target.id)}}>All</a>
+                              <a className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</a>
                             </li>
                             {
                               this.state.categoryList.map((item,key)=>
                               <li key={key}>
-                                <a id={item.id} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target.id)}} >
+                                <a id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
                                   {item.name}
                                 </a>
                                 <ul className="subSubItem">
                                 {
                                   item.child && item.child.map((sub,skey)=>
                                   <li key={skey}>
-                                    <a id={sub.id} onClick={(f) => {this.selectCatChange(f.target.id)}}>
+                                    <a id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
                                       {sub.name}
                                     </a>
                                   </li>

@@ -31,6 +31,8 @@ import {Checkbox} from 'primereact/checkbox';
 import {InputSwitch} from 'primereact/inputswitch';
 import {FileUpload} from 'primereact/fileupload';
 
+import Swal from 'sweetalert2';
+
 import {Growl} from 'primereact/growl';
 const editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleComponent extends React.PureComponent {
@@ -70,6 +72,8 @@ class NovusBiArticleComponent extends React.PureComponent {
             categories:[],
             soundShow:false,
             articleShow:true,
+            type:'All Articles',
+            backCat:[]
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -188,7 +192,8 @@ class NovusBiArticleComponent extends React.PureComponent {
             if(nextProps.allCategoryListRes.data.allCategoryList ){
                 if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
                     this.setState({
-                        categoryList: nextProps.allCategoryListRes.data.allCategoryList.data
+                        categoryList: nextProps.allCategoryListRes.data.allCategoryList.data,
+                        backCat: nextProps.allCategoryListRes.data.allCategoryList.data,
                     },()=>{
                         let cat =[];
                         for(let item of this.state.categoryList){
@@ -269,34 +274,55 @@ class NovusBiArticleComponent extends React.PureComponent {
         
         const categories = [];
         const catName = [];
-        for(let item of this.state.category){
-            categories.push(item.id)
-            catName.push(item.name)
-        }
-        const vals = categories.join(',');
-        const valsName = catName.join(',');
-        this.setState({
-          isSubmited: true,
-        }, () => { });
-        validate(this.state);
-        const errors = validate(this.state);
-        console.log(this.state)
-        // if (Object.keys(errors).length === 0) {
-            
-            let payloadReq = {
-                title: this.state.mainTitle,
-                content: this.state.editorArray,
-                type:this.state.type.name,
-                category:vals,
-                categories_name:valsName,
-                date:this.state.date,
-                author:this.state.author,
-                heighlight:this.state.heighlight,
-                resume:this.state.resume,
-                comment:this.state.comment,
-                pdf:this.state.pdf
+        if(this.state.editorArray[0].name == ''){
+            Swal.fire({
+                title: 'Please add content ',
+                type: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                timer: 3000
+              });
+        }else
+        if(this.state.category){
+            for(let item of this.state.category){
+                categories.push(item.id)
+                catName.push(item.name)
             }
+            const vals = categories.join(',');
+            const valsName = catName.join(',');
+            this.setState({
+            isSubmited: true,
+            }, () => { });
+            validate(this.state);
+            const errors = validate(this.state);
+            console.log(this.state)
+            // if (Object.keys(errors).length === 0) {
+                
+                let payloadReq = {
+                    title: this.state.mainTitle,
+                    content: this.state.editorArray,
+                    type:this.state.type.name,
+                    category:vals,
+                    categories_name:valsName,
+                    date:this.state.date,
+                    author:this.state.author,
+                    heighlight:this.state.heighlight,
+                    resume:this.state.resume,
+                    comment:this.state.comment,
+                    pdf:this.state.pdf
+                }
             this.props.handleFormSubmit(payloadReq);
+        }else{
+            Swal.fire({
+                title: 'Please choos a category (Appear at).',
+                type: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                timer: 3000
+              });
+        }
+        
+        
         // }
     }
     handleEditorChange(e,index){
@@ -397,17 +423,35 @@ class NovusBiArticleComponent extends React.PureComponent {
     typeSelect = (e) =>{
         console.log(e.value.name)
         this.setState({type: e.value})
+       let cats = [];
+       this.setState({
+        categoryList:this.state.backCat
+       },()=>{
         if(e.value.name ==  'All Sounds'){
+            for(let item of this.state.categoryList){
+                if(item.name == 'Podcast'){
+                  cats.push(item);
+                }
+              }
             this.setState({
                 soundShow:true,
                 articleShow:false,
+                categoryList:cats
             })
         }else{
+            for(let item of this.state.categoryList){
+                if(item.name != 'Podcast'){
+                    cats.push(item);
+                }
+            }
             this.setState({
                 soundShow:false,
                 articleShow:true,
+                categoryList:cats
             })
         }
+       })
+        
     }
     remove = (index) =>{
         editorArray.splice(index,1);
@@ -603,7 +647,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => this.typeSelect(e)} placeholder="All Content"/>
+                                                    <Dropdown className="all_sec_dropdown form-drop-control" optionLabel="name" value={this.state.type} options={allContent} onChange={(e) => this.typeSelect(e)} placeholder='All Article'/>
                                                 </div>
                                             </div>
                                             <div className="row">
