@@ -645,7 +645,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                                 </audio>
                                                             }
                                                             <br /><br />
-                                                                <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                                                <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={100000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
                                                                 
                                                             </div>
                                                             
