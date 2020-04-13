@@ -380,13 +380,13 @@ class NovusBiArticleComponent extends React.PureComponent {
         let response = JSON.parse(e.xhr.response)
         console.log(response)
         if(response.success === true){ 
-               this.state.editorArray.push({
-                   name:response.imageurl,
-                   
-               })    
+                editorArray[0].name = response.imageurl;    
                 this.setState({ 
-                editorArray: this.state.editorArray,
-                quote:!this.state.quote });
+                editorArray: editorArray,                
+                uploadName:response.path,
+                quote:!this.state.quote },()=>{
+                    console.log(this.state.editorArray)
+                });
         }else{
             
         } 
@@ -428,17 +428,21 @@ class NovusBiArticleComponent extends React.PureComponent {
         categoryList:this.state.backCat
        },()=>{
         if(e.value.name ==  'All Sounds'){
+            editorArray[0].type = "audio";
             for(let item of this.state.categoryList){
                 if(item.name == 'Podcast'){
                   cats.push(item);
                 }
               }
+              console.log(editorArray)
             this.setState({
                 soundShow:true,
                 articleShow:false,
-                categoryList:cats
+                categoryList:cats,
+                editorArray: editorArray
             })
         }else{
+            editorArray[0].type = "editor";
             for(let item of this.state.categoryList){
                 if(item.name != 'Podcast'){
                     cats.push(item);
@@ -447,7 +451,8 @@ class NovusBiArticleComponent extends React.PureComponent {
             this.setState({
                 soundShow:false,
                 articleShow:true,
-                categoryList:cats
+                categoryList:cats,
+                editorArray: editorArray
             })
         }
        })
@@ -618,18 +623,39 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    ))}  
-                                    {
-                                        this.state.soundShow && <div className="col-12">
-                                        <div className="image_uploader_main">
-                                            <i className="fa fa-music upload_icon"></i>
-                                            <br /><br />
-                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
-                                            
+                                    ))} 
+                                     
+                                    {this.state.soundShow && this.state.editorArray.map((editorVal, index) => (
+                                        <div className="editprofile_content" key={index}>
+                                            <div className="form_content_editprofile edit_profile_form_fields_wrapper">
+                                                <div> 
+                                                    <div className="row"> 
+                                                    { 'audio' === editorVal.type && (
+                                                        <div className="col-12">
+                                                            <div className="image_uploader_main">
+                                                            {
+                                                                editorVal.name === '' &&
+                                                                <i className="fa fa-music upload_icon"></i>
+                                                            }
+                                                            {
+                                                                editorVal.name !== '' &&
+                                                                <audio controls>
+                                                                    <source src={editorVal.name} type="audio/mpeg" />
+                                                                    Your browser does not support the audio element.
+                                                                </audio>
+                                                            }
+                                                            <br /><br />
+                                                                <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                                                
+                                                            </div>
+                                                            
+                                                        </div>  
+                                                    )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        
-                                    </div>  
-                                    } <br />                         
+                                   ))} <br />                         
                                     <div className="row">
                                         <div className="col-12">
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
