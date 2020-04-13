@@ -59,7 +59,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             mainTitle:'',
             pdfName:'Search for',
             pdfError:'',
-            uploadName:'Upload Here',
+            uploadName:'Upload New',
             uploadUrl:'',
             UploaderError: '',
             authorShow:false,
@@ -160,7 +160,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     editorArray:JSON.parse(this.state.appData.contant),
                     type:this.state.appData.type,
                     categories:this.state.appData.categories.split(','),
-                    date:this.state.appData.date,
+                    date:new Date(this.state.appData.date),
                     author:this.state.appData.author,
                     heighlight:this.state.appData.higlight == 'true'?true:false,
                     resume:this.state.appData.resume,
@@ -169,8 +169,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     pdf:this.state.appData.pdf,
                     // countries: this.state.appData.selected_countries
                 },()=>{
-                    console.log(this.state.comment)
-                    if(this.state.type.name =='All Sounds'){
+                    console.log(this.state)
+                    if(this.state.type == "All Sounds"){
                         this.setState({
                             soundShow:true,
                             articleShow:false,
@@ -365,17 +365,18 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         let response = JSON.parse(e.xhr.response)
         console.log(response)
         if(response.success === true){ 
-               this.state.editorArray.push({
-                   name:response.imageurl,
-                   
-               })    
+                editorArray[0].name = response.imageurl;    
                 this.setState({ 
-                editorArray: this.state.editorArray,
-                quote:!this.state.quote });
+                editorArray: editorArray,                
+                uploadName:response.path,
+                quote:!this.state.quote },()=>{
+                    console.log(this.state.editorArray)
+                });
         }else{
             
         } 
     }
+
 
     handleChange = (e) => {
         this.setState({
@@ -572,17 +573,37 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                         </div>
                                     </div>
                                     ))}
-                                    {
-                                        this.state.soundShow && <div className="col-12">
-                                        <div className="image_uploader_main">
-                                            <i className="fa fa-music upload_icon"></i>
-                                            <br /><br />
-                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={1000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
-                                            
+                                    {this.state.soundShow && this.state.editorArray.map((editorVal, index) => (
+                                        <div className="editprofile_content" key={index}>
+                                            <div className="form_content_editprofile edit_profile_form_fields_wrapper">
+                                                <div> 
+                                                    <div className="row"> 
+                                                    { 'audio' === editorVal.type && (
+                                                        <div className="col-12">
+                                                            <div className="image_uploader_main">
+                                                            {
+                                                                editorVal.name === '' &&
+                                                                <i className="fa fa-music upload_icon"></i>
+                                                            }
+                                                            {
+                                                                editorVal.name !== '' &&
+                                                                <audio controls>
+                                                                    <source src={editorVal.name} type="audio/mpeg" />
+                                                                    Your browser does not support the audio element.
+                                                                </audio>
+                                                            }
+                                                            <br /><br />
+                                                                <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="*" maxFileSize={100000000} onUpload={(e) => this.contentUploadAudio(e)} auto={true} chooseLabel={this.state.uploadName} />
+                                                                
+                                                            </div>
+                                                            
+                                                        </div>  
+                                                    )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        
-                                    </div>  
-                                    }   <br />                         
+                                   ))} <br />                            
                                     <div className="row">
                                         <div className="col-12">
                                             <button onClick={()=> this.handleSubmit()} className="btn btn-primary login_button" >Submit</button>
@@ -600,7 +621,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Type:</label>
-                                                    <h3>{this.state.type}</h3>
+                                                    <h5>{this.state.type}</h5>
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -620,7 +641,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                     <label>Author:</label>
                                                     {
                                                         this.state.authorShow &&
-                                                        <h3>{this.state.author}</h3>
+                                                        <h5>{this.state.author}</h5>
                                                     }
                                                     {this.state.authorSelect && !this.state.authorShow  &&
                                                         <Dropdown className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" value={this.state.authorVal} options={authorSection} onChange={(e) => this.selectAuthor(e.value)} placeholder="Author"/>
@@ -656,7 +677,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                     <InputSwitch checked={this.state.comment} onChange={(e) => this.setState({comment: e.value})} />
                                                 </div>
                                             </div>
-                                            
+                                            { this.state.articleShow &&
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label> PDF attached:</label><br />
@@ -670,7 +691,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                     
                                                 </div>
                                             </div>
-                                            
+                                            }
                                         </div>
                                     </div>
                                 </div>
