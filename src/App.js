@@ -28,6 +28,9 @@ import UpdateSubCategory from './container/updateSubCategory/updateSubCategory';
 import CreateCategory from './container/createCategory/createCategory';
 import NovusBiArticleUpdateComponent from './container/novusBiArticleUpdate/novusBiArticleUpdate';
 import 'react-toastify/dist/ReactToastify.css';
+import BannerListComponent from './container/bannerList/bannerList';
+import bannerCreate from './container/bannerCreate/bannerCreate';
+import updateBanner from './container/updateBanner/updateBanner';
 
 class App extends React.PureComponent {
   
@@ -76,6 +79,9 @@ class App extends React.PureComponent {
                 <Route path="/update-category" component={UpdateCategory} />
                 <Route path="/update-subcategory" component={UpdateSubCategory} />
                 <Route path="/create-category" component={CreateCategory} />
+                <Route path="/banner-list" component={BannerListComponent} />
+                <Route path="/banner-create" component={bannerCreate} />
+                <Route path="/banner-update" component={updateBanner} />
                 
                 
                 <Route render={() => (<Redirect to="/users" />)} />

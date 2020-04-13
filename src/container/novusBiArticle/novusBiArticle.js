@@ -274,15 +274,15 @@ class NovusBiArticleComponent extends React.PureComponent {
         
         const categories = [];
         const catName = [];
-        if(this.state.editorArray[0].name == ''){
-            Swal.fire({
-                title: 'Please add content ',
-                type: 'error',
-                confirmButtonText: 'OK',
-                allowOutsideClick: false,
-                timer: 3000
-              });
-        }else
+        // if(this.state.editorArray[0].name == ''){
+        //     Swal.fire({
+        //         title: 'Please add content ',
+        //         type: 'error',
+        //         confirmButtonText: 'OK',
+        //         allowOutsideClick: false,
+        //         timer: 3000
+        //       });
+        // }else
         if(this.state.category){
             for(let item of this.state.category){
                 categories.push(item.id)

@@ -207,6 +207,12 @@ class LayoutWrapper extends React.PureComponent {
                                                 </div>                                                 */}
                                             </div>
                                         </div>
+                                        <div className={page[1]==='banner-list' ? 'active' : 'no-class'} onClick={this.goCustomer}>
+                                            <NavLink to={"/banner-list"} data-parent="#sidebar" >
+                                            <i className="fa fa-image" style={{fontSize: '16px'}}  aria-hidden="true"></i>
+                                                <span className="content-name">Banners</span>
+                                            </NavLink>
+                                        </div>
                                         <div className="no-class">
                                             <div onClick={logout} data-parent="#sidebar" className="logout_link">
                                                 <i className="fa fa-sign-out" style={{fontSize: '18px'}}  aria-hidden="true"></i>

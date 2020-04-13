@@ -39,6 +39,10 @@ import allCategoryListReducer from './allCategoryListReducer';
 import deleteContentReducer from './deleteContentReducer';
 import statusContentReducer from './statusContentReducer';
 import novusBiArticleUpdateReducer from './novusBiArticleUpdateReducer';
+import bannerListReducer from './bannerListReducer';
+import deleteBannerListReducer from './deleteBannerListReducer';
+import createBannerReducer from './createBannerReducer';
+import updateBannerReducer from './updateBannerReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -81,4 +85,8 @@ export default combineReducers({
   allCategoryList:allCategoryListReducer,  
   doDeleteContentRes: deleteContentReducer,
   doStatusContentRes: statusContentReducer,
+  bannerList: bannerListReducer,
+  deleteBannerList: deleteBannerListReducer,
+  createBanner: createBannerReducer,
+  updateBanner: updateBannerReducer,
 });
