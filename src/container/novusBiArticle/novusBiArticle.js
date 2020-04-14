@@ -220,7 +220,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                         let cat =[];
                         for(let item of this.state.categoryList){
                             for(let subitem of this.state.categories){
-                                if(parseInt(item.id) == parseInt(subitem)){
+                                if(parseInt(item.id) === parseInt(subitem)){
                                     
                                     console.log(parseInt(item.id),parseInt(subitem))
                                     cat.push(item);
@@ -296,7 +296,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         
         const categories = [];
         const catName = [];
-        // if(this.state.editorArray[0].name == ''){
+        // if(this.state.editorArray[0].name === ''){
         //     Swal.fire({
         //         title: 'Please add content ',
         //         type: 'error',
@@ -450,10 +450,10 @@ class NovusBiArticleComponent extends React.PureComponent {
        this.setState({
         categoryList:this.state.backCat
        },()=>{
-        if(e.value.name ==  'All Sounds'){
+        if(e.value.name ===  'All Sounds'){
             editorArray[0].type = "audio";
             for(let item of this.state.categoryList){
-                if(item.name == 'Podcast'){
+                if(item.name === 'Podcast'){
                   cats.push(item);
                 }
               }

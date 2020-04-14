@@ -486,7 +486,7 @@ class EditUserComponent extends React.PureComponent {
     }
 
     removeApproved = () => {
-        if(this.state.selectedUserList.length == 1){
+        if(this.state.selectedUserList.length === 1){
             this.setState({ 
                 selectedUserList: [],
                 openDeleteAppModal:false
@@ -636,7 +636,7 @@ class EditUserComponent extends React.PureComponent {
                                             <div className="mt-2">
                                                 <div className="form-group">
                                                     <label>Zip Code</label>
-                                                    <input type="number"  min='1' step='1' onKeyDown={this.handleKeypress} onkeydown="javascript: return event.keyCode == 69 ? false : true" className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} value={this.state.zipcode}/>
+                                                    <input type="number"  min='1' step='1' onKeyDown={this.handleKeypress} onkeydown="javascript: return event.keyCode === 69 ? false : true" className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} value={this.state.zipcode}/>
                                                     {errors && isSubmited && <span className="error-message">{errors.zipcode}</span>}
                                                 </div>
                                             </div>

@@ -173,7 +173,7 @@ class ApplicationsComponent extends React.PureComponent {
                         <div className="heading_title">All Applications</div>
                       </div>
                       {
-                        userRole == '1' &&
+                        userRole === '1' &&
                         <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
                           <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Create Application</button>
                         </div>
@@ -185,11 +185,11 @@ class ApplicationsComponent extends React.PureComponent {
                           <Column className="tableCols" field="icon" header="Icon" body={this.actionIconTemplate} sortable style={{width: '100px'}}/>
                           <Column className="tableCols" field="application_name" header="Application Name" sortable style={{width: '120px'}}/>
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="admin" header="Admin" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>

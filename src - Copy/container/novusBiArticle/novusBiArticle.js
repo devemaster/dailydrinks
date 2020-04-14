@@ -193,7 +193,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                         let cat =[];
                         for(let item of this.state.categoryList){
                             for(let subitem of this.state.categories){
-                                if(parseInt(item.id) == parseInt(subitem)){
+                                if(parseInt(item.id) === parseInt(subitem)){
                                     
                                     console.log(parseInt(item.id),parseInt(subitem))
                                     cat.push(item);
@@ -397,7 +397,7 @@ class NovusBiArticleComponent extends React.PureComponent {
     typeSelect = (e) =>{
         console.log(e.value.name)
         this.setState({type: e.value})
-        if(e.value.name ==  'All Sounds'){
+        if(e.value.name ===  'All Sounds'){
             this.setState({
                 soundShow:true,
                 articleShow:false,

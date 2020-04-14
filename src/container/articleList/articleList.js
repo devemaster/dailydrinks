@@ -205,12 +205,12 @@ class ArticleListComponent extends React.PureComponent {
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
                           <Column className="tableCols" field="application_name" header="Title" sortable style={{width: '120px'}}/>
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
                           <Column className="tableCols" field="" header="Status" style={{width: '120px'}} body={this.actionStatusTemplate} />
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>

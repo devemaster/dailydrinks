@@ -162,9 +162,9 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     categories:this.state.appData.categories.split(','),
                     date:this.state.appData.date,
                     author:this.state.appData.author,
-                    heighlight:this.state.appData.higlight == 'true'?true:false,
+                    heighlight:this.state.appData.higlight === 'true'?true:false,
                     resume:this.state.appData.resume,
-                    comment:this.state.appData.comment == 'true'?true:false,
+                    comment:this.state.appData.comment === 'true'?true:false,
                     authorShow:true,
                     pdf:this.state.appData.pdf,
                     // countries: this.state.appData.selected_countries
@@ -203,7 +203,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                         let cat =[];
                         for(let item of this.state.categoryList){
                             for(let subitem of this.state.categories){
-                                if(parseInt(item.id) == parseInt(subitem)){
+                                if(parseInt(item.id) === parseInt(subitem)){
                                     
                                     console.log(parseInt(item.id),parseInt(subitem))
                                     cat.push(item);

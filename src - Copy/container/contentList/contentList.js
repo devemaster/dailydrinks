@@ -83,7 +83,7 @@ class ContentListComponent extends React.PureComponent {
                   let cats = [];
                   let mats = []
                   for(let c of this.state.dumCat){
-                      if(c.parent_id == '0'){
+                      if(c.parent_id === '0'){
                         cats.push(c)
                       }else{
                         mats.push(c)
@@ -92,7 +92,7 @@ class ContentListComponent extends React.PureComponent {
                   for(let c of cats){
                     let dts = []
                     for(let k of mats){
-                      if(c.id == k.parent_id){
+                      if(c.id === k.parent_id){
                         dts.push(k);
                       }
                     }
@@ -156,13 +156,13 @@ class ContentListComponent extends React.PureComponent {
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button> 
       {
-        rowData.status != 'draft' && rowData.status == 'pending' &&
+        rowData.status != 'draft' && rowData.status === 'pending' &&
         <button className="btn btn-success-customer" onClick={()=> this.ChangeStatus(rowData.contant_id)}>
           <i className="fa fa-toggle-off" aria-hidden="true"></i>
         </button> 
       }
       {
-        rowData.status != 'draft' && rowData.status == 'active'&&
+        rowData.status != 'draft' && rowData.status === 'active'&&
         <button className="btn btn-delete-customer" >
           <i className="fa fa-toggle-on" aria-hidden="true"></i>
         </button> 
@@ -228,11 +228,11 @@ class ContentListComponent extends React.PureComponent {
     let conts = JSON.parse(data.contant)
     let icon = '';
     for(let item of conts){
-      if(item.type == 'uploader'){
+      if(item.type === 'uploader'){
         icon = item.name;
       }
     }
-    if(icon == ''){
+    if(icon === ''){
       return (
         <div>
           {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
@@ -251,7 +251,7 @@ class ContentListComponent extends React.PureComponent {
   }
 
   actionStatusTemplate = (data) => {
-    if(data.status == 'draft'){
+    if(data.status === 'draft'){
       return (
         <div className="status_main_bx">
           <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
@@ -260,7 +260,7 @@ class ContentListComponent extends React.PureComponent {
         </div>
       );
     }else
-    if(data.status == 'pending'){
+    if(data.status === 'pending'){
       return (
         <div className="status_main_bx">
           <button className="btn btn-danger" onClick={this.toggleBox}>
@@ -269,7 +269,7 @@ class ContentListComponent extends React.PureComponent {
         </div>
       );
     }else
-    if(data.status == 'active'){
+    if(data.status === 'active'){
       return (
         <div className="status_main_bx">
           <button className="btn btn-success" onClick={this.toggleBox}>
@@ -330,7 +330,7 @@ class ContentListComponent extends React.PureComponent {
     this.setState({
       contentList:this.state.backupContentList
     },()=>{
-      if(e == ''){
+      if(e === ''){
         this.setState({
           contentList:this.state.backupContentList
         })
@@ -353,7 +353,7 @@ class ContentListComponent extends React.PureComponent {
     const cats = [];
     this.setState({showSubCat :false}) 
     console.log(e)
-    if(e == ''){
+    if(e === ''){
       this.setState({
         contentList:this.state.backupContentList
       })
@@ -429,7 +429,7 @@ class ContentListComponent extends React.PureComponent {
                         <div className="heading_title">List of Content</div>
                       </div>
                       {
-                        userRole == '1' &&
+                        userRole === '1' &&
                         <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
                           <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Add Content</button>
                         </div>
@@ -481,13 +481,13 @@ class ContentListComponent extends React.PureComponent {
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
                           <Column className="tableCols" field="title" header="Title" sortable style={{width: '120px'}}/>
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
                           <Column className="tableCols" field="" header="Type / Sections" style={{width: '120px'}} body={this.actionTypeTemplate} />
                           <Column className="tableCols" field="" header="Status" style={{width: '120px'}} body={this.actionStatusTemplate} />
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>

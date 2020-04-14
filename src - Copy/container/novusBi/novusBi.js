@@ -229,7 +229,7 @@ class NovusBiComponent extends React.PureComponent {
                         <div className="heading_title">News</div>
                       </div>
                       {
-                        userRole == '1' &&
+                        userRole === '1' &&
                         <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
                           <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Create List</button>
                         </div>
@@ -242,12 +242,12 @@ class NovusBiComponent extends React.PureComponent {
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
                           <Column className="tableCols" field="application_name" header="Title" sortable style={{width: '120px'}}/>
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
                           <Column className="tableCols" field="" header="Status" style={{width: '120px'}} body={this.actionStatusTemplate} />
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="action" header="Type / Sections" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>

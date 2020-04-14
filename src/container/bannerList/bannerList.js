@@ -203,7 +203,7 @@ class BannerListComponent extends React.PureComponent {
                         <div className="heading_title">Banner List</div>
                       </div>
                       {
-                        userRole == '1' &&
+                        userRole === '1' &&
                         <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
                           <button className="btn btn-placeOrder" onClick={() => this.createApp()}>Add</button>
                         </div>

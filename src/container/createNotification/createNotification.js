@@ -196,7 +196,7 @@ class CreateNotificationComponent extends React.PureComponent {
                                             <div className="col-6">
                                                 <div className="mt-2">
                                                     {
-                                                        userRole == '1' ?
+                                                        userRole === '1' ?
                                                         <div className="form-group select-loader">
                                                             <label>Select Group</label>
                                                             <select className="form-control" name="groupValue" onChange={(e) => this.changeGroup(e)} value={this.state.groupValue}>
