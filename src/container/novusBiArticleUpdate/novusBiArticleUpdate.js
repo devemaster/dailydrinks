@@ -9,6 +9,7 @@ import { getAllCountry, doAllCountryRes } from '../../action/novusBiArticleActio
 import { getAllUsers, doUserAllRes } from '../../action/userActions'; 
 import { submitnovusBiUpdateArticle, donovusBiUpdateArticleRes } from '../../action/novusBiArticleUpdateActions';
 import { fetchallcategoryList, getallcategoryListRes } from '../../action/allCategoryListActions';
+import { fetchRegionList, getRegionListRes } from '../../action/regionListActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -28,7 +29,8 @@ import {Checkbox} from 'primereact/checkbox';
 import {InputSwitch} from 'primereact/inputswitch';
 import {FileUpload} from 'primereact/fileupload';
 
-import {Growl} from 'primereact/growl';
+
+let isDone = false;
 const editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleUpdateComponent extends React.PureComponent {
     _isMounted = false;
@@ -66,6 +68,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             categories:[],
             soundShow:false,
             articleShow:true,
+            regionSelectData:[],
             thumbname:'Choose Thumbnail',
             thumbnail:'',
             thumbnailError:''
@@ -187,7 +190,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     comment:this.state.appData.comment === 'true'?true:false,
                     authorShow:true,
                     pdf:this.state.appData.pdf,
-                    thumbnail:this.state.appData.thumbnail
+                    thumbnail:this.state.appData.thumbnail,
+                    regionNames:this.state.appData.region
                     // countries: this.state.appData.selected_countries
                 },()=>{
                     console.log(this.state)
@@ -209,6 +213,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
 
         this.props.getAllCountry();
         this.props.fetchallcategoryList();
+        this.props.fetchRegionList();
         this.setState({
             isLoader: false,
         });
@@ -234,6 +239,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                 }
                             }
                         }       
+
                         console.log(this.state.category)
                     });
                 }
@@ -247,6 +253,40 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     });
                 }
             }
+        }
+        
+        if (nextProps.RegionListRes) {
+			if (nextProps.RegionListRes.data && nextProps.RegionListRes.data.regionList) {
+				if (nextProps.RegionListRes.data.regionList.success===true) {
+                    this.setState({
+                        regionList: nextProps.RegionListRes.data.regionList.RegionList,
+                        isLoader: false,
+                    },()=>{
+                        let RegionArr = []
+                        if(this.state.regionNames){
+                            let cId = this.state.regionNames.split(',');
+                            for(let c of this.state.regionList){
+                            for(let i of cId){
+                                if(i == c.region_id){
+                                    RegionArr.push(c)
+                                }
+                            }
+                            }
+                            this.setState({
+                                region:RegionArr
+                            },()=>{
+                                console.log(this.state.region)
+                            })
+                        }
+                        
+                    });
+				}else{
+                    this.setState({
+                        RegionList: [],
+                        isLoader: false,
+                    });
+                }
+			}
         }
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
@@ -268,7 +308,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         }
         if(nextProps.ArticleUpdateAppRes){
             if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate ){
-                if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate.success === true){
+                if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate.success === true && isDone == true){
+                    isDone = false;
                     console.log("success")
                     this.setState({
                         isLoader: false
@@ -300,12 +341,18 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         
         const categories = [];
         const catName = [];
+        const counts = [];
         for(let item of this.state.category){
             categories.push(item.id)
             catName.push(item.name)
         }
         const vals = categories.join(',');
         const valsName = catName.join(',');
+        let countryIds = '';
+        for(let item of this.state.region){
+            counts.push(item.region_id)
+        }
+        countryIds = counts.toString()
         this.setState({
           isSubmited: true,
         }, () => { });
@@ -313,7 +360,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         const errors = validate(this.state);
         console.log(this.state)
         // if (Object.keys(errors).length === 0) {
-            
+            isDone = true;
             let payloadReq = {
                 contant_id:this.state.contant_id,
                 title: this.state.mainTitle,
@@ -327,7 +374,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 resume:this.state.resume,
                 comment:this.state.comment,
                 pdf:this.state.pdf,
-                pdfName:this.state.pdf
+                pdfName:this.state.pdf,
+                region:countryIds
             }
             this.props.handleFormSubmit(payloadReq);
         // }
@@ -669,6 +717,12 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 form-group">
+                                                    <label>Region :</label>
+                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="region_name" optionValue="id" value={this.state.region} options={this.state.regionList} onChange={(e) => {this.setState({region: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
                                                     <label>Date:</label>
                                                     <Calendar className="all_sec_dropdown  form-drop-control" value={this.state.date} onChange={(e) => this.setState({date: e.value})} showIcon={true} showTime={true} showSeconds={true}/>
                                                 </div>
@@ -742,6 +796,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
 }
 
 NovusBiArticleUpdateComponent.propTypes = {
+	RegionListRes: PropTypes.any,
     handleFormSubmit: PropTypes.func,
     ArticleUpdateAppRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
@@ -751,6 +806,7 @@ NovusBiArticleUpdateComponent.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
+    RegionListRes: getRegionListRes,
     ArticleUpdateAppRes: donovusBiUpdateArticleRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
@@ -765,6 +821,7 @@ function mapDispatchToProps(dispatch) {
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
+		fetchRegionList: () => dispatch(fetchRegionList()),
     };
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

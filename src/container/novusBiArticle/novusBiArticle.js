@@ -9,6 +9,7 @@ import { getAllCountry, doAllCountryRes } from '../../action/novusBiArticleActio
 import { getAllUsers, doUserAllRes } from '../../action/userActions'; 
 import { submitnovusBiArticle, donovusBiArticleRes } from '../../action/novusBiArticleActions';
 import { fetchallcategoryList, getallcategoryListRes } from '../../action/allCategoryListActions';
+import { fetchRegionList, getRegionListRes } from '../../action/regionListActions';
 import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconActions';
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
@@ -33,8 +34,8 @@ import {FileUpload} from 'primereact/fileupload';
 
 import Swal from 'sweetalert2';
 
-import {Growl} from 'primereact/growl';
 const editorArray = [{'type':"editor",'name':""}];
+let isDone = false;
 class NovusBiArticleComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -202,6 +203,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             });
         }
 
+        this.props.fetchRegionList();
         this.props.getAllCountry();
         this.props.fetchallcategoryList();
         this.setState({
@@ -231,6 +233,8 @@ class NovusBiArticleComponent extends React.PureComponent {
                             }
                         }       
                         console.log(this.state.category)
+                        const e = {value:{name:'All Articles'}};
+                        this.typeSelect(e)
                     });
                 }
             }
@@ -262,9 +266,25 @@ class NovusBiArticleComponent extends React.PureComponent {
 				}
 			}
         }
+        if (nextProps.RegionListRes) {
+			if (nextProps.RegionListRes.data && nextProps.RegionListRes.data.regionList) {
+				if (nextProps.RegionListRes.data.regionList.success===true) {
+                    this.setState({
+                        regionList: nextProps.RegionListRes.data.regionList.RegionList,
+                        isLoader: false,
+                    });
+				}else{
+                    this.setState({
+                        RegionList: [],
+                        isLoader: false,
+                    });
+                }
+			}
+        }
         if(nextProps.ArticleAppRes){
             if(nextProps.ArticleAppRes.data.novusBiArticle ){
-                if(nextProps.ArticleAppRes.data.novusBiArticle.success === true){
+                if(nextProps.ArticleAppRes.data.novusBiArticle.success === true && isDone === true){
+                    isDone = false;
                     console.log("success")
                     this.setState({
                         isLoader: false
@@ -293,18 +313,10 @@ class NovusBiArticleComponent extends React.PureComponent {
         console.log(this.state.editorArray)
     }
     handleSubmit = () => {
-        
+        console.log(this.state.region)
         const categories = [];
         const catName = [];
-        // if(this.state.editorArray[0].name === ''){
-        //     Swal.fire({
-        //         title: 'Please add content ',
-        //         type: 'error',
-        //         confirmButtonText: 'OK',
-        //         allowOutsideClick: false,
-        //         timer: 3000
-        //       });
-        // }else
+        const counts = [];
         if(this.state.category){
             for(let item of this.state.category){
                 categories.push(item.id)
@@ -312,6 +324,22 @@ class NovusBiArticleComponent extends React.PureComponent {
             }
             const vals = categories.join(',');
             const valsName = catName.join(',');
+            let countryIds = '';
+            if(this.state.region && this.state.region.length > 0){
+                for(let item of this.state.region){
+                    counts.push(item.region_id)
+                }
+                countryIds = counts.toString()
+            }else{
+                Swal.fire({
+                    title: 'Please choos a Region.',
+                    type: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    timer: 3000
+                  });
+            }
+            
             this.setState({
             isSubmited: true,
             }, () => { });
@@ -319,7 +347,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             const errors = validate(this.state);
             console.log(this.state)
             // if (Object.keys(errors).length === 0) {
-                
+                isDone = true;
                 let payloadReq = {
                     title: this.state.mainTitle,
                     thumbnail:this.state.thumbnail,
@@ -332,7 +360,8 @@ class NovusBiArticleComponent extends React.PureComponent {
                     heighlight:this.state.heighlight,
                     resume:this.state.resume,
                     comment:this.state.comment,
-                    pdf:this.state.pdf
+                    pdf:this.state.pdf,
+                    region:countryIds
                 }
             this.props.handleFormSubmit(payloadReq);
         }else{
@@ -722,6 +751,12 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 form-group">
+                                                    <label>Region :</label>
+                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="region_name" optionValue="id" value={this.state.region} options={this.state.regionList} onChange={(e) => {this.setState({region: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 form-group">
                                                     <label>Date:</label>
                                                     <Calendar touchUI={true} className="all_sec_dropdown  form-drop-control" value={this.state.date} onChange={(e) => this.setState({date: e.value})} showIcon={true} showTime={true} showSeconds={true}/>
                                                 </div>
@@ -797,6 +832,7 @@ class NovusBiArticleComponent extends React.PureComponent {
 }
 
 NovusBiArticleComponent.propTypes = {
+	RegionListRes: PropTypes.any,
     handleFormSubmit: PropTypes.func,
     ArticleAppRes: PropTypes.any,
     doAllCountryRes: PropTypes.any,
@@ -806,6 +842,7 @@ NovusBiArticleComponent.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
+    RegionListRes: getRegionListRes,
     ArticleAppRes: donovusBiArticleRes,
     doAllCountryRes: doAllCountryRes,
     allUsersRes: doUserAllRes,
@@ -820,6 +857,7 @@ function mapDispatchToProps(dispatch) {
         getAllCountry: () => dispatch(getAllCountry()),
         getAllUsers: () => dispatch(getAllUsers()),
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
+		fetchRegionList: () => dispatch(fetchRegionList()),
     };
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
