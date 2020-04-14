@@ -155,25 +155,25 @@ class CreateUserComponent extends React.PureComponent {
                     });
                     if (this.state.selectedUserList.length > 0) {
                         let isTrue = 0;
-                        if (userRole == '1') {
+                        if (userRole === '1') {
                             for (let items of this.state.selectedUserList) {
-                                if (items.application_id == this.state.applicationId) {
+                                if (items.application_id === this.state.applicationId) {
                                     isTrue = 1;
                                 }
                             }
                         } else {
                             for (let items of this.state.selectedUserList) {
-                                if (items.user_name == this.state.userName) {
+                                if (items.user_name === this.state.userName) {
                                     isTrue = 1;
                                 }
                             }
                         }
-                        if (isTrue == 0) {
+                        if (isTrue === 0) {
                             let localArr = this.state.selectedUserList;
                             let appName = '';
-                            if (userRole == '1') {
+                            if (userRole === '1') {
                                 for (let item of this.state.applicationList) {
-                                    if (Number(this.state.applicationId) == item.application_id) {
+                                    if (Number(this.state.applicationId) === item.application_id) {
                                         appName = item.application_name;
                                     }
                                 }
@@ -188,7 +188,7 @@ class CreateUserComponent extends React.PureComponent {
                             this.setState({
                                 selectedUserList: localArr,
                             }, () => {
-                                if (userRole == '1') {
+                                if (userRole'1') {
                                     this.setState({
                                         applicationId: '',
                                         userName: '',
