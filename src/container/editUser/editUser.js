@@ -100,7 +100,7 @@ class EditUserComponent extends React.PureComponent {
         this.setState({
             userData: userDetails,
         }, () => {
-            if (userRole == '2') {
+            if (userRole === '2') {
                 if (this.state.userData.app_user.length > 0) {
                     for (let item of this.state.userData.app_user) {
                         item.application_name =  getItem('adminAppName');
@@ -254,15 +254,15 @@ class EditUserComponent extends React.PureComponent {
                     });
                     if (this.state.selectedUserList.length > 0) {
                         let isTrue = 0;
-                        if (userRole == '1') {
+                        if (userRole === '1') {
                             for (let items of this.state.selectedUserList) {
-                                if (items.application_id == this.state.applicationId) {
+                                if (items.application_id === this.state.applicationId) {
                                     isTrue = 1;
                                 }
                             }
                         } else {
                             for (let items of this.state.selectedUserList) {
-                                if (items.user_name == this.state.userName) {
+                                if (items.user_name === this.state.userName) {
                                     isTrue = 1;
                                 }
                             }
@@ -270,9 +270,9 @@ class EditUserComponent extends React.PureComponent {
                         if (isTrue === 0) {
                             let localArr = this.state.selectedUserList;
                             let appName = '';
-                            if (userRole == '1') {
+                            if (userRole === '1') {
                                 for (let item of this.state.applicationList) {
-                                    if (Number(this.state.applicationId) == item.application_id) {
+                                    if (Number(this.state.applicationId) === item.application_id) {
                                         appName = item.application_name;
                                     }
                                 }
@@ -287,7 +287,7 @@ class EditUserComponent extends React.PureComponent {
                             this.setState({
                                 selectedUserList: localArr,
                             }, () => {
-                                if (userRole == '1') {
+                                if (userRole === '1') {
                                     this.setState({
                                         applicationId: '',
                                         userName: '',
@@ -308,9 +308,9 @@ class EditUserComponent extends React.PureComponent {
                     } else {
                         let localArr = this.state.selectedUserList;
                         let appName = '';
-                        if (userRole == '1') {
+                        if (userRole === '1') {
                             for (let item of this.state.applicationList) {
-                                if (Number(this.state.applicationId) == item.application_id) {
+                                if (Number(this.state.applicationId) === item.application_id) {
                                     appName = item.application_name;
                                 }
                             }
@@ -325,7 +325,7 @@ class EditUserComponent extends React.PureComponent {
                         this.setState({
                             selectedUserList: localArr,
                         }, () => {
-                            if (userRole == '1') {
+                            if (userRole === '1') {
                                 this.setState({
                                     applicationId: '',
                                     userName: '',
@@ -702,7 +702,7 @@ class EditUserComponent extends React.PureComponent {
                                                     {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.applicationId}</span>}
                                                 </div> */}
                                                 {
-                                                    userRole == '1' ?
+                                                    userRole === '1' ?
                                                     <div className="form-group">
                                                         <select className="form-control" name="applicationId" onChange={(e) => this.createApproved(e)} value={this.state.applicationId}>
                                                             <option value=''>Select Application</option>
@@ -759,7 +759,7 @@ class EditUserComponent extends React.PureComponent {
                                         <div className="error-message-user-modal">
                                             <div className="row" >
                                             {
-                                                    userRole == '1' ?
+                                                    userRole === '1' ?
                                                     <div className="error-message-user-header"> This application already selected please choose other application </div>
                                                     :
                                                     <div className="error-message-user-header"> This user already added please enter other user </div>

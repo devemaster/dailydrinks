@@ -110,7 +110,7 @@ class TrashListComponent extends React.PureComponent {
   }
 
   actionStatusTemplate = (data) => {
-    if(data.status == 'draft'){
+    if(data.status === 'draft'){
       return (
         <div className="status_main_bx">
           <button className="btn pending-status btn_draft" onClick={this.toggleBox}>
@@ -119,7 +119,7 @@ class TrashListComponent extends React.PureComponent {
         </div>
       );
     }else
-    if(data.status == 'pending'){
+    if(data.status === 'pending'){
       return (
         <div className="status_main_bx">
           <button className="btn btn-danger" onClick={this.toggleBox}>
@@ -128,7 +128,7 @@ class TrashListComponent extends React.PureComponent {
         </div>
       );
     }else
-    if(data.status == 'active'){
+    if(data.status === 'active'){
       return (
         <div className="status_main_bx">
           <button className="btn btn-success" onClick={this.toggleBox}>
@@ -267,13 +267,13 @@ class TrashListComponent extends React.PureComponent {
                           <Column className="tableCols" field="icon" header="" body={this.actionIconTemplate}  style={{width: '100px'}}/>
                           <Column className="tableCols" field="title" header="Title" sortable style={{width: '120px'}}/>
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="admin" header="Date" body={this.adminActionTemplate} style={{width: '120px'}}/>
                           }
                           <Column className="tableCols" field="" header="Type / Sections" style={{width: '120px'}} body={this.actionTypeTemplate} />
                           <Column className="tableCols" field="" header="Status" style={{width: '120px'}} body={this.actionStatusTemplate} />
                           {
-                            userRole == '1' &&
+                            userRole === '1' &&
                             <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '200px'}}/>
                           }
                         </DataTable>
