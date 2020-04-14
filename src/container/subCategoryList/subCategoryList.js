@@ -17,7 +17,7 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
-import { getItem } from '../../utils/localStore';
+// import { getItem } from '../../utils/localStore';
 
 
 

@@ -382,7 +382,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             }
             
           });
-        this.setState({ editorArray: this.state.editorArray });
+        return this.setState({ editorArray: this.state.editorArray });
     }
     handleEmbadeChange = (e,index) => {
         console.log(e.target.value)
@@ -392,7 +392,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             }
             
           });
-        this.setState({ editorArray: this.state.editorArray });
+        return this.setState({ editorArray: this.state.editorArray });
     }
     fileUploadProcess= () =>{
         console.log("hello");
@@ -413,7 +413,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                 }
                 
               });
-            this.setState({ 
+            return this.setState({ 
                 editorArray: this.state.editorArray,
                 uploadName:response.path,
                 quote:!this.state.quote });
@@ -605,7 +605,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                         </div>
                                                     </div>
                                                     <div className="col-4">
-                                                        <img src={this.state.thumbnail} alt={this.state.thumbnail} style={{width: 60, height: 60}} alt=""/>
+                                                        <img src={this.state.thumbnail} alt="thumbnail" style={{width: 60, height: 60}} alt=""/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -633,7 +633,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                             }
                                                             {
                                                                 editorVal.name !== '' &&
-                                                                <img src={editorVal.name} style={{"maxWidth":"200px"}} />
+                                                                <img src={editorVal.name} alt="upload" style={{"maxWidth":"200px"}} />
                                                             }
                                                             <br /><br />
                                                             <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />

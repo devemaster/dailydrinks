@@ -506,29 +506,29 @@ class ContentListComponent extends React.PureComponent {
                     </select>
                     <ul className="selectbox">
                       <li>
-                        <a href="javascript:void(0)" onClick={this.toggleBox}>
+                        <span  onClick={this.toggleBox}>
                           {this.state.selectCategory}
                           <i className="fa fa-caret-down"></i>  
-                        </a>                   
+                        </span>                   
                         
                           {showSubCat &&
                             <ul className="subItem" >
                             <li>
-                              <a href="javascript:void(0)" className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</a>
+                              <span className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</span>
                             </li>
                             {
                               this.state.categoryList.map((item,key)=>
                               <li key={key}>
-                                <a href="javascript:void(0)" id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
+                                <span  id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
                                   {item.name}
-                                </a>
+                                </span>
                                 <ul className="subSubItem">
                                 {
                                   item.child && item.child.map((sub,skey)=>
                                   <li key={skey}>
-                                    <a href="javascript:void(0)" id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
+                                    <span id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
                                       {sub.name}
-                                    </a>
+                                    </span>
                                   </li>
                                   )
                                 }

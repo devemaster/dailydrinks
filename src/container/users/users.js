@@ -21,7 +21,7 @@ import Swal from 'sweetalert2';
 
 let isApprove = false;
 let isDelete = false;
-let isApprovedApp = false;
+// let isApprovedApp = false;
 let userRole = getItem('userRoleId');
 let isUserAvailable = false;
 
@@ -100,7 +100,7 @@ class UsersComponent extends React.PureComponent {
     if (props.userApproveAppRes) {
       if (props.userApproveAppRes.data && props.userApproveAppRes.data.userApproveApp) {
         if (props.userApproveAppRes.data.userApproveApp.success === true ) {
-          isApprovedApp = false;
+          // isApprovedApp = false;
           this.props.getUsers();
           this.setState({
             openApprovedModal: false

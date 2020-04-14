@@ -14,7 +14,6 @@ import { uploadAppIcon, doUploadAppIconRes } from '../../action/uploadAppIconAct
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
-import validate from './formValidation';
 import {Editor} from "primereact/editor";
 import {Button} from "primereact/button";
 import 'react-images-uploader/font.css';
@@ -387,7 +386,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             }
             
           });
-        this.setState({ editorArray: this.state.editorArray });
+        return this.setState({ editorArray: this.state.editorArray });
     }
     handleEmbadeChange = (e,index) =>{
         console.log(e.target.value)
@@ -397,7 +396,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             }
             
           });
-        this.setState({ editorArray: this.state.editorArray });
+        return this.setState({ editorArray: this.state.editorArray });
     }
     fileUploadProcess= () =>{
         console.log("hello");
@@ -418,11 +417,11 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 }
                 
               });
-            this.setState({ 
+            return this.setState({ 
                 editorArray: this.state.editorArray,
                 quote:!this.state.quote });
         }else{
-            
+        
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
@@ -598,7 +597,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                             }
                                                             {
                                                                 editorVal.name !== '' &&
-                                                                <img src={editorVal.name} style={{"maxWidth":"200px"}} />
+                                                                <img src={editorVal.name} alt="uploader" style={{"maxWidth":"200px"}} />
                                                             }
                                                             <br /><br />
                                                             <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />

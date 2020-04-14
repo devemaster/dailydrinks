@@ -820,7 +820,7 @@ body .layout_left .dropdown-menu {
     position: relative;
     width: 100%;
 }
-body .layout_left .dropdown-toggle::after {
+body .layout_left a::after {
     color: #fff;
     position: relative;
     top: 4px;
@@ -839,4 +839,12 @@ body .layout_left .dropdown-toggle::after {
 }
 .nav-link{
     cursor: pointer;
+}
+span#navbarDropdown {
+    padding: 10px 20px;
+}
+.link_clr span.content-name {
+    color: #ddd;
+    font-weight: 600;
+    padding-left: 15px;
 }
