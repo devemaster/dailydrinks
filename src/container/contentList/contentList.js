@@ -505,30 +505,24 @@ class ContentListComponent extends React.PureComponent {
                       }
                     </select>
                     <ul className="selectbox">
-                      <li>
-                        <span  onClick={this.toggleBox}>
+                      <li onClick={this.toggleBox}>
                           {this.state.selectCategory}
                           <i className="fa fa-caret-down"></i>  
-                        </span>                   
+                                          
                         
                           {showSubCat &&
                             <ul className="subItem" >
-                            <li>
-                              <span className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</span>
+                            <li className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All
                             </li>
                             {
                               this.state.categoryList.map((item,key)=>
-                              <li key={key}>
-                                <span  id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
+                              <li key={key}  id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
                                   {item.name}
-                                </span>
                                 <ul className="subSubItem">
                                 {
                                   item.child && item.child.map((sub,skey)=>
-                                  <li key={skey}>
-                                    <span id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
+                                  <li key={skey}  id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
                                       {sub.name}
-                                    </span>
                                   </li>
                                   )
                                 }

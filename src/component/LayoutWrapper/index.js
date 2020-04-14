@@ -140,7 +140,7 @@ class LayoutWrapper extends React.PureComponent {
                                                 <span className="content-name">Notification</span>
                                             </NavLink>
                                         </div>
-                                        <div  className={(page[1]==='novus-bi-article' || page[1]==='novus-bi-create' || page[1]==='subcategory-list')  ? 'show nav-item dropdown pd-20 layout_left drop_down_cls': 'nav-item dropdown pd-20 layout_left drop_down_cls'}>
+                                        <div  className={(page[1]==='novus-bi-article' || page[1]==='novus-bi-create' || page[1]==='subcategory-list' || page[1]==='banner-list' || page[1]=== 'region-list' || page[1]=== 'banner-create' || page[1]=== 'region-create' || page[1]=== 'banner-update' || page[1]=== 'region-update')  ? 'show nav-item dropdown pd-20 layout_left drop_down_cls': 'nav-item dropdown pd-20 layout_left drop_down_cls'}>
                                             <span  className="nav-link dropdown-toggle link_clr" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i className="fa fa-dashboard" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                             <span className="content-name">Novus BI</span>
@@ -175,10 +175,16 @@ class LayoutWrapper extends React.PureComponent {
                                                     </NavLink>
                                                 </div>
 
-                                                <div className={page[1]==='region-list' ? 'active' : 'no-class'}>
+                                                <div className={(page[1]==='region-list' || page[1]==='region-create' || page[1]==='region-update') ? 'active' : 'no-class'}>
                                                     <NavLink to={"/region-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-map" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Region</span>
+                                                    </NavLink>
+                                                </div>
+                                                <div className={(page[1]==='banner-list' || page[1]==='banner-create' || page[1]==='banner-update') ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/banner-list"} data-parent="#sidebar" >
+                                                    <i className="fa fa-image" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <span className="content-name">Banners</span>
                                                     </NavLink>
                                                 </div>
                                          
@@ -213,12 +219,6 @@ class LayoutWrapper extends React.PureComponent {
                                                 </div>
                                                 </div>                                                 */}
                                             </div>
-                                        </div>
-                                        <div className={page[1]==='banner-list' ? 'active' : 'no-class'} onClick={this.goCustomer}>
-                                            <NavLink to={"/banner-list"} data-parent="#sidebar" >
-                                            <i className="fa fa-image" style={{fontSize: '16px'}}  aria-hidden="true"></i>
-                                                <span className="content-name">Banners</span>
-                                            </NavLink>
                                         </div>
                                         <div className="no-class">
                                             <div onClick={logout} data-parent="#sidebar" className="logout_link">

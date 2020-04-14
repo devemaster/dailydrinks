@@ -848,3 +848,9 @@ span#navbarDropdown {
     font-weight: 600;
     padding-left: 15px;
 }
+.link_clr i {
+    color:#ddd
+}
+.link_clr:after {
+    border-top: .3em solid #ddd !important;
+}
