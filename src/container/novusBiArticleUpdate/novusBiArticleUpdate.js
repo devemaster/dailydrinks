@@ -66,6 +66,9 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             categories:[],
             soundShow:false,
             articleShow:true,
+            thumbname:'Choose Thumbnail',
+            thumbnail:'',
+            thumbnailError:''
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -145,7 +148,24 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
-    
+    onBasicUploadThumb = (event) => {
+        this.setState({
+            isLoader:false
+        })
+        let response = JSON.parse(event.xhr.response)
+        if(response.success === true){
+            this.setState({
+                thumbname:response.path,
+                thumbnail:response.imageurl,
+                thumbnailError: ''
+            })
+        }else{
+            this.setState({
+                thumbnailError:response.message
+            })
+        }
+        // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
+    }
 
     componentDidMount() {
         if(this.props.location.state){
@@ -167,6 +187,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     comment:this.state.appData.comment == 'true'?true:false,
                     authorShow:true,
                     pdf:this.state.appData.pdf,
+                    thumbnail:this.state.appData.thumbnail
                     // countries: this.state.appData.selected_countries
                 },()=>{
                     console.log(this.state)
@@ -486,7 +507,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                             <div className="row">
                                 <div className="col-9 col-md-9">
                                     <div className="row">
-                                        <div className="col-12">
+                                        <div className="col-7">
                                             <div className="mt-2">
                                                 <div className="form-group">
                                                     
@@ -494,6 +515,22 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <div className="col-5">
+                                                <div className="row">
+                                                    <div className="col-8">
+                                                        <div className="mt-2">
+                                                            <div className="form-group">
+                                                            <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="thumbnail" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadThumb} auto={true} chooseLabel={this.state.thumbname} />
+                                                            {this.state.thumbnailError != '' && <span className="error-message err-msg">Something went wrong</span>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-4">
+                                                        <img src={this.state.thumbnail} style={{width: 60, height: 60}} alt=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
                                     </div>
                                     
                                     {this.state.articleShow && this.state.editorArray.map((editorVal, index) => (

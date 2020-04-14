@@ -229,25 +229,19 @@ class ContentListComponent extends React.PureComponent {
   }
 
   actionIconTemplate = (data) => {
-    let conts = JSON.parse(data.contant)
-    let icon = '';
-    for(let item of conts){
-      if(item.type == 'uploader'){
-        icon = item.name;
-      }
-    }
-    if(icon == ''){
+    
+    if( data.thumbnail && data.thumbnail != ''){
       return (
         <div>
           {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-          <img src={logoImg} alt='icon' className="image_icons_content" />
+          <img src={data.thumbnail} alt='icon' className="image_icons_content" />
         </div>
       );
     }else{
       return (
         <div>
           {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-          <img src={icon} alt='icon' className="image_icons_content" />
+          <img src={logoImg} alt='icon' className="image_icons_content" />
         </div>
       );
     }
