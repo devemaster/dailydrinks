@@ -31,6 +31,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import BannerListComponent from './container/bannerList/bannerList';
 import bannerCreate from './container/bannerCreate/bannerCreate';
 import updateBanner from './container/updateBanner/updateBanner';
+import regionList from './container/regionList/regionList';
+import regionCreate from './container/regionCreate/regionCreate';
+import updateRegion from './container/updateRegion/updateRegion';
 
 class App extends React.PureComponent {
   
@@ -82,6 +85,9 @@ class App extends React.PureComponent {
                 <Route path="/banner-list" component={BannerListComponent} />
                 <Route path="/banner-create" component={bannerCreate} />
                 <Route path="/banner-update" component={updateBanner} />
+                <Route path="/region-list" component={regionList} />
+                <Route path="/region-create" component={regionCreate} />
+                <Route path="/region-update" component={updateRegion} />
                 
                 
                 <Route render={() => (<Redirect to="/users" />)} />

@@ -141,7 +141,7 @@ class LayoutWrapper extends React.PureComponent {
                                             </NavLink>
                                         </div>
                                         <div  className={(page[1]==='novus-bi-article' || page[1]==='novus-bi-create' || page[1]==='subcategory-list')  ? 'show nav-item dropdown pd-20 layout_left drop_down_cls': 'nav-item dropdown pd-20 layout_left drop_down_cls'}>
-                                            <a className="nav-link dropdown-toggle link_clr" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <a href="#" className="nav-link dropdown-toggle link_clr" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i className="fa fa-dashboard" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                             <span className="content-name">Novus BI</span>
                                             </a>
@@ -172,6 +172,13 @@ class LayoutWrapper extends React.PureComponent {
                                                     <NavLink to={"/trash-list"} data-parent="#sidebar" >
                                                     <i className="fa fa-trash" style={{fontSize: '14px'}}  aria-hidden="true"></i>
                                                     <span className="content-name">Trash</span>
+                                                    </NavLink>
+                                                </div>
+
+                                                <div className={page[1]==='region-list' ? 'active' : 'no-class'}>
+                                                    <NavLink to={"/region-list"} data-parent="#sidebar" >
+                                                    <i className="fa fa-map" style={{fontSize: '14px'}}  aria-hidden="true"></i>
+                                                    <span className="content-name">Region</span>
                                                     </NavLink>
                                                 </div>
                                          

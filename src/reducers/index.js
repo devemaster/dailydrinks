@@ -43,6 +43,10 @@ import bannerListReducer from './bannerListReducer';
 import deleteBannerListReducer from './deleteBannerListReducer';
 import createBannerReducer from './createBannerReducer';
 import updateBannerReducer from './updateBannerReducer';
+import regionListReducer from './regionListReducer';
+import deleteRegionListReducer from './deleteRegionListReducer';
+import createRegionReducer from './createRegionReducer';
+import updateRegionReducer from './updateRegionReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -89,4 +93,8 @@ export default combineReducers({
   deleteBannerList: deleteBannerListReducer,
   createBanner: createBannerReducer,
   updateBanner: updateBannerReducer,
+  regionList: regionListReducer,
+  deleteRegionList: deleteRegionListReducer,
+  createRegion: createRegionReducer,
+  updateRegion: updateRegionReducer,
 });
