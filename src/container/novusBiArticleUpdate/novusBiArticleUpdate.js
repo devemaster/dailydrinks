@@ -29,7 +29,7 @@ import {FileUpload} from 'primereact/fileupload';
 
 
 let isDone = false;
-const editorArray = [{'type':"editor",'name':""}];
+let editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleUpdateComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -175,6 +175,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             this.setState({
                 appData: appDetails,
             }, () => {
+                editorArray = JSON.parse(this.state.appData.contant);
                 this.setState({
                     contant_id: this.state.appData.contant_id,
                     mainTitle:this.state.appData.title,
@@ -380,23 +381,30 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
     }
     handleEditorChange = (e,index) =>{
         console.log(e)
-        this.state.editorArray.map((editor, sidx) => {
-            if(sidx === index){
-                editor.name = e.htmlValue;
-            }
-            
-          });
-        return this.setState({ editorArray: this.state.editorArray });
+        const vals = this.state.editorArray;
+          for(let i =0; vals.length > i;i++){
+              if(i === index){
+                  
+                  vals[i].name = e.htmlValue
+                  
+              }
+          }
+        this.setState({ editorArray: vals });
+        // return true
     }
     handleEmbadeChange = (e,index) =>{
         console.log(e.target.value)
-        this.state.editorArray.map((editor, sidx) => {
-            if(sidx === index){
-                editor.name = e.target.value;
-            }
-            
-          });
-        return this.setState({ editorArray: this.state.editorArray });
+        
+        const vals = this.state.editorArray;
+          for(let i =0; vals.length > i;i++){
+              if(i === index){
+                  
+                  vals[i].name = e.target.value;
+                  
+              }
+          }
+        this.setState({ editorArray: vals });
+        // return true;
     }
     fileUploadProcess= () =>{
         console.log("hello");
@@ -411,18 +419,22 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         console.log("done")
         let response = JSON.parse(event.xhr.response)
         if(response.success === true){            
-            this.state.editorArray.map((editor, sidx) => {
-                if(sidx === index){
-                    editor.name = response.imageurl;
+           
+              const vals = this.state.editorArray;
+                for(let i =0; vals.length > i;i++){
+                    if(i === index){
+                        
+                        vals[i].name = response.imageurl
+                        
+                    }
                 }
-                
-              });
-            return this.setState({ 
-                editorArray: this.state.editorArray,
+            this.setState({ 
+                editorArray: vals,
                 quote:!this.state.quote });
         }else{
         
         }
+        return true;
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
     contentUploadAudio = (e) => {
@@ -569,7 +581,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                         </div>
                                                     </div>
                                                     <div className="col-4">
-                                                        <img src={this.state.thumbnail} alt={this.state.thumbnail} style={{width: 60, height: 60}} alt=""/>
+                                                        <img src={this.state.thumbnail} alt={this.state.thumbnail} style={{width: 60, height: 60}} />
                                                     </div>
                                                 </div>
                                             </div>

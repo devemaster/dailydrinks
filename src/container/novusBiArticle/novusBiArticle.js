@@ -376,23 +376,27 @@ class NovusBiArticleComponent extends React.PureComponent {
     }
     handleEditorChange = (e,index) =>{
         console.log(e)
-        this.state.editorArray.map((editor, sidx) => {
-            if(sidx === index){
-                editor.name = e.htmlValue;
+        const vals = this.state.editorArray;
+        for(let i =0; vals.length > i;i++){
+            if(i === index){
+                
+                vals[i].name = e.htmlValue
+                
             }
-            
-          });
-        return this.setState({ editorArray: this.state.editorArray });
+        }
+        this.setState({ editorArray: vals });
     }
     handleEmbadeChange = (e,index) => {
         console.log(e.target.value)
-        this.state.editorArray.map((editor, sidx) => {
-            if(sidx === index){
-                editor.name = e.target.value;
+        const vals = this.state.editorArray;
+        for(let i =0; vals.length > i;i++){
+            if(i === index){
+                
+                vals[i].name = e.target.value
+                
             }
-            
-          });
-        return this.setState({ editorArray: this.state.editorArray });
+        }
+        this.setState({ editorArray: vals });
     }
     fileUploadProcess= () =>{
         console.log("hello");
@@ -406,20 +410,23 @@ class NovusBiArticleComponent extends React.PureComponent {
         })
         console.log("done")
         let response = JSON.parse(event.xhr.response)
-        if(response.success === true){            
-            this.state.editorArray.map((editor, sidx) => {
-                if(sidx === index){
-                    editor.name = response.imageurl;
+        if(response.success === true){    
+            const vals = this.state.editorArray;
+            for(let i =0; vals.length > i;i++){
+                if(i === index){
+                    
+                    vals[i].name = response.imageurl
+                    
                 }
-                
-              });
-            return this.setState({ 
-                editorArray: this.state.editorArray,
+            }   
+            this.setState({ 
+                editorArray: vals,
                 uploadName:response.path,
                 quote:!this.state.quote });
         }else{
             
         }
+        return event;
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
     contentUploadAudio = (e) => {
@@ -523,6 +530,62 @@ class NovusBiArticleComponent extends React.PureComponent {
             </span>
         );
     }
+    actionTemplateEditor = (editorVal,index) => {
+        if(editorVal.type === 'editor'){
+            return  (
+                <div className="col-12">
+            
+                    <Editor className="editor_cls" style={{height:'320px'}} value={editorVal.name} onTextChange={(e)=>this.handleEditorChange(e,index)}/>
+                
+                </div>
+            )
+        }else if(editorVal.type === 'uploader'){
+            return (
+                <div className="col-12">
+                    <div className="image_uploader_main">
+                        {
+                            editorVal.name === '' &&
+                            <i className="fa fa-camera upload_icon"></i>
+                        }
+                        {
+                            editorVal.name !== '' &&
+                            <img src={editorVal.name} alt="upload" style={{"maxWidth":"200px"}} />
+                        }
+                        <br /><br />
+                        <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
+                        
+                    </div>
+                    
+                </div> 
+            )
+        }else if(editorVal.type === 'embed'){
+            return (
+                <div className="col-12">
+                    <div className="mt-2">
+                        <div className="image_uploader_main">
+                            <i className="fa fa-code upload_icon"></i>
+                            <p>Paste the embedded code below</p>
+                            <InputTextarea  onChange={(e)=>this.handleEmbadeChange(e,index)} rows={4} className="text_area_article"></InputTextarea>
+                            
+                        </div>                                                            
+                    </div>
+                </div> 
+            )
+        }else if(editorVal.type === 'quote'){
+            return (
+                <div className="col-12">
+                    <div className="mt-2">
+                        <div className="image_uploader_main">
+                            <i className="fa fa-quote-right upload_icon"></i>
+                            <p>Quotations</p>
+                            <InputTextarea rows={4}  onChange={(e)=>this.handleEmbadeChange(e,index)} className="text_area_article"></InputTextarea>
+                            
+                            </div>
+                    </div>
+                </div>   
+            )
+        }                   
+    }
 
     
     render() {
@@ -605,7 +668,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                         </div>
                                                     </div>
                                                     <div className="col-4">
-                                                        <img src={this.state.thumbnail} alt="thumbnail" style={{width: 60, height: 60}} alt=""/>
+                                                        <img src={this.state.thumbnail} alt="thumbnail" style={{width: 60, height: 60}} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -617,57 +680,9 @@ class NovusBiArticleComponent extends React.PureComponent {
                                         
                                             <div> 
                                                 <div className="row">   
-                                                    { 'editor' === editorVal.type && (                       
-                                                    <div className="col-12">
-                                                    
-                                                        <Editor className="editor_cls" style={{height:'320px'}} value={editorVal.name} onTextChange={(e)=>this.handleEditorChange(e,index)}/>
-                                                    
-                                                    </div>
-                                                    )}
-                                                    { 'uploader' === editorVal.type && (
-                                                    <div className="col-12">
-                                                        <div className="image_uploader_main">
-                                                            {
-                                                                editorVal.name === '' &&
-                                                                <i className="fa fa-camera upload_icon"></i>
-                                                            }
-                                                            {
-                                                                editorVal.name !== '' &&
-                                                                <img src={editorVal.name} alt="upload" style={{"maxWidth":"200px"}} />
-                                                            }
-                                                            <br /><br />
-                                                            <FileUpload mode="basic" onProgress={this.fileUploadProcess} name="uploader" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={(e) => this.contentUploadImage(e,index)} auto={true} chooseLabel={this.state.uploadName} />
-                                                            
-                                                        </div>
-                                                        
-                                                    </div>  
-                                                    )} 
-                                                    { 'embed' === editorVal.type && (
-                                                    <div className="col-12">
-                                                        <div className="mt-2">
-                                                            <div className="image_uploader_main">
-                                                                <i className="fa fa-code upload_icon"></i>
-                                                                <p>Paste the embedded code below</p>
-                                                                <InputTextarea  onChange={(e)=>this.handleEmbadeChange(e,index)} rows={4} className="text_area_article"></InputTextarea>
-                                                                
-                                                            </div>                                                            
-                                                        </div>
-                                                    </div>     
-                                                    )}
-                                                    { 'quote' === editorVal.type && (
-                                                    <div className="col-12">
-                                                        <div className="mt-2">
-                                                            <div className="image_uploader_main">
-                                                                <i className="fa fa-quote-right upload_icon"></i>
-                                                                <p>Quotations</p>
-                                                                <InputTextarea rows={4}  onChange={(e)=>this.handleEmbadeChange(e,index)} className="text_area_article"></InputTextarea>
-                                                                
-                                                                </div>
-                                                        </div>
-                                                    </div>  
-                                                    )}                                    
+                                                   {this.actionTemplateEditor(editorVal,index)}               
                                                 </div>
-                                                <div className="btn_box_main">
+                                                <div className="btn_box_main"> 
                                                     <div>
                                                         <p className="ever_element pull-left" ><i className="fa fa-plus-circle"></i> Add An element</p>
                                                         
