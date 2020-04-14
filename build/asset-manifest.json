@@ -1,24 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.a40d38b7.chunk.css",
-    "main.js": "/static/js/main.bf782a461.3.0.chunk.js",
-    "main.js.map": "/static/js/main.bf782a461.3.0.chunk.js.map",
+    "main.css": "/static/css/main.1e039dfa.chunk.css",
+    "main.js": "/static/js/main.fdcdc2201.3.0.chunk.js",
+    "main.js.map": "/static/js/main.fdcdc2201.3.0.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a1.3.0.js",
     "runtime~main.js.map": "/static/js/runtime~main.a8a9905a1.3.0.js.map",
-    "static/css/2.d95e9972.chunk.css": "/static/css/2.d95e9972.chunk.css",
-    "static/js/2.1258a9781.3.0.chunk.js": "/static/js/2.1258a9781.3.0.chunk.js",
-    "static/js/2.1258a9781.3.0.chunk.js.map": "/static/js/2.1258a9781.3.0.chunk.js.map",
+    "static/css/2.1947b3fa.chunk.css": "/static/css/2.1947b3fa.chunk.css",
+    "static/js/2.732b4aa61.3.0.chunk.js": "/static/js/2.732b4aa61.3.0.chunk.js",
+    "static/js/2.732b4aa61.3.0.chunk.js.map": "/static/js/2.732b4aa61.3.0.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.b5f9989da519db5f6acca6c83fcbdf60.js": "/precache-manifest.b5f9989da519db5f6acca6c83fcbdf60.js",
+    "precache-manifest.70344cc5c257927664509e42bf917e95.js": "/precache-manifest.70344cc5c257927664509e42bf917e95.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/2.d95e9972.chunk.css.map": "/static/css/2.d95e9972.chunk.css.map",
-    "static/css/main.a40d38b7.chunk.css.map": "/static/css/main.a40d38b7.chunk.css.map",
+    "static/css/2.1947b3fa.chunk.css.map": "/static/css/2.1947b3fa.chunk.css.map",
+    "static/css/main.1e039dfa.chunk.css.map": "/static/css/main.1e039dfa.chunk.css.map",
     "static/media/layoutwrapper.css": "/static/media/SourceSansPro-SemiBold.ef842494.woff",
     "static/media/primereact.min.css": "/static/media/line.567f5738.gif",
     "static/media/icon-left.svg": "/static/media/icon-left.0ea4be34.svg",
     "static/media/loader-example.gif": "/static/media/loader-example.3886920c.gif",
     "static/media/novusone-logo.png": "/static/media/novusone-logo.6b9fef02.png",
     "static/media/theme.css": "/static/media/open-sans-v15-latin-regular.cffb686d.woff2",
-    "static/media/primeicons.css": "/static/media/primeicons.b8eccb10.eot"
+    "static/media/primeicons.css": "/static/media/primeicons.b8eccb10.eot",
+    "static/media/subimg1.PNG": "/static/media/subimg1.c3137dfc.PNG"
   }
 }
