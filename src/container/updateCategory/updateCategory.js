@@ -14,7 +14,6 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
-import Select from 'react-select';
 
 import {FileUpload} from 'primereact/fileupload';
 class UpdateCategoryComponent extends React.PureComponent {

@@ -16,9 +16,6 @@ import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Button} from 'primereact/button';
-import {InputText} from 'primereact/inputtext';
-import { Link } from 'react-router-dom';
 
 
 let isDelete = false;
@@ -53,25 +50,11 @@ class CategoryListComponent extends React.PureComponent {
 	}
 
   componentDidMount() {
-    let appData = JSON.parse(getItem('adminAppData'));
-    if(appData !== null) {
-      appData.cat_id = appData.cat_id;
-      appData.category_name = appData.category_name;
-      appData.icon = appData.icon;
-      delete appData.cat_id;
-      delete appData.category_name;
-      delete appData.icon;
-      let itemArr = [];
-      itemArr.push(appData);
-      this.setState({
-        categoryList: itemArr
-      });
-    } else {
+    
       this.setState({
         isLoader:true
       });
       this.props.fetchcategoryList();
-    }
   }
 
   componentWillReceiveProps(props) {
@@ -195,10 +178,10 @@ class CategoryListComponent extends React.PureComponent {
     let userRole = getItem('userRoleId');
     const Header = (<div className="offer_head">Category List</div>);
     const spinner = <span><img src={loaderImg} alt="" /></span>;
-    var tableHeader = <div style={{'textAlign':'left'}}>
-                        <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
-                        <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
-                    </div>;
+    // var tableHeader = <div style={{'textAlign':'left'}}>
+    //                     <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+    //                     <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
+    //                 </div>;
     return (
       <div className="active_drop_menus">
       <Loader show={this.state.isLoader} message={spinner}>

@@ -181,9 +181,6 @@ class NovusBiComponent extends React.PureComponent {
         { opened && (
           <div className="status_bx">
           <Button label="Draft" icon="pi pi-pencil" className="btn pending-status" iconPos="left" onClick={this.toggleBtn1} />
-          <Button label="Not published" className="btn btn-delete-customer" icon="pi pi-clock" className="btn pending-status" iconPos="left" onClick={this.toggleBtn2} />
-          <Button label="Published" className="btn approve-status" icon="pi pi-check" className="btn pending-status" iconPos="left" onClick={this.toggleBtn3
-          } />
           </div>  
         )}
       </div>

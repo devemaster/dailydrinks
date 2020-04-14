@@ -16,8 +16,6 @@ import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Button} from 'primereact/button';
-import {Dropdown} from 'primereact/dropdown';
 import logoImg from '../../assets/images/novusone-logo.png';
 
 

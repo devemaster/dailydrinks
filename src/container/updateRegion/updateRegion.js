@@ -82,7 +82,7 @@ class UpdateRegionComponent extends React.PureComponent {
                         let cId = this.state.countryNames.split(',');
                         for(let c of this.state.countryList){
                         for(let i of cId){
-                            if(i == c.id){
+                            if(i === c.id){
                             CountryArr.push(c)
                             }
                         }

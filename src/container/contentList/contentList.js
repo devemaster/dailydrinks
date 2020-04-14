@@ -18,7 +18,6 @@ import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Dropdown} from 'primereact/dropdown';
 import logoImg from '../../assets/images/novusone-logo.png';
 import moment from 'moment';
 
@@ -230,7 +229,7 @@ class ContentListComponent extends React.PureComponent {
 
   actionIconTemplate = (data) => {
     
-    if( data.thumbnail && data.thumbnail != ''){
+    if( data.thumbnail && data.thumbnail !== ''){
       return (
         <div>
           {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
@@ -408,7 +407,7 @@ class ContentListComponent extends React.PureComponent {
         })
       }else if(e === 'All Content'){
         for(let item of this.state.categoryList){
-          if(item.name != 'Podcast'){
+          if(item.name !== 'Podcast'){
             cats.push(item);
           }
         }
@@ -451,23 +450,23 @@ class ContentListComponent extends React.PureComponent {
   ];
   const { showSubCat } = this.state;
 
-  const allSection = [
-      {name: 'News'},
-      {name: 'KPIs Market'},
-      {name: 'Birds'},
-      {name: 'Pigs'},
-      {name: 'Ruminants'},
-      {name: 'Aqua'},
-      {name: 'Grains'},
-      {name: 'IMPORTS STATS'},
-      {name: 'ENZYMES '},
-      {name: 'MINERALS '},
-      {name: 'EUBIOTICS '},
-      {name: 'METIONINA '},
-      {name: 'COMPETITION'},
-      {name: 'PODCASTS'},
+  // const allSection = [
+  //     {name: 'News'},
+  //     {name: 'KPIs Market'},
+  //     {name: 'Birds'},
+  //     {name: 'Pigs'},
+  //     {name: 'Ruminants'},
+  //     {name: 'Aqua'},
+  //     {name: 'Grains'},
+  //     {name: 'IMPORTS STATS'},
+  //     {name: 'ENZYMES '},
+  //     {name: 'MINERALS '},
+  //     {name: 'EUBIOTICS '},
+  //     {name: 'METIONINA '},
+  //     {name: 'COMPETITION'},
+  //     {name: 'PODCASTS'},
 
-  ];     
+  // ];     
     const { contentList } = this.state;
     console.log(contentList);
     let userRole = getItem('userRoleId');
@@ -507,7 +506,7 @@ class ContentListComponent extends React.PureComponent {
                     </select>
                     <ul className="selectbox">
                       <li>
-                        <a onClick={this.toggleBox}>
+                        <a href="javascript:void(0)" onClick={this.toggleBox}>
                           {this.state.selectCategory}
                           <i className="fa fa-caret-down"></i>  
                         </a>                   
@@ -515,19 +514,19 @@ class ContentListComponent extends React.PureComponent {
                           {showSubCat &&
                             <ul className="subItem" >
                             <li>
-                              <a className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</a>
+                              <a href="javascript:void(0)" className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All</a>
                             </li>
                             {
                               this.state.categoryList.map((item,key)=>
                               <li key={key}>
-                                <a id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
+                                <a href="javascript:void(0)" id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
                                   {item.name}
                                 </a>
                                 <ul className="subSubItem">
                                 {
                                   item.child && item.child.map((sub,skey)=>
                                   <li key={skey}>
-                                    <a id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
+                                    <a href="javascript:void(0)" id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
                                       {sub.name}
                                     </a>
                                   </li>

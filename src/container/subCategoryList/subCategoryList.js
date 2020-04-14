@@ -18,10 +18,6 @@ import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
 import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
-import {Button} from 'primereact/button';
-import {Dropdown} from 'primereact/dropdown';
-import subImg1 from '../../../src/assets/images/subimg1.PNG';
-import { Link } from 'react-router-dom';
 
 
 
@@ -188,7 +184,7 @@ class SubCategoryListComponent extends React.PureComponent {
   render() {
     const { subCategoryList } = this.state;
     console.log(subCategoryList);
-    let userRole = getItem('userRoleId');
+    // let userRole = getItem('userRoleId');
     const Header = (<div className="offer_head">Sub-Category List</div>);
     const spinner = <span><img src={loaderImg} alt="" /></span>;
     var tableHeader = <div style={{'textAlign':'left'}}>

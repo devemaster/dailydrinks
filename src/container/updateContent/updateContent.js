@@ -14,7 +14,6 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
-import Select from 'react-select';
 class UpdateContentComponent extends React.PureComponent {
     constructor(props) {
         super(props);

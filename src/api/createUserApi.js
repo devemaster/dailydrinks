@@ -1,7 +1,6 @@
 
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
-import Swal from 'sweetalert2';
 class createUserApi {
     static doCreateUser(data) {
         const TOKEN = getItem('auth_token');

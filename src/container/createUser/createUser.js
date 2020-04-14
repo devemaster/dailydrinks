@@ -60,7 +60,7 @@ class CreateUserComponent extends React.PureComponent {
         }
         this.handleKeypress = this.handleKeypress.bind(this)
     }
-    handleKeypress(e) {
+    handleKeypress = (e) =>{
         const characterCode = e.key
         if (characterCode === 'Backspace') return
     
@@ -559,7 +559,7 @@ class CreateUserComponent extends React.PureComponent {
                                         <div className="col-6">
                                             <div className="mt-2">
                                                 <div className="form-group">
-                                                    <input type="number" min='1' step='1' onKeyDown={this.handleKeypress}className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} onkeydown="javascript: return event.keyCode === 69 ? false : true"/>
+                                                    <input type="number" min='1' step='1' onKeyDown={this.handleKeypress} className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} onkeydown="javascript: return event.keyCode === 69 ? false : true"/>
                                                     {errors && isSubmited && <span className="error-message">{errors.zipcode}</span>}
                                                    
                                                 </div>

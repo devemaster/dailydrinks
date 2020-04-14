@@ -28,10 +28,6 @@ let isUserAvailable = false;
 class UsersComponent extends React.PureComponent {
   constructor() { 
     super();
-    isApprove = false;
-    isDelete = false;
-    isApprovedApp = false;
-    isUserAvailable = false;
 		this.state = {
 			isLoader: false,
       globalFilter: '',

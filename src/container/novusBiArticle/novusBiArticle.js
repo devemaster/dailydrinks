@@ -15,13 +15,10 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
-import Select from 'react-select';
 import {Editor} from "primereact/editor";
 import {Button} from "primereact/button";
-import ImagesUploader from 'react-images-uploader';
 import 'react-images-uploader/styles.css';
 import 'react-images-uploader/font.css';
-import { Link } from 'react-router-dom';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Dropdown} from 'primereact/dropdown';
 import {Calendar} from 'primereact/calendar';
@@ -344,7 +341,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             isSubmited: true,
             }, () => { });
             validate(this.state);
-            const errors = validate(this.state);
+            // const errors = validate(this.state);
             console.log(this.state)
             // if (Object.keys(errors).length === 0) {
                 isDone = true;
@@ -377,7 +374,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         
         // }
     }
-    handleEditorChange(e,index){
+    handleEditorChange = (e,index) =>{
         console.log(e)
         this.state.editorArray.map((editor, sidx) => {
             if(sidx === index){
@@ -387,7 +384,7 @@ class NovusBiArticleComponent extends React.PureComponent {
           });
         this.setState({ editorArray: this.state.editorArray });
     }
-    handleEmbadeChange(e,index){
+    handleEmbadeChange = (e,index) => {
         console.log(e.target.value)
         this.state.editorArray.map((editor, sidx) => {
             if(sidx === index){
@@ -403,7 +400,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             isLoader:true
         })
     }
-    contentUploadImage(event,index) {
+    contentUploadImage = (event,index) =>{
         this.setState({
             isLoader:false
         })
@@ -496,7 +493,7 @@ class NovusBiArticleComponent extends React.PureComponent {
         }else{
             editorArray[0].type = "editor";
             for(let item of this.state.categoryList){
-                if(item.name != 'Podcast'){
+                if(item.name !== 'Podcast'){
                     cats.push(item);
                 }
             }
@@ -541,13 +538,13 @@ class NovusBiArticleComponent extends React.PureComponent {
             {name: 'Team'},
             {name: 'GuilhermeFray'},
         ];  
-        const header = this.renderHeader();
+        // const header = this.renderHeader();
 
         const Header = (<div className="offer_head">Create User</div>);
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
-        const errors = validate(this.state);
-        const { isSubmited, countryList, usersList } = this.state;
+        // const errors = validate(this.state);
+        const { countryList, usersList } = this.state;
 
         // let countryListOptionsItems = [];
         const countryListOptions = [];
@@ -603,12 +600,12 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                         <div className="mt-2">
                                                             <div className="form-group">
                                                             <FileUpload  onProgress={this.fileUploadProcess} mode="basic" name="thumbnail" url="http://3.132.68.85:3000/api/file_upload" accept="image/*" maxFileSize={1000000} onUpload={this.onBasicUploadThumb} auto={true} chooseLabel={this.state.thumbname} />
-                                                            {this.state.thumbnailError != '' && <span className="error-message err-msg">Something went wrong</span>}
+                                                            {this.state.thumbnailError !== '' && <span className="error-message err-msg">Something went wrong</span>}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="col-4">
-                                                        <img src={this.state.thumbnail} style={{width: 60, height: 60}} alt=""/>
+                                                        <img src={this.state.thumbnail} alt={this.state.thumbnail} style={{width: 60, height: 60}} alt=""/>
                                                     </div>
                                                 </div>
                                             </div>

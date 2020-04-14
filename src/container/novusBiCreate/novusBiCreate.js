@@ -13,7 +13,6 @@ import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import {FileUpload} from 'primereact/fileupload';
-import Select from 'react-select';
 class NovusBiCreateComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -160,7 +159,7 @@ class NovusBiCreateComponent extends React.PureComponent {
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
         const errors = validate(this.state);
-        const { isSubmited, countryList, usersList } = this.state;
+        const { isSubmited,usersList } = this.state;
 
         // let countryListOptionsItems = [];
         const userListOptions = [];

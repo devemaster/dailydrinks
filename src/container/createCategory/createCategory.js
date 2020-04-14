@@ -12,7 +12,6 @@ import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
-import Select from 'react-select';
 class CreateCategoryComponent extends React.PureComponent {
     _isMounted = false;
     constructor(props) {
@@ -128,7 +127,7 @@ class CreateCategoryComponent extends React.PureComponent {
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
         const errors = validate(this.state);
-        const { isSubmited, countryList, usersList } = this.state;
+        const { isSubmited,  usersList } = this.state;
 
         // let countryListOptionsItems = [];
         const userListOptions = [];
