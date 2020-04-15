@@ -152,7 +152,7 @@ class RegionListComponent extends React.PureComponent {
     let cId = data.country.split(',');
     for(let c of this.state.countryList){
       for(let i of cId){
-        if(i === c.id){
+        if(parseInt(i) === parseInt(c.id)){
           CountryArr.push(c.country_name)
         }
       }

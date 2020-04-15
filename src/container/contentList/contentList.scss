@@ -329,6 +329,10 @@ ul.selectbox {
     right: 5px;
     bottom: 12px;
 }
+.selectbox li {
+    display: block;
+    width: 100%;
+}
 ul.subItem {
     position: absolute;
     z-index: 100;
@@ -337,17 +341,19 @@ ul.subItem {
     margin-top: 8px;
     left: 0;
     width: 100%;
-    padding: 5px;
+    padding: 0;
     list-style: none;
+}
+.subSubItem li {
+    font-weight: 400;
 }
 ul.subSubItem {
     list-style: none;
-    padding-left: 12px;
+    padding:0
 }
 .subItem li {
     border-bottom: 1px solid #f7f7f7;
     display: block;
-    padding: 5px;
     color: #565656 !important;
     cursor: pointer;
     font-size: 16px;
@@ -357,4 +363,10 @@ select.type_drop {
     padding: 2px 5px 8px;
     border-color: lightgray;
     border-radius: 3px;
+}
+.subItem > li{
+    padding:5px
+}
+.subSubItem > li {
+    padding: 5px 5px 5px 15px;
 }

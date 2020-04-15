@@ -82,10 +82,10 @@ class ContentListComponent extends React.PureComponent {
                 this.setState({
                   dumCat: props.allCategoryListRes.data.allCategoryList.data
                 },()=>{
-                  let cats = [];
+                  let cats = [{name:'All',id:''}];
                   let mats = []
                   for(let c of this.state.dumCat){
-                      if(c.parent_id === '0'){
+                      if(c.parent_id === 0){
                         cats.push(c)
                       }else{
                         mats.push(c)
@@ -362,7 +362,7 @@ class ContentListComponent extends React.PureComponent {
       for(let item of this.state.contentList){
         let vals = item.categories.split(',');
         console.log(vals)
-        if(vals.includes(e.id)){
+        if(vals.includes(e.id.toString())){
           cats.push(item);
         }
         this.setState({
@@ -512,16 +512,15 @@ class ContentListComponent extends React.PureComponent {
                         
                           {showSubCat &&
                             <ul className="subItem" >
-                            <li className="optionGroup"  id="" name="All" onClick={(e) => {this.selectCatChange(e.target)}}>All
-                            </li>
                             {
                               this.state.categoryList.map((item,key)=>
-                              <li key={key}  id={item.id} name={item.name} className="optionGroup" onClick={(e) => {this.selectCatChange(e.target)}} >
-                                  {item.name}
+                              <li key={key} >
+                              <span id={item.id} name={item.name} className="optionGroup" onClick={() => {this.selectCatChange(item)}} >
+                                  {item.name}</span> 
                                 <ul className="subSubItem">
                                 {
                                   item.child && item.child.map((sub,skey)=>
-                                  <li key={skey}  id={sub.id} name={sub.name} onClick={(f) => {this.selectCatChange(f.target)}}>
+                                  <li key={skey}  id={sub.id} name={sub.name} onClick={() => {this.selectCatChange(sub)}}>
                                       {sub.name}
                                   </li>
                                   )

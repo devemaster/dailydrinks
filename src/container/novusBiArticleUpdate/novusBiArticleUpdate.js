@@ -266,7 +266,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                             let cId = this.state.regionNames.split(',');
                             for(let c of this.state.regionList){
                             for(let i of cId){
-                                if(i === c.region_id){
+                                if(parseInt(i) === parseInt(c.region_id)){
                                     RegionArr.push(c)
                                 }
                             }
