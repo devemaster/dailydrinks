@@ -327,15 +327,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                     counts.push(item.region_id)
                 }
                 countryIds = counts.toString()
-            }else{
-                Swal.fire({
-                    title: 'Please choos a Region.',
-                    type: 'error',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false,
-                    timer: 3000
-                  });
-            }
+           
             
             this.setState({
             isSubmited: true,
@@ -361,6 +353,15 @@ class NovusBiArticleComponent extends React.PureComponent {
                     region:countryIds
                 }
             this.props.handleFormSubmit(payloadReq);
+        }else{
+            Swal.fire({
+                title: 'Please choos a Region.',
+                type: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                timer: 3000
+              });
+        }
         }else{
             Swal.fire({
                 title: 'Please choos a category (Appear at).',

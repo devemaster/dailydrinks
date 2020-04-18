@@ -352,26 +352,29 @@ class ContentListComponent extends React.PureComponent {
     this.setState({showSubCat :false}) 
     console.log(e)
     this.setState({
-      selectCategory:e.name
-    })
-    if(e.id === ''){
-      this.setState({
-        contentList:this.state.backupContentList
-      })
-    }else{
-      for(let item of this.state.contentList){
-        let vals = item.categories.split(',');
-        console.log(vals)
-        if(vals.includes(e.id.toString())){
-          cats.push(item);
-        }
+      selectCategory:e.name,      
+      contentList:this.state.backupContentList
+    },()=>{
+
+      if(e.id === ''){
         this.setState({
-          contentList:cats
+          contentList:this.state.backupContentList
         })
+      }else{
+        for(let item of this.state.contentList){
+          let vals = item.categories.split(',');
+          console.log(vals)
+          if(vals.includes(e.id.toString())){
+            cats.push(item);
+          }
+          this.setState({
+            contentList:cats
+          })
+        }
       }
-    }
-    
-    this.setState({allSection: e.id})
+      
+      this.setState({allSection: e.id})
+    })
 
 
 
