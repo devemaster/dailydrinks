@@ -29,7 +29,12 @@ import {Checkbox} from 'primereact/checkbox';
 import {InputSwitch} from 'primereact/inputswitch';
 import {FileUpload} from 'primereact/fileupload';
 
+
 import Swal from 'sweetalert2';
+
+import { TreeSelect } from 'antd';
+
+const { TreeNode } = TreeSelect;
 
 const editorArray = [{'type':"editor",'name':""}];
 let isDone = false;
@@ -44,6 +49,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             icon: '',
             countryList: [],
             usersList: [],
+            category:undefined,
             categoryList:[],
             selectedCountry: null,
             selectedUser: null,
@@ -212,27 +218,43 @@ class NovusBiArticleComponent extends React.PureComponent {
         if(nextProps.allCategoryListRes){
             if(nextProps.allCategoryListRes.data.allCategoryList ){
                 if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
-                    this.setState({
-                        categoryList: nextProps.allCategoryListRes.data.allCategoryList.data,
-                        backCat: nextProps.allCategoryListRes.data.allCategoryList.data,
-                    },()=>{
-                        let cat =[];
-                        for(let item of this.state.categoryList){
-                            for(let subitem of this.state.categories){
-                                if(parseInt(item.id) === parseInt(subitem)){
-                                    
-                                    console.log(parseInt(item.id),parseInt(subitem))
-                                    cat.push(item);
-                                    this.setState({
-                                        category:cat
-                                    })
+                    
+                        this.setState({
+                            dumCat: nextProps.allCategoryListRes.data.allCategoryList.data
+                            },()=>{
+                            let cats = [{name:'All',id:'',key:''}];
+                            let mats = []
+                            for(let c of this.state.dumCat){
+                                if(c.parent_id === 0){
+                                    c.key = c.id;
+                                    cats.push(c)
+                                }else{                                    
+                                    c.key = c.id;
+                                    mats.push(c)
                                 }
                             }
-                        }       
-                        console.log(this.state.category)
-                        const e = {value:{name:'All Articles'}};
-                        this.typeSelect(e)
+                            for(let c of cats){
+                                let dts = []
+                                for(let k of mats){
+                                if(c.id === k.parent_id){
+                                    dts.push(k);
+                                }
+                                }
+                                c.child = dts;
+                            }
+                            console.log(cats)
+                            this.setState({
+                            backupCat: cats,
+                            categoryList: cats,
+                            backCat: cats,
+                            },()=>{
+                                console.log(this.state.categoryList);
+                                const e = {value:{name:'All Articles'}};
+                                this.typeSelect(e)
+                            })    
                     });
+                    
+                   
                 }
             }
         }
@@ -315,11 +337,14 @@ class NovusBiArticleComponent extends React.PureComponent {
         const catName = [];
         const counts = [];
         if(this.state.category){
-            for(let item of this.state.category){
-                categories.push(item.id)
-                catName.push(item.name)
+            for(let item of this.state.dumCat){
+                for(let i of this.state.category){
+                    if(parseInt(item.id) === parseInt(i)){
+                        catName.push(item.name)
+                    }
+                }
             }
-            const vals = categories.join(',');
+            const vals = this.state.category.join(',');
             const valsName = catName.join(',');
             let countryIds = '';
             if(this.state.region && this.state.region.length > 0){
@@ -588,6 +613,10 @@ class NovusBiArticleComponent extends React.PureComponent {
         }                   
     }
 
+    onCatChange = (v)=>{
+        console.log(v)
+        this.setState({ category:v });
+    }
     
     render() {
         const allContent = [
@@ -759,8 +788,33 @@ class NovusBiArticleComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Appear at:</label>
-                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" optionValue="id" value={this.state.category} options={this.state.categoryList} onChange={(e) => {this.setState({category: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
-                                                </div>
+                                                    <TreeSelect
+                                                        showSearch
+                                                        style={{ width: '100%' }}
+                                                        value={this.state.category}
+                                                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                                        placeholder="Please select Category"
+                                                        allowClear
+                                                        treeCheckable={true}
+                                                        multiple
+                                                        treeDefaultExpandAll
+                                                        onChange={this.onCatChange}
+                                                    >
+                                                    {
+                                                        this.state.categoryList.length > 0 && this.state.categoryList.map((item,key)=>
+                                                        <TreeNode key={item.key} value={item.id} title={item.name}>
+                                                        {
+                                                            item.child.length > 0 && item.child.map((itemSub,subkey)=>
+                                                            <TreeNode key={itemSub.key} value={itemSub.id} title={itemSub.name}>
+                                                            </TreeNode>
+                                                            )
+                                                        }
+                                                        </TreeNode>
+                                                        )
+                                                    }
+                                                        
+                                                    </TreeSelect>
+                                                    </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 form-group">

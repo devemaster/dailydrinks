@@ -28,6 +28,10 @@ import {InputSwitch} from 'primereact/inputswitch';
 import {FileUpload} from 'primereact/fileupload';
 
 
+import { TreeSelect } from 'antd';
+
+const { TreeNode } = TreeSelect;
+
 let isDone = false;
 let editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleUpdateComponent extends React.PureComponent {
@@ -181,7 +185,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     mainTitle:this.state.appData.title,
                     editorArray:JSON.parse(this.state.appData.contant),
                     type:this.state.appData.type,
-                    categories:this.state.appData.categories.split(','),
+                    category:this.state.appData.categories.split(','),
                     date:new Date(this.state.appData.date),
                     author:this.state.appData.author,
                     heighlight:this.state.appData.higlight === 'true'?true:false,
@@ -223,23 +227,38 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             if(nextProps.allCategoryListRes.data.allCategoryList ){
                 if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
                     this.setState({
-                        categoryList: nextProps.allCategoryListRes.data.allCategoryList.data
-                    },()=>{
-                        let cat =[];
-                        for(let item of this.state.categoryList){
-                            for(let subitem of this.state.categories){
-                                if(parseInt(item.id) === parseInt(subitem)){
-                                    
-                                    console.log(parseInt(item.id),parseInt(subitem))
-                                    cat.push(item);
-                                    this.setState({
-                                        category:cat
-                                    })
+                        dumCat: nextProps.allCategoryListRes.data.allCategoryList.data
+                        },()=>{
+                            let cats = [{name:'All',id:'',key:''}];
+                            let mats = []
+                            for(let c of this.state.dumCat){
+                                if(c.parent_id === 0){
+                                    c.key = c.id;
+                                    cats.push(c)
+                                }else{                                    
+                                    c.key = c.id;
+                                    mats.push(c)
                                 }
                             }
-                        }       
-
-                        console.log(this.state.category)
+                            for(let c of cats){
+                                let dts = []
+                                for(let k of mats){
+                                if(c.id === k.parent_id){
+                                    dts.push(k);
+                                }
+                                }
+                                c.child = dts;
+                            }
+                            console.log(cats)
+                            this.setState({
+                            backupCat: cats,
+                            categoryList: cats,
+                            backCat: cats,
+                            },()=>{
+                                console.log(this.state.categoryList);
+                                // const e = {value:{name:'All Articles'}};
+                                // this.typeSelect(e)
+                            })    
                     });
                 }
             }
@@ -341,11 +360,14 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         const categories = [];
         const catName = [];
         const counts = [];
-        for(let item of this.state.category){
-            categories.push(item.id)
-            catName.push(item.name)
+        for(let item of this.state.dumCat){
+            for(let i of this.state.category){
+                if(parseInt(item.id) === parseInt(i)){
+                    catName.push(item.name)
+                }
+            }
         }
-        const vals = categories.join(',');
+        const vals = this.state.category.join(',');
         const valsName = catName.join(',');
         let countryIds = '';
         for(let item of this.state.region){
@@ -718,7 +740,32 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                             <div className="row">
                                                 <div className="col-12 form-group">
                                                     <label>Appear at:</label>
-                                                    <MultiSelect className="all_sec_dropdown all_section_tab form-drop-control" optionLabel="name" optionValue="id" value={this.state.category} options={this.state.categoryList} onChange={(e) => {this.setState({category: e.value})}} style={{minWidth:'100%'}} filter={true} filterPlaceholder="Search" placeholder="Choose" />
+                                                    <TreeSelect
+                                                        showSearch
+                                                        style={{ width: '100%' }}
+                                                        value={this.state.category}
+                                                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                                        placeholder="Please select Category"
+                                                        allowClear
+                                                        treeCheckable={true}
+                                                        multiple
+                                                        treeDefaultExpandAll
+                                                        onChange={this.onCatChange}
+                                                        >
+                                                        {
+                                                            this.state.categoryList.length > 0 && this.state.categoryList.map((item,key)=>
+                                                            <TreeNode key={item.key} value={item.id} title={item.name}>
+                                                            {
+                                                                item.child.length > 0 && item.child.map((itemSub,subkey)=>
+                                                                <TreeNode key={itemSub.key} value={itemSub.id} title={itemSub.name}>
+                                                                </TreeNode>
+                                                                )
+                                                            }
+                                                            </TreeNode>
+                                                            )
+                                                        }
+                                                        
+                                                    </TreeSelect>
                                                 </div>
                                             </div>
                                             <div className="row">

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reducers from './reducers';
 import thunk from 'redux-thunk';
-
+import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
