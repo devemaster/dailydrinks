@@ -63,6 +63,7 @@ class NovusBiArticleComponent extends React.PureComponent {
             date:new Date(),
             authorInput:false,
             authorSelect:true,
+            author:'',
             comment:true,
             editorArray:editorArray,
             mainTitle:'',
@@ -80,7 +81,8 @@ class NovusBiArticleComponent extends React.PureComponent {
             backCat:[],
             thumbname:'Choose Thumbnail',
             thumbnail:'',
-            thumbnailError:''
+            thumbnailError:'',
+            resume:''
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -182,29 +184,31 @@ class NovusBiArticleComponent extends React.PureComponent {
     
 
     componentDidMount() {
-        if(this.props.location.state){
-            const appDetails = this.props.location.state.appData;
-            console.log(appDetails);
-            this.setState({
-                appData: appDetails,
-            }, () => {
-                this.setState({
-                    cat_id: this.state.appData.contant_id,
-                    mainTitle:this.state.appData.title,
-                    editorArray:JSON.parse(this.state.appData.contant),
-                    type:this.state.appData.type,
-                    categories:this.state.appData.categories.split(','),
-                    date:this.state.appData.date,
-                    author:this.state.appData.author,
-                    heighlight:this.state.appData.higlight,
-                    resume:this.state.appData.resume,
-                    comment:parseInt(this.state.appData.comment),
-                    authorShow:true
-                    // countries: this.state.appData.selected_countries
-                })
+        console.log("editort",this.state.editorArray)
+        
+        // if(this.props.location.state){
+        //     const appDetails = this.props.location.state.appData;
+        //     console.log(appDetails);
+        //     this.setState({
+        //         appData: appDetails,
+        //     }, () => {
+        //         this.setState({
+        //             // cat_id: this.state.appData.contant_id,
+        //             // mainTitle:this.state.appData.title,
+        //             // editorArray:JSON.parse(this.state.appData.contant),
+        //             // type:this.state.appData.type,
+        //             // categories:this.state.appData.categories.split(','),
+        //             // date:this.state.appData.date,
+        //             // author:this.state.appData.author,
+        //             // heighlight:this.state.appData.higlight,
+        //             // resume:this.state.appData.resume,
+        //             // comment:parseInt(this.state.appData.comment),
+        //             // authorShow:true
+        //             // countries: this.state.appData.selected_countries
+        //         })
                 
-            });
-        }
+        //     });
+        // }
 
         this.props.fetchRegionList();
         this.props.getAllCountry();
@@ -306,7 +310,16 @@ class NovusBiArticleComponent extends React.PureComponent {
                     isDone = false;
                     console.log("success")
                     this.setState({
-                        isLoader: false
+                        isLoader: false,
+                        mainTitle: '',
+                        thumbnail:'',
+                        editorArray: [{'type':"editor",'name':""}],
+                        type:'',
+                        category:'',
+                        date:new Date(),
+                        author:'',
+                        resume:'',
+                        pdf:''
                     });
                     this.props.history.push('/content-list');
                 } else {
@@ -333,19 +346,20 @@ class NovusBiArticleComponent extends React.PureComponent {
     }
     handleSubmit = () => {
         console.log(this.state.region)
-        const categories = [];
-        const catName = [];
-        const counts = [];
+        // const categories = [];
+        let catName = '';
+        let counts = [];
         if(this.state.category){
+            console.log(this.state.category)
             for(let item of this.state.dumCat){
-                for(let i of this.state.category){
-                    if(parseInt(item.id) === parseInt(i)){
-                        catName.push(item.name)
+                // for(let i of this.state.category){
+                    if(parseInt(item.id) === parseInt(this.state.category)){
+                        catName = item.name
                     }
-                }
+                // }
             }
-            const vals = this.state.category.join(',');
-            const valsName = catName.join(',');
+            const vals = this.state.category;
+            const valsName = catName;
             let countryIds = '';
             if(this.state.region && this.state.region.length > 0){
                 for(let item of this.state.region){
@@ -511,6 +525,7 @@ class NovusBiArticleComponent extends React.PureComponent {
        },()=>{
         if(e.value.name ===  'All Sounds'){
             editorArray[0].type = "audio";
+            editorArray[0].name = '';
             for(let item of this.state.categoryList){
                 if(item.name === 'Podcast'){
                   cats.push(item);
@@ -523,8 +538,14 @@ class NovusBiArticleComponent extends React.PureComponent {
                 categoryList:cats,
                 editorArray: editorArray
             })
+        editorArray[0].name = "";
+        this.setState({
+            editorArray:editorArray
+        })
+        console.log("editort1",this.state.editorArray)
         }else{
             editorArray[0].type = "editor";
+            editorArray[0].name = '';
             for(let item of this.state.categoryList){
                 if(item.name !== 'Podcast'){
                     cats.push(item);
@@ -536,6 +557,11 @@ class NovusBiArticleComponent extends React.PureComponent {
                 categoryList:cats,
                 editorArray: editorArray
             })
+            editorArray[0].name = "";
+        this.setState({
+            editorArray:editorArray
+        })
+        console.log("editort1",this.state.editorArray)
         }
        })
         
@@ -663,6 +689,7 @@ class NovusBiArticleComponent extends React.PureComponent {
                 );
             });
         }
+        console.log('NewData',this.state.editorArray)
         return (
                 <LayoutWrapper title="Create Application" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
@@ -795,14 +822,12 @@ class NovusBiArticleComponent extends React.PureComponent {
                                                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                                                         placeholder="Please select Category"
                                                         allowClear
-                                                        treeCheckable={true}
-                                                        multiple
                                                         treeDefaultExpandAll
                                                         onChange={this.onCatChange}
                                                     >
                                                     {
                                                         this.state.categoryList.length > 0 && this.state.categoryList.map((item,key)=>
-                                                        <TreeNode key={item.key} value={item.id} title={item.name}>
+                                                        <TreeNode key={item.key} value={item.id} title={item.name} disabled={item.child.length > 0}>
                                                         {
                                                             item.child.length > 0 && item.child.map((itemSub,subkey)=>
                                                             <TreeNode key={itemSub.key} value={itemSub.id} title={itemSub.name}>

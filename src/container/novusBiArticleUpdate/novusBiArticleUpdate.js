@@ -73,7 +73,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             regionSelectData:[],
             thumbname:'Choose Thumbnail',
             thumbnail:'',
-            thumbnailError:''
+            thumbnailError:'',
+            resume:''
         }
         
         this.showMenu = this.showMenu.bind(this);
@@ -185,7 +186,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                     mainTitle:this.state.appData.title,
                     editorArray:JSON.parse(this.state.appData.contant),
                     type:this.state.appData.type,
-                    category:this.state.appData.categories.split(','),
+                    category:parseInt(this.state.appData.categories),
                     date:new Date(this.state.appData.date),
                     author:this.state.appData.author,
                     heighlight:this.state.appData.higlight === 'true'?true:false,
@@ -357,18 +358,19 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
     }
     handleSubmit = () => {
         
-        const categories = [];
-        const catName = [];
-        const counts = [];
+        // const categories = [];
+        let catName = '';
+        let counts = [];
+        console.log(this.state.category)
         for(let item of this.state.dumCat){
-            for(let i of this.state.category){
-                if(parseInt(item.id) === parseInt(i)){
-                    catName.push(item.name)
+            // for(let i of this.state.category){
+                if(parseInt(item.id) === parseInt(this.state.category)){
+                    catName = item.name
                 }
-            }
+            // }
         }
-        const vals = this.state.category.join(',');
-        const valsName = catName.join(',');
+        const vals = this.state.category;
+        const valsName = catName;
         let countryIds = '';
         for(let item of this.state.region){
             counts.push(item.region_id)
@@ -567,6 +569,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 );
             });
         }
+        console.log('NewData',this.state.editorArray)
         return (
                 <LayoutWrapper title="Create Application" header={Header} >
                     <Loader show={this.state.isLoader} message={spinner}>
@@ -747,8 +750,6 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                                                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                                                         placeholder="Please select Category"
                                                         allowClear
-                                                        treeCheckable={true}
-                                                        multiple
                                                         treeDefaultExpandAll
                                                         onChange={this.onCatChange}
                                                         >
