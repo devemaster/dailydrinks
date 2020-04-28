@@ -200,9 +200,7 @@ span.fa.fa-search.form-control-feedback.search-icon {
 .header_dropopen .dropdown-menu.menu_fontSze {
     display: block;
 }
-.active_drop_menus .dropdown-menu.menu_fontSze {
-    display: block;
-} 
+
 .active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a i, 
 .active_drop_menus .right_sidebar_content .dropdown-menu.menu_fontSze a i,
 .active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a span, 
@@ -214,3 +212,10 @@ span.fa.fa-search.form-control-feedback.search-icon {
 // tbody.p-datatable-tbody tr:nth-child(5) i.fa.fa-eye {
 //     display: none;
 // } 
+th {
+    width: 31%;
+    text-align: left !important;
+}
+td {
+    text-align: left !important;
+}

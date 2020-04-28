@@ -44,14 +44,21 @@ class GaverageComponent extends React.PureComponent {
       openDeleteAppModal: false,
       isDisabled: false,
       newList:[],
-      editable:true,
+      editable:false,
       Age:'',
       Dysbacteriosis:'',
       E_acervuline:'',
       E_maxima:'',
       E_tenella:'',
       ID:'',
-      TMLS:''
+      TMLS:'',
+      ErrorAge:false,
+      ErrorDysbacteriosis:false,
+      ErrorE_acervuline:false,
+      ErrorE_maxima:false,
+      ErrorE_tenella:false,
+      ErrorID:false,
+      ErrorTMLS:false
     }
 	}
 
@@ -82,7 +89,8 @@ class GaverageComponent extends React.PureComponent {
               E_maxima:this.state.AverageList[0].E_maxima,
               E_tenella:this.state.AverageList[0].E_tenella,
               ID:this.state.AverageList[0].ID,
-              TMLS:this.state.AverageList[0].TMLS
+              TMLS:this.state.AverageList[0].TMLS,
+              editable:false
             })
           });
 				}else{
@@ -97,11 +105,7 @@ class GaverageComponent extends React.PureComponent {
       if(props.doUpdateAverageRes && props.doUpdateAverageRes.data){            
           if(props.doUpdateAverageRes.data && props.doUpdateAverageRes.data.updateAverage ){
               if(props.doUpdateAverageRes.data.updateAverage && isDelete === true){
-                      isDelete= false;
-                  this.setState({
-                      isLoader: false
-                  });
-                  
+                isDelete= false;
                 this.props.fetchAverageList();  
               } 
           }
@@ -109,10 +113,96 @@ class GaverageComponent extends React.PureComponent {
   }
   }
  
- 
+  edit=()=>{
+    this.setState({
+      editable:!this.state.editable
+    })
+  }
   
   update=()=>{
-    
+      if(this.state.Age ===''){
+        this.setState({
+          ErrorAge:true,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+      }else if(this.state.Dysbacteriosis ===''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:true,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+
+      }else if(this.state.E_acervuline ==''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:true,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+      }else if(this.state.E_maxima ==''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:true,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+      }else if(this.state.E_tenella ==''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:true,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+        
+      }else if(this.state.ID ==''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:true,
+          ErrorTMLS:false
+        })
+      }else if(this.state.TMLS ==''){
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:true
+        })
+      }else{
+        this.setState({
+          ErrorAge:false,
+          ErrorDysbacteriosis:false,
+          ErrorE_acervuline:false,
+          ErrorE_maxima:false,
+          ErrorE_tenella:false,
+          ErrorID:false,
+          ErrorTMLS:false
+        })
+        
       arr[0].Age = this.state.Age;
       arr[0].Dysbacteriosis=this.state.Dysbacteriosis;
       arr[0].E_acervuline=this.state.E_acervuline;
@@ -135,6 +225,8 @@ class GaverageComponent extends React.PureComponent {
       }
       isDelete = true;
       this.props.handleFormSubmit(data);
+      
+    }
   }
 
   render() {
@@ -148,7 +240,7 @@ class GaverageComponent extends React.PureComponent {
     //                     <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
     //                 </div>;
     return (
-      <div className="active_drop_menus">
+      <div className="">
       <Loader show={this.state.isLoader} message={spinner}>
         <LayoutWrapper className="Banner_hed_page" title="Global Average" header={Header}>
           <div className="application-list_content header_dropopen">
@@ -159,7 +251,14 @@ class GaverageComponent extends React.PureComponent {
                     <div  className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-sm-12 col-md-6">
                         <div className="heading_title">Global Average</div>
+                        
                       </div>
+                      {
+                        userRole === '1' &&
+                        <div className="col-sm-12 col-md-6" style={{ textAlign: 'right' }}>
+                          <button className="btn btn-placeOrder" onClick={this.edit}>Edit</button>
+                        </div>
+                      }
                     </div>
                     <div className="row pl-pr-15px xs-pl-pr-0px">
                       <div className="col-12 table-responsive tableheight advisor-tab-tableheight" style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 15 }}>
@@ -168,37 +267,90 @@ class GaverageComponent extends React.PureComponent {
                           
                             <tr >                            
                               <th>Age</th>
-                              <td  ><input type="text" id="Age" value={this.state.Age} onChange={(e) => {this.setState({Age:e.target.value})}}/></td>
-                            </tr>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="Age" value={this.state.Age} onChange={(e) => {this.setState({Age:e.target.value})}}/>
+                                {this.state.ErrorAge && <span className="error-message">Please fill this field</span>}
+                                </td>
+                           
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.Age}</td>
+                           
+                              }
+                              </tr>
                             <tr >                            
                               <th>Dysbacteriosis</th>
-                              <td  ><input type="text" id="Dysbacteriosis" value={this.state.Dysbacteriosis} onChange={(e) => {this.setState({Dysbacteriosis:e.target.value})}}/></td>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="Dysbacteriosis" value={this.state.Dysbacteriosis} onChange={(e) => {this.setState({Dysbacteriosis:e.target.value})}}/>
+                                {this.state.ErrorDysbacteriosis && <span className="error-message">Please fill this field</span>}
+                                </td>
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.Dysbacteriosis}</td>
+                            
+                              }
                             </tr>
                             <tr >                            
                               <th>E_acervuline</th>
-                              <td  ><input type="text" id="E_acervuline" value={this.state.E_acervuline} onChange={(e) => {this.setState({E_acervuline:e.target.value})}}/></td>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="E_acervuline" value={this.state.E_acervuline} onChange={(e) => {this.setState({E_acervuline:e.target.value})}}/>
+                                {this.state.ErrorE_acervuline && <span className="error-message">Please fill this field</span>}
+                                </td>
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.E_acervuline}</td>
+                            
+                              }
                             </tr>
                             <tr >                            
                               <th>E_maxima</th>
-                              <td  ><input type="text" id="E_maxima" value={this.state.E_maxima} onChange={(e) => {this.setState({E_maxima:e.target.value})}}/></td>
-                            </tr>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="E_maxima" value={this.state.E_maxima} onChange={(e) => {this.setState({E_maxima:e.target.value})}}/>
+                                {this.state.ErrorE_maxima && <span className="error-message">Please fill this field</span>}
+                                </td>
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.E_maxima}</td>
+                            
+                              }
+                              </tr>
                             <tr >                            
                               <th>E_tenella</th>
-                              <td  ><input type="text" id="E_tenella" value={this.state.E_tenella} onChange={(e) => {this.setState({E_tenella:e.target.value})}}/></td>
-                            </tr>
-                            <tr >                            
-                              <th>ID</th>
-                              <td  ><input type="text" id="ID" value={this.state.ID} onChange={(e) => {this.setState({ID:e.target.value})}}/></td>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="E_tenella" value={this.state.E_tenella} onChange={(e) => {this.setState({E_tenella:e.target.value})}}/>                                
+                                {this.state.ErrorE_tenella && <span className="error-message">Please fill this field</span>}
+                                </td>
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.E_tenella}</td>
+                            
+                              }
                             </tr>
                             <tr >                            
                               <th>TMLS</th>
-                              <td  ><input type="text" id="TMLS" value={this.state.TMLS} onChange={(e) => {this.setState({TMLS:e.target.value})}}/></td>
+                              {
+                                this.state.editable === true && <td  >
+                                <input type="text" id="TMLS" value={this.state.TMLS} onChange={(e) => {this.setState({TMLS:e.target.value})}}/>                                
+                                {this.state.ErrorTMLS && <span className="error-message">Please fill this field</span>}
+                                </td>
+                              }
+                              {
+                                this.state.editable === false && <td  >{this.state.TMLS}</td>
+                            
+                              }
                             </tr>
-                            <tr>
+                            {
+                              this.state.editable === true &&<tr>
                               <td colSpan="2">
-                              <button className="btn btn-placeOrder" onClick={this.update}>Update</button>
+                              <button className="btn btn-placeOrder"  onClick={this.update}>Update</button>
                               </td>
                             </tr>
+                            }
                               
                           </tbody>
                         </table>

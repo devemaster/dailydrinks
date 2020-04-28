@@ -134,7 +134,7 @@ class LayoutWrapper extends React.PureComponent {
                                                 <span className="content-name">Applications</span>
                                             </NavLink>
                                         </div>
-                                        <div className={page[1]==='global-average' ? 'active' : 'no-class'} onClick={this.goCustomer}>
+                                        <div className={page[1]==='global-average' ? 'active' : 'no-class'} >
                                             <NavLink to={"/global-average"} data-parent="#sidebar" >
                                             <i className="fa fa-globe" style={{fontSize: '16px'}}  aria-hidden="true"></i>
                                                 <span className="content-name">Global Average</span>
