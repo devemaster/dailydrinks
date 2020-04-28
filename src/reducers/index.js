@@ -47,6 +47,8 @@ import regionListReducer from './regionListReducer';
 import deleteRegionListReducer from './deleteRegionListReducer';
 import createRegionReducer from './createRegionReducer';
 import updateRegionReducer from './updateRegionReducer';
+import gAverageReducer from './gAverageReducer';
+import updateAverageReducer from './updateAverageReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -97,4 +99,6 @@ export default combineReducers({
   deleteRegionList: deleteRegionListReducer,
   createRegion: createRegionReducer,
   updateRegion: updateRegionReducer,
+  averageList: gAverageReducer,
+  updateAverage: updateAverageReducer,
 });

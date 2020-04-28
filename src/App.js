@@ -34,6 +34,7 @@ import updateBanner from './container/updateBanner/updateBanner';
 import regionList from './container/regionList/regionList';
 import regionCreate from './container/regionCreate/regionCreate';
 import updateRegion from './container/updateRegion/updateRegion';
+import gAverage from './container/gAverage/gAverage';
 
 class App extends React.PureComponent {
   
@@ -88,6 +89,7 @@ class App extends React.PureComponent {
                 <Route path="/region-list" component={regionList} />
                 <Route path="/region-create" component={regionCreate} />
                 <Route path="/region-update" component={updateRegion} />
+                <Route path="/global-average" component={gAverage} />
                 
                 
                 <Route render={() => (<Redirect to="/users" />)} />
