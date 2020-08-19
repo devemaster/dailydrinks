@@ -4,6 +4,7 @@ import createAdminApi from '../api/createAdminApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function doCreateAdmin(data) {
   return {
     type: types.DO_CREATE_ADMIN,
@@ -11,6 +12,7 @@ export function doCreateAdmin(data) {
   };
 }
 
+// request respnse set
 export function doCreateAdminRes(data) {
   return {
     type: types.DO_CREATE_ADMIN_RES,
@@ -18,6 +20,7 @@ export function doCreateAdminRes(data) {
   };
 }
 
+// call api, action and response
 export function create_admin(data) {
   const TOKEN = getItem('auth_token');
 

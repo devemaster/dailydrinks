@@ -1,4 +1,6 @@
 
+
+// validation function used to banner create
 export default function validate(values) {
   const errors = {};
   if (values.title === '') {

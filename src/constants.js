@@ -1,6 +1,3 @@
-
-export const BASE_URL = 'http://3.132.68.85:3000/api';
- 
- 
- 
- 
+// comman base url setup for api uses
+export const BASE_URL = 'https://api.novusint.com/navigate';
+// export const BASE_URL = 'https://novusone-api-prod.azurewebsites.net';

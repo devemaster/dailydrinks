@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getcontentList() {
 
   return {
@@ -11,6 +12,7 @@ export function getcontentList() {
   };
 }
 
+// request respnse set
 export function getcontentListRes(data) {  
   return {
     type: types.FETCH_CONTENTLIST_RES, 
@@ -18,6 +20,7 @@ export function getcontentListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchcontentList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

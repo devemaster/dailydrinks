@@ -14,6 +14,8 @@ import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 class CreateCategoryComponent extends React.PureComponent {
     _isMounted = false;
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +32,9 @@ class CreateCategoryComponent extends React.PureComponent {
             categoryTitle:'Create Category'
         }
     }
+
+    
+// on component load function call
     componentDidMount() {
         // this.props.getAllUsers();
         if(this.props.location.state.appData){
@@ -49,8 +54,12 @@ class CreateCategoryComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log("Check nextProps", nextProps)
+
+        // user list response
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -60,6 +69,8 @@ class CreateCategoryComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // upload image response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -69,6 +80,8 @@ class CreateCategoryComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // creat category response
         if(nextProps.createAppRes){
             if(nextProps.createAppRes.data.createCategory ){
                 if(nextProps.createAppRes.data.createCategory.success === true){
@@ -84,10 +97,13 @@ class CreateCategoryComponent extends React.PureComponent {
             }
         }
     }
+
+    // go back to category list page rouging
     handleBack = () => {
         this.props.history.push('/category-list');
     }
 
+    // form submit category create
     handleSubmit = () => {
         console.log("hello")
         this.setState({
@@ -101,14 +117,20 @@ class CreateCategoryComponent extends React.PureComponent {
                 category_name: this.state.category_name,
                 icon: this.state.icon
             }
+
+            // category create action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // input on change function 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // file upload change function
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
@@ -116,6 +138,8 @@ class CreateCategoryComponent extends React.PureComponent {
         this.props.uploadImage(e.target.files);
     }
     
+
+    // user select option change function
     userChange = (item) => {
         this.setState({
             selectedUser: item
@@ -123,13 +147,22 @@ class CreateCategoryComponent extends React.PureComponent {
 
     }
     render() {
+
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // form validation errors
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited,  usersList } = this.state;
 
         // let countryListOptionsItems = [];
+
+        // user list select option setup
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -217,6 +250,7 @@ class CreateCategoryComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 CreateCategoryComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAppRes: PropTypes.any,
@@ -224,12 +258,15 @@ CreateCategoryComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createAppRes: doCreateCategoryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateCategory(data)),
@@ -237,6 +274,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CreateCategoryComponent);

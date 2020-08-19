@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class NovusBiApi {  
+    
+    // api function to send and get data from server side
     static getnovusBi() {
         const TOKEN = getItem('auth_token');
         try{

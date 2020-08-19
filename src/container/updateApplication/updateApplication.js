@@ -16,6 +16,8 @@ import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import Select from 'react-select';
 class UpdateApplicationComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -31,6 +33,9 @@ class UpdateApplicationComponent extends React.PureComponent {
             appData: null
         }
     }
+
+    
+// on component load function call
     componentDidMount() {
         // Get country list //
         this.props.getAllCountry();
@@ -48,7 +53,11 @@ class UpdateApplicationComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+    
+// on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -77,6 +86,8 @@ class UpdateApplicationComponent extends React.PureComponent {
                 }
             }
         }
+
+        // uplaod image icon reponse
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -86,6 +97,8 @@ class UpdateApplicationComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // update app response 
         if(nextProps.updateAppRes){
             if(nextProps.updateAppRes.data.uploadApplication ){
                 if(nextProps.updateAppRes.data.uploadApplication.success === true){
@@ -101,10 +114,13 @@ class UpdateApplicationComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to application list routing
     handleBack = () => {
         this.props.history.push('/applications');
     }
 
+    // form submit
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -123,20 +139,30 @@ class UpdateApplicationComponent extends React.PureComponent {
                 selectedCountries: selectedCou.join(),
                 selectedUser: '',
             }
+
+            // update application action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // on input change 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // on file upload change
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
+
+        // file uplaod action call
         this.props.uploadImage(e.target.files);
     }
+
+    // on country select change
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -144,13 +170,23 @@ class UpdateApplicationComponent extends React.PureComponent {
         });
     }
     render() {
+        
+        // set page header title
         const Header = (<div className="offer_head">Update Application</div>);
         
+        
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+
+        // get data from state 
         const { isSubmited, countryList } = this.state;
 
         const countryListOptions = [];
+
+        // set countrl list select option setup
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
                 countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
@@ -228,6 +264,7 @@ class UpdateApplicationComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateApplicationComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     updateAppRes: PropTypes.any,
@@ -236,6 +273,7 @@ UpdateApplicationComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     updateAppRes: doUpdateAppRes,
     doAllCountryRes: doAllCountryRes,
@@ -243,6 +281,7 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateApplication(data)),
@@ -251,6 +290,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateApplicationComponent);

@@ -1,4 +1,4 @@
-
+// form validateion for sub category update
 export default function validate(values) {
   const errors = {};
   if (values.applicationName === '') {

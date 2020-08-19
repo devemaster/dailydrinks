@@ -1,4 +1,4 @@
-
+// form validation for create notification
 export default function validate(values) {
   const errors = {};
   if (values.groupValue === '') {

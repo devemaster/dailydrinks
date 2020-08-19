@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getnovusBi() {
 
   return {
@@ -11,6 +12,7 @@ export function getnovusBi() {
   };
 }
 
+// request respnse set
 export function getnovusBiRes(data) {  
   return {
     type: types.FETCH_NOVUSBI_RES, 
@@ -18,6 +20,7 @@ export function getnovusBiRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchnovusBi() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

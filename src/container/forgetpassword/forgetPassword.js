@@ -12,14 +12,14 @@ import { submitForgotpassword, doForgotpasswordRes } from '../../action/forgotPa
 // import { ToastContainer } from 'react-toastify';
 
 class ForgetPasswordComponent extends React.PureComponent {
-
+// constructor function
     constructor() {
         super();
         this.state = {
         }
     }
 
-
+    // forgot form submit
     handleSubmit(data) {
         let sendRequest = {
             "email" : data.email
@@ -62,22 +62,25 @@ class ForgetPasswordComponent extends React.PureComponent {
     }
 }
 
-
+// setup props data
 ForgetPasswordComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     forgotpasswordRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     forgotpasswordRes: doForgotpasswordRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitForgotpassword(data))
     };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(ForgetPasswordComponent);

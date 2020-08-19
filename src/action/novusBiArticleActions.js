@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import novusBiArticleApi from '../api/novusBiArticleApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function donovusBiArticle(data) {
   return {
     type: types.DO_NOVUSBI_ARTICLE,
@@ -10,6 +13,7 @@ export function donovusBiArticle(data) {
   };
 }
 
+// request respnse set
 export function donovusBiArticleRes(data) {
   return {
     type: types.DO_NOVUSBI_ARTICLE_RES,
@@ -17,6 +21,7 @@ export function donovusBiArticleRes(data) {
   };
 }
 
+// call api, action and response
 export function submitnovusBiArticle(data) {
   const TOKEN = getItem('auth_token');
 

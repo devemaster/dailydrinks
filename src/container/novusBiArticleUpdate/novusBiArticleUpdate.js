@@ -36,6 +36,8 @@ let isDone = false;
 let editorArray = [{'type':"editor",'name':""}];
 class NovusBiArticleUpdateComponent extends React.PureComponent {
     _isMounted = false;
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -83,6 +85,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         this.closeMenuSection = this.closeMenuSection.bind(this);
         this.onBasicUploadAuto = this.onBasicUploadAuto.bind(this);
     }
+
+
     showMenu(event) {
         event.preventDefault();
         
@@ -120,6 +124,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
           
         }
       }
+
+   // select author function
     selectAuthor = (event) => {
         console.log(event)
         if(event.name === 'Other'){
@@ -136,6 +142,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             })
         }
     }
+    // image upload
     onBasicUploadAuto(event) {
         this.setState({
             isLoader:false
@@ -154,6 +161,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
+    // thumb image uplaod
     onBasicUploadThumb = (event) => {
         this.setState({
             isLoader:false
@@ -173,6 +181,7 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
 
+// on component load function call
     componentDidMount() {
         if(this.props.location.state){
             const appDetails = this.props.location.state.appData;
@@ -215,15 +224,23 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             });
         }
 
-        this.props.getAllCountry();
-        this.props.fetchallcategoryList();
-        this.props.fetchRegionList();
+         // get region list acion call
+         this.props.fetchRegionList();
+
+         // get country list action call
+         this.props.getAllCountry();
+ 
+         // get category list action call
+         this.props.fetchallcategoryList();
         this.setState({
             isLoader: false,
         });
     }
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
+
+        // category list response
         if(nextProps.allCategoryListRes){
             if(nextProps.allCategoryListRes.data.allCategoryList ){
                 if(nextProps.allCategoryListRes.data.allCategoryList.success === true){
@@ -264,6 +281,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 }
             }
         }
+
+        // country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -273,6 +292,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 }
             }
         }
+
+        // user list response
         
         if (nextProps.RegionListRes) {
 			if (nextProps.RegionListRes.data && nextProps.RegionListRes.data.regionList) {
@@ -307,6 +328,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 }
 			}
         }
+
+        // user list response
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -316,6 +339,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // image upload response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -325,6 +350,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // article update response
         if(nextProps.ArticleUpdateAppRes){
             if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate ){
                 if(nextProps.ArticleUpdateAppRes.data.novusBiArticleUpdate.success === true && isDone === true){
@@ -342,9 +369,13 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to articl list page routing
     handleBack = () => {
         this.props.history.push('/content-list');
     }
+
+    //  select content type input functionality
     editorBtn = (i, item) => {
         editorArray.splice(i+1, 0, {
             'type':item,'name':""
@@ -356,6 +387,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         })
         console.log(this.state.editorArray)
     }
+
+    // submit form 
     handleSubmit = () => {
         
         // const categories = [];
@@ -400,9 +433,13 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 pdfName:this.state.pdf,
                 region:countryIds
             }
+
+            // update artilce action call
             this.props.handleFormSubmit(payloadReq);
         // }
     }
+
+    // text editor on change
     handleEditorChange = (e,index) =>{
         console.log(e)
         const vals = this.state.editorArray;
@@ -416,6 +453,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         this.setState({ editorArray: vals });
         // return true
     }
+
+    // embade editor on change
     handleEmbadeChange = (e,index) =>{
         console.log(e.target.value)
         
@@ -430,12 +469,16 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         this.setState({ editorArray: vals });
         // return true;
     }
+
+    // file upload on prgress loader show
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // conten upload image
     contentUploadImage = (event,index) =>{
         this.setState({
             isLoader:false
@@ -461,6 +504,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         return true;
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
+
+    // conten audio upload
     contentUploadAudio = (e) => {
         this.setState({
             isLoader:false
@@ -481,34 +526,46 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
     }
 
 
+
+    // other input change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // file upload change
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
         this.props.uploadImage(e.target.files);
     }
+
+    // country change function
     countryChange = (item) => {
         this.setState({
             selectedCountry: item
         });
     }
+
+    // title on change
     titleChange = (e) => {
         console.log(e.target.value)
         this.setState({
             mainTitle:e.target.value
         })
     }
+
+    // user on change 
     userChange = (item) => {
         this.setState({
             selectedUser: item
         });
 
     }
+
+    // remove content append type
     remove = (index) =>{
         editorArray.splice(index,1);
         this.setState({
@@ -517,35 +574,42 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
         }) 
     }
     
-    renderHeader() {
-        return (
-            <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button className="ql-underline" aria-label="Underline"></button>
-            </span>
-        );
-    }
+    // renderHeader() {
+    //     return (
+    //         <span className="ql-formats">
+    //             <button className="ql-bold" aria-label="Bold"></button>
+    //             <button className="ql-italic" aria-label="Italic"></button>
+    //             <button className="ql-underline" aria-label="Underline"></button>
+    //         </span>
+    //     );
+    // }
 
     
     render() {
 
             
-        
+        // conten type select option setup
         const authorSection = [
             {name: 'Other'},
             {name: 'Team'},
             {name: 'GuilhermeFray'},
         ];  
         // const header = this.renderHeader();
-
+        
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
+        
+        // loader spinner
         
         const spinner = <span><img src={loaderImg} alt="" /></span>;
         // const errors = validate(this.state);
+
+        // get country list and user list from state
         const { countryList, usersList } = this.state;
 
-        // let countryListOptionsItems = [];
+        
+
+        // country list select option setup
         const countryListOptions = [];
 
         if (countryList && countryList.length > 0) {
@@ -558,6 +622,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
                 );
             });
         }
+
+        // user list select option setup
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -849,6 +915,8 @@ class NovusBiArticleUpdateComponent extends React.PureComponent {
     }
 }
 
+
+// setup props data
 NovusBiArticleUpdateComponent.propTypes = {
 	RegionListRes: PropTypes.any,
     handleFormSubmit: PropTypes.func,
@@ -859,6 +927,8 @@ NovusBiArticleUpdateComponent.propTypes = {
     allCategoryListRes:PropTypes.any
 };
 
+
+// setup response function
 const mapStateToProps = createStructuredSelector({
     RegionListRes: getRegionListRes,
     ArticleUpdateAppRes: donovusBiUpdateArticleRes,
@@ -868,6 +938,8 @@ const mapStateToProps = createStructuredSelector({
     allCategoryListRes:getallcategoryListRes
 });
 
+
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         fetchallcategoryList: () => dispatch(fetchallcategoryList()),
@@ -878,6 +950,8 @@ function mapDispatchToProps(dispatch) {
 		fetchRegionList: () => dispatch(fetchRegionList()),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(NovusBiArticleUpdateComponent);

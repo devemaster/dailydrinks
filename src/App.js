@@ -89,11 +89,8 @@ class App extends React.PureComponent {
                 <Route path="/region-list" component={regionList} />
                 <Route path="/region-create" component={regionCreate} />
                 <Route path="/region-update" component={updateRegion} />
-                <Route path="/global-average" component={gAverage} />
-                
-                
-                <Route render={() => (<Redirect to="/users" />)} />
-                
+                <Route path="/global-average" component={gAverage} />                
+                <Route render={() => (<Redirect to="/users" />)} />                
               </Switch>
             </BrowserRouter>
           </React.Fragment>

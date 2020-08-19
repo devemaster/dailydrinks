@@ -1,4 +1,4 @@
-
+// form vlidateion for region create
 export default function validate(values) {
   const errors = {};
   if (values.region_name === '') {

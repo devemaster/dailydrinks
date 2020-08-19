@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function doCheckUser(data) {
 
   return {
@@ -12,6 +13,7 @@ export function doCheckUser(data) {
   };
 }
 
+// request respnse set
 export function doCheckUserRes(data) {  
   return {
     type: types.DO_CHECK_USER_RES, 
@@ -19,6 +21,7 @@ export function doCheckUserRes(data) {
   };
 }
 
+// call api, action and response
 export function checkUserName(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

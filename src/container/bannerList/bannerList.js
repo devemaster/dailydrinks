@@ -21,11 +21,8 @@ import { getItem } from '../../utils/localStore';
 let isDelete = false;
 
 class BannerListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      BannersList: e.value,
-    })
-  }
+  
+  // constructor function
   constructor() { 
     super();    
     isDelete = false;
@@ -49,16 +46,22 @@ class BannerListComponent extends React.PureComponent {
     this.viewTemplate = this.viewTemplate.bind(this);
 	}
 
+  // on component load function call
   componentDidMount() {
     
       this.setState({
         isLoader:true
       });
+
+      // get banner list 
       this.props.fetchBannerList();
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // get banner list response
     if (props.BannerListRes) {
 			if (props.BannerListRes.data && props.BannerListRes.data.bannerList) {
 				if (props.BannerListRes.data.bannerList.success===true) {
@@ -74,6 +77,8 @@ class BannerListComponent extends React.PureComponent {
         }
 			}
     }
+
+    // banner delete confirm response
     if (props.doDeleteBannerRes) {
 			if (props.doDeleteBannerRes.data && props.doDeleteBannerRes.data.deleteBannerList) {
 				if (props.doDeleteBannerRes.data.deleteBannerList.success && isDelete) {
@@ -83,17 +88,26 @@ class BannerListComponent extends React.PureComponent {
             isDisabled: false,
             isLoader:false
           });
+          // call banner list when delete success
           this.props.fetchBannerList();
 				}
 			}
     }
   }
 
+  // on select change function of table 
+  onSelectionChange = (e) => {   
+    this.setState({
+      BannersList: e.value,
+    })
+  }
 
+  // routing function to create banner page
   createApp(){
     this.props.history.push('/banner-create')
   }
 
+  // on delete banner confirm call function
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -103,9 +117,12 @@ class BannerListComponent extends React.PureComponent {
     let payload = {
       banner_id: this.state.cat_id
     }
+
+    // delete banner action call
     this.props.deleteBannerListRecord(payload);
   }
 
+  // delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       cat_id: rowData.banner_id,
@@ -113,11 +130,14 @@ class BannerListComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
+
+  // banner list table action button 
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}  className="btn-group">
@@ -131,6 +151,9 @@ class BannerListComponent extends React.PureComponent {
       </div>
     );
   }
+
+
+  // banner image icon template for table
   actionIconTemplate = (data) => {
     // console.log(data)
     return (
@@ -140,6 +163,8 @@ class BannerListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // view banner template for table
   viewTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -149,12 +174,16 @@ class BannerListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // go to banner edit page with data and routing function
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/banner-update',
       state: {appData: rowData}
     })
   }
+
+  // sub banner create page routing with parent banner data
   goAddSubBanner = (rowData) => {
     this.props.history.push({
       pathname: '/create-Banner',
@@ -163,10 +192,18 @@ class BannerListComponent extends React.PureComponent {
   }
 
   render() {
+
+    // get banner list from state
     const { BannerList } = this.state;
     // console.log(BannerList);
+
+    // get userRole from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Banner List</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
     // var tableHeader = <div style={{'textAlign':'left'}}>
     //                     <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
@@ -245,16 +282,19 @@ class BannerListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 BannerListComponent.propTypes = {
 	BannerListRes: PropTypes.any,
 	doDeleteBannerRes: PropTypes.any,
 };
 
+ // setup response function
 const mapStateToProps = createStructuredSelector({
   BannerListRes: getBannerListRes,
 	doDeleteBannerRes: doDeleteBannerRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchBannerList: () => dispatch(fetchBannerList()),
@@ -262,6 +302,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(BannerListComponent);

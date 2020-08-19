@@ -21,11 +21,8 @@ import { getItem } from '../../utils/localStore';
 let isDelete = false;
 
 class CategoryListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      categorysList: e.value,
-    })
-  }
+
+  // constructor function
   constructor() { 
     super();    
     isDelete = false;
@@ -49,16 +46,21 @@ class CategoryListComponent extends React.PureComponent {
     this.viewTemplate = this.viewTemplate.bind(this);
 	}
 
+  // on component load function call
   componentDidMount() {
     
       this.setState({
         isLoader:true
       });
+      // call category list action 
       this.props.fetchcategoryList();
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // categorylist response
     if (props.categoryListRes) {
 			if (props.categoryListRes.data && props.categoryListRes.data.categoryList) {
 				if (props.categoryListRes.data.categoryList.success===true) {
@@ -74,6 +76,8 @@ class CategoryListComponent extends React.PureComponent {
         }
 			}
     }
+
+    // category delete confirm response
     if (props.doDeleteAppRes) {
 			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteCategoryList) {
 				if (props.doDeleteAppRes.data.deleteCategoryList.success && isDelete) {
@@ -83,6 +87,8 @@ class CategoryListComponent extends React.PureComponent {
             isDisabled: false,
             isLoader:false
           });
+
+          // call category list action after delete success
           this.props.fetchcategoryList();
 				}
 			}
@@ -90,10 +96,19 @@ class CategoryListComponent extends React.PureComponent {
   }
 
 
+  // on table select change call 
+  onSelectionChange = (e) => {   
+    this.setState({
+      categorysList: e.value,
+    })
+  }
+
+  // create category page routing
   createApp(){
     this.props.history.push('/novus-bi-create')
   }
 
+  // delete category confrim call
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -103,9 +118,12 @@ class CategoryListComponent extends React.PureComponent {
     let payload = {
       id: this.state.cat_id
     }
+
+    // delete category action call
     this.props.deleteCategoryListRecord(payload);
   }
 
+  // delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       cat_id: rowData.cat_id,
@@ -113,11 +131,14 @@ class CategoryListComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
+
+  // table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}  className="btn-group">
@@ -134,6 +155,8 @@ class CategoryListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // category icon show template in table
   actionIconTemplate = (data) => {
     // console.log(data)
     return (
@@ -143,6 +166,8 @@ class CategoryListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // view sub category action template for table
   viewTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -152,6 +177,8 @@ class CategoryListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // got sub category view page with parent category data
   getSubCategory = (rowData) => {
     console.log(rowData.cat_id)
     this.props.history.push({
@@ -159,12 +186,16 @@ class CategoryListComponent extends React.PureComponent {
       state: {appData: rowData.cat_id}
     })
   }
+
+  // edit cateogry page roting with category data
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/update-category',
       state: {appData: rowData}
     })
   }
+
+  // create category page rouing with parent cateogry data
   goAddSubCategory = (rowData) => {
     this.props.history.push({
       pathname: '/create-category',
@@ -173,10 +204,18 @@ class CategoryListComponent extends React.PureComponent {
   }
 
   render() {
+
+    // get category list data from state
     const { categoryList } = this.state;
     // console.log(categoryList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Category List</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
     // var tableHeader = <div style={{'textAlign':'left'}}>
     //                     <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
@@ -256,16 +295,19 @@ class CategoryListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 CategoryListComponent.propTypes = {
 	categoryListRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+ // setup response function
 const mapStateToProps = createStructuredSelector({
   categoryListRes: getcategoryListRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchcategoryList: () => dispatch(fetchcategoryList()),
@@ -273,6 +315,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CategoryListComponent);

@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class userApprovedApi {  
+    
+    // api function to send and get data from server side
     static doUserApproved(data) {
         const TOKEN = getItem('auth_token');
         try{

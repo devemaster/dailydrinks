@@ -20,6 +20,8 @@ import { getItem } from '../../utils/localStore';
 let isDelete = false;
 
 class ApplicationsComponent extends React.PureComponent {
+
+  // constructor function
   constructor() { 
     super();
     isDelete = false;
@@ -34,6 +36,7 @@ class ApplicationsComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
+  // on component load function call
   componentDidMount() {
     let appData = JSON.parse(getItem('adminAppData'));
     if(appData !== null) {
@@ -53,7 +56,10 @@ class ApplicationsComponent extends React.PureComponent {
     }
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
+
+    // get application list response
     if (props.allApplicationRes) {
 			if (props.allApplicationRes.data && props.allApplicationRes.data.applicationList) {
 				if (props.allApplicationRes.data.applicationList.success===true) {
@@ -64,6 +70,8 @@ class ApplicationsComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // get application delete repsonse
     if (props.doDeleteAppRes) {
 			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
 				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
@@ -78,6 +86,7 @@ class ApplicationsComponent extends React.PureComponent {
     }
   }
 
+   // action button for dataTable
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -91,6 +100,7 @@ class ApplicationsComponent extends React.PureComponent {
     );
   }
 
+  // edit application page routing with updatable data
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/update-application',
@@ -98,10 +108,12 @@ class ApplicationsComponent extends React.PureComponent {
     })
   }
 
+  // create new application page routing
   createApp(){
     this.props.history.push('/create-application')
   }
 
+  // delete action call after confirm
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -110,9 +122,12 @@ class ApplicationsComponent extends React.PureComponent {
     let payload = {
       app_id: this.state.appId
     }
+
+    // delete action call
     this.props.deleteApplicationRecord(payload);
   }
 
+  // open delete confirm model-popup
   openDeleteApp = (rowData) => {
     this.setState({
       appId: rowData.application_id,
@@ -120,12 +135,14 @@ class ApplicationsComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete 
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+  // application icon show table action
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -134,6 +151,7 @@ class ApplicationsComponent extends React.PureComponent {
     );
   }
 
+  // admin detail page routing button
   adminActionTemplate = (rowData) => {
     return (
       <div style={{textAlign: 'center'}}>
@@ -144,6 +162,7 @@ class ApplicationsComponent extends React.PureComponent {
     );
   }
 
+  // admin detail page routing function with data
   goToAdmin = (data) => {
     this.props.history.push('/adminDetails',{
       applicationData: data
@@ -151,11 +170,20 @@ class ApplicationsComponent extends React.PureComponent {
   }
 
   render() {
+    // get application list from state
     const { applicationList } = this.state;
     console.log(applicationList);
+
+    // get userRole from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Applications</div>);
+
+    // set loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // set table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -234,16 +262,19 @@ class ApplicationsComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 ApplicationsComponent.propTypes = {
 	allApplicationRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
 	allApplicationRes: getAllApplicationRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// setup response function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchAllApplication: () => dispatch(fetchAllApplication()),
@@ -251,6 +282,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(ApplicationsComponent);

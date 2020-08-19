@@ -8,8 +8,12 @@ import { createStructuredSelector } from 'reselect';
 import './form.scss';
 
 const fields = ['email', 'encrypted_password'];
+
+// make value to lowerCase
 const lower = value => value && value.toLowerCase();
 
+
+// form field dynamic created
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <div>
         <div>
@@ -19,6 +23,7 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
     </div>
 )
 
+// validation
 const validate = values => {
     const errors = {}
     if (!values.email) {
@@ -40,6 +45,7 @@ class LoginForm extends React.PureComponent {
         }
     }
 
+    // exit component clear data
     componentWillUnmount() {
         this.props.reset();
     }
@@ -52,6 +58,8 @@ class LoginForm extends React.PureComponent {
     //         }
     //     }
     // }
+
+    // show hide input in password field
     showHidePass = () => {
         this.setState({
             showPasshword: !this.state.showPasshword
@@ -105,21 +113,27 @@ class LoginForm extends React.PureComponent {
     }
 }
 
+// setup props data
 LoginForm.propTypes = {
     handleSubmit: PropTypes.func,
     submitting: PropTypes.bool,
     handleFormSubmit: PropTypes.func,
     doLoginRes: PropTypes.any
 };
+
+// setup response function
 const mapStateToProps = createStructuredSelector({
     doLoginRes: doLoginRes
 });
   
+// dispatch function
 function mapDispatchToProps(dispatch,ownProps) {
     return {
         
     };
 }
+
+
 const ReduxLoginForm = reduxForm({
     form: 'ReduxLoginForm',
     fields,
@@ -130,4 +144,5 @@ const ReduxLoginForm = reduxForm({
     touchOnBlur: false,
 })(LoginForm)
 
+// connect component to redux store
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxLoginForm);

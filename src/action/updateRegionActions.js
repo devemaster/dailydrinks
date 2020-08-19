@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import UpdateRegionApi from '../api/updateRegionApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doUpdateRegion(data) {
   return {
     type: types.UPDATE_REGION,
@@ -10,6 +13,7 @@ export function doUpdateRegion(data) {
   };
 }
 
+// request respnse set
 export function doUpdateRegionRes(data) {
   return {
     type: types.UPDATE_REGION_RES,
@@ -17,6 +21,7 @@ export function doUpdateRegionRes(data) {
   };
 }
 
+// call api, action and response
 export function submitUpdateRegion(data) {
   const TOKEN = getItem('auth_token');
 

@@ -11,6 +11,7 @@ import logoImg from '../../assets/images/novusone-logo.png';
 
 class ResetPasswordComponent extends React.PureComponent {
 
+    // constructor function
     constructor() {
         super();
         this.state = {
@@ -19,6 +20,7 @@ class ResetPasswordComponent extends React.PureComponent {
         }
     }
 
+    // on component load function call
     componentDidMount() {
         let pathArray = this.props.location.pathname.split('/');
         this.setState({
@@ -26,11 +28,16 @@ class ResetPasswordComponent extends React.PureComponent {
         })
     }
 
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) { }
 
+    // form submit
     handleSubmit(data){
         let sendRequest = data;
         sendRequest.reset_password_token = this.state.resetpasswordtoken;
+
+        // reset password action call
         this.props.handleFormSubmit(sendRequest);
     }
 
@@ -61,21 +68,27 @@ class ResetPasswordComponent extends React.PureComponent {
 }
 
 
+// setup props data
 ResetPasswordComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     resetpasswordRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     resetpasswordRes: doResetpasswordRes
 });
 
+
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(reset_password(data))
     };
 }
 
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(ResetPasswordComponent);

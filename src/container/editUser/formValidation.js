@@ -1,4 +1,4 @@
-
+// form validation for edit user
 export default function validate(values) {
   const errors = {};
   if (values.email === '') {

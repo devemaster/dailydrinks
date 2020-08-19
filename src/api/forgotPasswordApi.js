@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 
 class forgotPasswordApi {
+    
+    // api function to send and get data from server side
     static doForgotpassword(data) {
 
         let sendBody={

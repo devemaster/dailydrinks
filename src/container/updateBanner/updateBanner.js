@@ -19,6 +19,8 @@ import {FileUpload} from 'primereact/fileupload';
 
 let isDone = false;
 class UpdateBannerComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -36,6 +38,8 @@ class UpdateBannerComponent extends React.PureComponent {
             iconName:'Choos Icon'
         }
     }
+    
+// on component load function call
     componentDidMount() {
         // Get country list //
         this.props.getAllCountry();
@@ -58,11 +62,16 @@ class UpdateBannerComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+
+    
+// on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log("Props cat", nextProps)
         this.setState({
             isLoader:false
         })
+
+        // upload image respnse
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -72,6 +81,8 @@ class UpdateBannerComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // update banner response
         if(nextProps.doUpdateBannerRes){
             if(nextProps.doUpdateBannerRes && nextProps.doUpdateBannerRes.data){            
                 if(nextProps.doUpdateBannerRes.data && nextProps.doUpdateBannerRes.data.updateBanner ){
@@ -81,6 +92,8 @@ class UpdateBannerComponent extends React.PureComponent {
                         this.setState({
                             isLoader: false
                         });
+
+                        // banner update success route to banner list page
                         this.props.history.push('/Banner-list');
                     } 
                 }
@@ -88,10 +101,13 @@ class UpdateBannerComponent extends React.PureComponent {
         }
         
     }
+
+    // back to banner list page routing
     handleBack = () => {
         this.props.history.push('/Banner-list');
     }
 
+    // form submit 
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -107,14 +123,20 @@ class UpdateBannerComponent extends React.PureComponent {
                 banner_image: this.state.icon,
             }
             isDone = true;
+
+            // banner update action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // on input change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // file upload on change
     handleFileChange = (e) => {
         this.setState({
             isLoader:true
@@ -122,14 +144,20 @@ class UpdateBannerComponent extends React.PureComponent {
         this.setState({
             file: e.target.files
         });
+
+        // file upload action call
         this.props.uploadImage(e.target.files);
     }
+
+    // file uplaod process show laoder
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // basic file upload
     onBasicUploadAuto = (event) => {
         this.setState({
             isLoader:false
@@ -155,13 +183,22 @@ class UpdateBannerComponent extends React.PureComponent {
     //     });
     // }
     render() {
+        
+        // set page header title
         const Header = (<div className="offer_head">Update Banner</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+
+        // data from state
         const { isSubmited, countryList } = this.state;
 
         const countryListOptions = [];
+
+        // countrylist select option setup
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
                 countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
@@ -249,6 +286,7 @@ class UpdateBannerComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateBannerComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     doUpdateBannerRes: PropTypes.any,
@@ -257,6 +295,7 @@ UpdateBannerComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     doUpdateBannerRes: doUpdateBannerRes,
     doAllCountryRes: doAllCountryRes,
@@ -264,6 +303,7 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateBanner(data)),
@@ -272,6 +312,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateBannerComponent);

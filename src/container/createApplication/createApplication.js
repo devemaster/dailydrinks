@@ -16,6 +16,8 @@ import validate from './formValidation';
 import Select from 'react-select';
 class CreateApplicationComponent extends React.PureComponent {
     _isMounted = false;
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -30,14 +32,25 @@ class CreateApplicationComponent extends React.PureComponent {
             file: null
         }
     }
+
+    // on component load function call
     componentDidMount() {
+
+        // get country list action call
         this.props.getAllCountry();
         // this.props.getAllUsers();
         this.setState({
             isLoader: false,
         });
+
+
     }
+
+    
+    // on component receive new props   
     componentWillReceiveProps(nextProps) {
+
+        // countrylist response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -47,6 +60,8 @@ class CreateApplicationComponent extends React.PureComponent {
                 }
             }
         }
+
+        // userlist respnse
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -56,6 +71,8 @@ class CreateApplicationComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // upload image response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -65,12 +82,16 @@ class CreateApplicationComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // create application response
         if(nextProps.createAppRes){
             if(nextProps.createAppRes.data.createApplication ){
                 if(nextProps.createAppRes.data.createApplication.success === true){
                     this.setState({
                         isLoader: false
                     });
+
+                    // app created succssfullty route to application list page
                     this.props.history.push('/applications');
                 } else {
                     setTimeout(() => { this.setState({
@@ -80,10 +101,14 @@ class CreateApplicationComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to application list page
     handleBack = () => {
         this.props.history.push('/applications');
     }
 
+
+    // submit function application create form
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -101,25 +126,40 @@ class CreateApplicationComponent extends React.PureComponent {
                 selectedCountries: selectedCon.join(),
                 selectedUser: '',
             }
+
+            // application create action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // input on change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
+
+
     }
+
+
+    // file upload on change function
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
+
+        // upload image action call
         this.props.uploadImage(e.target.files);
     }
+
+    // on country change 
     countryChange = (item) => {
         this.setState({
             selectedCountry: item
         });
     }
+
+    // on user change
     userChange = (item) => {
         this.setState({
             selectedUser: item
@@ -127,13 +167,23 @@ class CreateApplicationComponent extends React.PureComponent {
 
     }
     render() {
+
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors for create form
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, countryList, usersList } = this.state;
 
         // let countryListOptionsItems = [];
+
+
+        // countrylist select option setup
         const countryListOptions = [];
 
         if (countryList && countryList.length > 0) {
@@ -146,6 +196,8 @@ class CreateApplicationComponent extends React.PureComponent {
                 );
             });
         }
+
+        // userlist select option setup
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -233,6 +285,7 @@ class CreateApplicationComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 CreateApplicationComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAppRes: PropTypes.any,
@@ -241,6 +294,7 @@ CreateApplicationComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createAppRes: doCreateApplicationRes,
     doAllCountryRes: doAllCountryRes,
@@ -248,6 +302,8 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateApplication(data)),
@@ -256,6 +312,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CreateApplicationComponent);

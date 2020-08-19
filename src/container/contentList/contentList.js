@@ -26,11 +26,8 @@ let isDelete = false;
 let isUpdate = true;
 
 class ContentListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      wmsList: e.value,
-    })
-  }
+  
+  // constructor function
   constructor() { 
     super();
     
@@ -54,8 +51,14 @@ class ContentListComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
   }
 
+  
+// on component load function call  
   componentDidMount() {
+
+    // call getcategory list action
     this.props.fetchallcategoryList();
+
+    // get and set already get comment list or call for content list
     let appData = JSON.parse(getItem('adminAppData'));
     if(appData !== null) {
       appData.application_id = appData.app_id;
@@ -70,12 +73,17 @@ class ContentListComponent extends React.PureComponent {
         contentList: itemArr
       });
     } else {
+
+      // get content list action call 
       this.props.fetchcontentList();
     }
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // get category list response
     if(props.allCategoryListRes){
         if(props.allCategoryListRes.data.allCategoryList ){
             if(props.allCategoryListRes.data.allCategoryList.success === true){
@@ -109,6 +117,8 @@ class ContentListComponent extends React.PureComponent {
             }
         }
     }
+
+    // get conten list response
     if (props.contentListRes) {
 			if (props.contentListRes.data && props.contentListRes.data.contentList) {
 				if (props.contentListRes.data.contentList.status===true) {
@@ -122,6 +132,8 @@ class ContentListComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // content delete confirm response
     if (props.doDeleteContentRes) {
 			if (props.doDeleteContentRes.data && props.doDeleteContentRes.data.doDeleteContentRes) {
 				if (isDelete) {
@@ -131,10 +143,14 @@ class ContentListComponent extends React.PureComponent {
             isLoader: false,
             isDisabled: false,
           });
+
+          // call get content list action after delte success
           this.props.fetchcontentList();
 				}
 			}
     }
+
+    // status update response
     if (props.doStatusContentRes) {
 			if (props.doStatusContentRes.data && props.doStatusContentRes.data.doStatusContentRes) {
         if(isUpdate){
@@ -142,6 +158,8 @@ class ContentListComponent extends React.PureComponent {
           this.setState({
             isLoader: false,
           })
+
+          // call get content list action after status update success
           this.props.fetchcontentList();
         }
 				
@@ -149,6 +167,14 @@ class ContentListComponent extends React.PureComponent {
     }
   }
 
+  // table select option on change call
+  onSelectionChange = (e) => {   
+    this.setState({
+      wmsList: e.value,
+    })
+  }
+
+// table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -176,6 +202,7 @@ class ContentListComponent extends React.PureComponent {
     );
   }
 
+  // article edit/update page routing with data
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/novus-bi-article-update',
@@ -183,13 +210,13 @@ class ContentListComponent extends React.PureComponent {
     })
   }
 
-
+  // create new article page routing
   createApp(){
     this.props.history.push('/novus-bi-article')
   }
 
   
-
+// delete  confrim call
   deleteApp = () => {
     console.log(this.state.contant_id)
     this.setState({
@@ -200,9 +227,12 @@ class ContentListComponent extends React.PureComponent {
     let payload = {
       contant_id: this.state.contant_id
     }
+
+    // delete action call
     this.props.deleteContentListRecord(payload);
   }
 
+  // change status call
   ChangeStatus = (e) => {
     isUpdate = true;
     let payload = {
@@ -211,9 +241,11 @@ class ContentListComponent extends React.PureComponent {
     this.setState({
       isLoader:true
     })
+    // change status action call
     this.props.statusContentListRecord(payload);
   }
 
+  // delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       contant_id: rowData.contant_id,
@@ -221,12 +253,14 @@ class ContentListComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+  // icon show template in table
   actionIconTemplate = (data) => {
     
     if( data.thumbnail && data.thumbnail !== ''){
@@ -247,6 +281,7 @@ class ContentListComponent extends React.PureComponent {
     
   }
 
+  // status update button template for table 
   actionStatusTemplate = (data) => {
     if(data.status === 'draft'){
       return (
@@ -277,6 +312,8 @@ class ContentListComponent extends React.PureComponent {
     }
     
   }
+
+  // select type template for table  
   actionTypeTemplate = (data) => {
     // console.log(data)
     let cat =data.categories_name.split(',');
@@ -289,6 +326,7 @@ class ContentListComponent extends React.PureComponent {
     );
   }
 
+  // category select option template
   catTemplate = (option) =>{
     return (
       <div>
@@ -306,6 +344,7 @@ class ContentListComponent extends React.PureComponent {
     )
   }
 
+  // admin detail routing button with data template for table
   adminActionTemplate = (rowData) => {
     let date =moment(rowData.date).format('DD/MM/YYYY HH:mm');
     return (
@@ -322,6 +361,8 @@ class ContentListComponent extends React.PureComponent {
     //   applicationData: data
     // })
   }
+
+  // select category function 
   selectCatButton = (e)=>{
     const cats = [];
     console.log(e)
@@ -347,6 +388,8 @@ class ContentListComponent extends React.PureComponent {
     })
     
   }
+
+  // on select category change functon
   selectCatChange = (e) =>{
     const cats = [];
     this.setState({showSubCat :false}) 
@@ -379,9 +422,13 @@ class ContentListComponent extends React.PureComponent {
 
 
   }
+
+  // sub cateory select show hide toggle function
   toggleBox = () =>{
     this.setState({showSubCat : !this.state.showSubCat}) 
   }
+
+  // select contetn type filter function
   selectContentType = (e) =>{
     console.log(e)
     const cats = [];
@@ -451,6 +498,8 @@ class ContentListComponent extends React.PureComponent {
       {name: 'All Content'},
       {name: 'All Sounds'},
   ];
+
+
   const { showSubCat } = this.state;
 
   // const allSection = [
@@ -470,11 +519,21 @@ class ContentListComponent extends React.PureComponent {
   //     {name: 'PODCASTS'},
 
   // ];     
+
+  // content list data from state
     const { contentList } = this.state;
     console.log(contentList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">List of Content</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -596,12 +655,14 @@ class ContentListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 ContentListComponent.propTypes = {
 	contentListRes: PropTypes.any,
 	doDeleteContentRes: PropTypes.any,
 	doStatusContentRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   contentListRes: getcontentListRes,
 	doDeleteContentRes: doDeleteContentRes,
@@ -609,6 +670,7 @@ const mapStateToProps = createStructuredSelector({
   allCategoryListRes:getallcategoryListRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
     fetchallcategoryList: () => dispatch(fetchallcategoryList()),
@@ -618,6 +680,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(ContentListComponent);

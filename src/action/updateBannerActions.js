@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import UpdateBannerApi from '../api/updateBannerApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doUpdateBanner(data) {
   return {
     type: types.UPDATE_BANNER,
@@ -10,6 +13,7 @@ export function doUpdateBanner(data) {
   };
 }
 
+// request respnse set
 export function doUpdateBannerRes(data) {
   return {
     type: types.UPDATE_BANNER_RES,
@@ -17,6 +21,7 @@ export function doUpdateBannerRes(data) {
   };
 }
 
+// call api, action and response
 export function submitUpdateBanner(data) {
   const TOKEN = getItem('auth_token');
 

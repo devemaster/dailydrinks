@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class usersSearchApi {  
+    
+    // api function to send and get data from server side
     static doUserSearchAll(data) {
         let payload = {
             user_name: data

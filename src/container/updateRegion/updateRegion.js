@@ -20,6 +20,8 @@ import Swal from 'sweetalert2'
 
 let isDone = false;
 class UpdateRegionComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -40,6 +42,9 @@ class UpdateRegionComponent extends React.PureComponent {
             iconName:'Choos Icon'
         }
     }
+
+    
+    // on component load function call
     componentDidMount() {
         // Get country list //
         this.props.getAllCountry();
@@ -58,11 +63,16 @@ class UpdateRegionComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log("Props cat", nextProps)
         this.setState({
             isLoader:false
         })
+
+        // upload file response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -72,6 +82,8 @@ class UpdateRegionComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -96,6 +108,8 @@ class UpdateRegionComponent extends React.PureComponent {
                 }
             }
         }
+
+        // update region response
         if(nextProps.doUpdateRegionRes){
             if(nextProps.doUpdateRegionRes && nextProps.doUpdateRegionRes.data){            
                 if(nextProps.doUpdateRegionRes.data && nextProps.doUpdateRegionRes.data.updateRegion ){
@@ -105,6 +119,8 @@ class UpdateRegionComponent extends React.PureComponent {
                         this.setState({
                             isLoader: false
                         });
+
+                        // update success route to region list page
                         this.props.history.push('/region-list');
                     } 
                 }
@@ -112,10 +128,13 @@ class UpdateRegionComponent extends React.PureComponent {
         }
         
     }
+
+    // back to region list page
     handleBack = () => {
         this.props.history.push('/region-list');
     }
 
+    // form submit
     handleSubmit = () => {
         console.log(this.state.countrys)
         if(this.state.countrys && this.state.countrys.length > 0){ 
@@ -139,6 +158,8 @@ class UpdateRegionComponent extends React.PureComponent {
                     region_name		: this.state.region_name,
                     country	: countryIds
                 }
+
+                // update region action call
                 this.props.handleFormSubmit(payloadReq);
                 isDone = true;
             }
@@ -153,11 +174,15 @@ class UpdateRegionComponent extends React.PureComponent {
               })
         }
     }
+
+    // on input change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // on file change
     handleFileChange = (e) => {
         this.setState({
             isLoader:true
@@ -165,14 +190,20 @@ class UpdateRegionComponent extends React.PureComponent {
         this.setState({
             file: e.target.files
         });
+
+        // uplaod file action call
         this.props.uploadImage(e.target.files);
     }
+
+    // file uplaod process show laoder
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // image upload
     onBasicUploadAuto = (event) => {
         this.setState({
             isLoader:false
@@ -198,12 +229,20 @@ class UpdateRegionComponent extends React.PureComponent {
     //     });
     // }
     render() {
+        
+        // set page header title
         const Header = (<div className="offer_head">Update Region</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+        
+        // get data from state
         const { isSubmited, countryList } = this.state;
 
+        // countryl list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -275,6 +314,7 @@ class UpdateRegionComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateRegionComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     doUpdateRegionRes: PropTypes.any,
@@ -283,6 +323,7 @@ UpdateRegionComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     doUpdateRegionRes: doUpdateRegionRes,
     doAllCountryRes: doAllCountryRes,
@@ -290,6 +331,7 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateRegion(data)),
@@ -298,6 +340,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateRegionComponent);

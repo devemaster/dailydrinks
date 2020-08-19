@@ -2,7 +2,10 @@ import * as types from './actionTypes';
 import {logout} from '../helper/helper';
 import DeleteCategoryListApi from '../api/deleteCategoryListApi';
 import { getItem } from '../utils/localStore';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+
+
+// request payload set
 export function doDeleteApp(data) {
   return {
     type: types.DELETE_CATEGORYLIST,
@@ -10,6 +13,7 @@ export function doDeleteApp(data) {
   };
 }
 
+// request respnse set
 export function doDeleteAppRes(data) {
   return {
     type: types.DELETE_CATEGORYLIST_RES,
@@ -17,6 +21,8 @@ export function doDeleteAppRes(data) {
   };
 }
 
+
+// call api, action and response
 export function deleteCategoryListRecord(data) {
   const TOKEN = getItem('auth_token');
 

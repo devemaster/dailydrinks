@@ -4,6 +4,8 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+
+// request payload set
 export function doAppAdmin(data) {
   return {
     type: types.DO_APP_ADMIN,
@@ -11,6 +13,8 @@ export function doAppAdmin(data) {
   };
 }
 
+
+// request respnse set
 export function doAppAdminRes(data) {  
   return {
     type: types.DO_APP_ADMIN_RES, 
@@ -18,6 +22,8 @@ export function doAppAdminRes(data) {
   };
 }
 
+
+// call api, action and response
 export function get_app_admin(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

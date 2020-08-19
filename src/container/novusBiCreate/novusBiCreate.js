@@ -15,6 +15,8 @@ import validate from './formValidation';
 import {FileUpload} from 'primereact/fileupload';
 class NovusBiCreateComponent extends React.PureComponent {
     _isMounted = false;
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -32,6 +34,8 @@ class NovusBiCreateComponent extends React.PureComponent {
             iconName:'Choose Icon'
         }
     }
+
+    // on component load function call
     componentDidMount() {
         // this.props.getAllUsers();
         console.log(this.props.location)
@@ -53,11 +57,15 @@ class NovusBiCreateComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         this.setState({
             isLoader: false
         });
         console.log("Check nextProps", nextProps)
+
+        // user list response
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -67,6 +75,8 @@ class NovusBiCreateComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // image upload response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -76,12 +86,16 @@ class NovusBiCreateComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // create category response
         if(nextProps.createAppRes){
             if(nextProps.createAppRes.data.createCategory ){
                 if(nextProps.createAppRes.data.createCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
+                    
+                    // after success got to category list page 
                     this.props.history.push('/category-list');
                 } else {
                     setTimeout(() => { this.setState({
@@ -91,10 +105,13 @@ class NovusBiCreateComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to previous page
     handleBack = () => {
         this.props.history.push('/category-list');
     }
 
+    // form submit function
     handleSubmit = () => {
         console.log("hello")
         this.setState({
@@ -109,15 +126,21 @@ class NovusBiCreateComponent extends React.PureComponent {
                 category_name: this.state.category_name,
                 icon: this.state.icon
             }
+
+            // category create action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // file uplaod on progress loader show
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // image uplaod 
     onBasicUploadAuto = (event) => {
         this.setState({
             isLoader:false
@@ -136,18 +159,25 @@ class NovusBiCreateComponent extends React.PureComponent {
         }
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
+
+    // input on change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // select file on change
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
+
+        // image upload action call
         this.props.uploadImage(e.target.files);
     }
     
+    // on user select change
     userChange = (item) => {
         this.setState({
             selectedUser: item
@@ -155,14 +185,21 @@ class NovusBiCreateComponent extends React.PureComponent {
 
     }
     render() {
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validations error
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited,usersList } = this.state;
 
         // let countryListOptionsItems = [];
         const userListOptions = [];
+        // set user list on select option
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
                 userListOptions.push({ value: item.fullname, label: item.fullname, original: item });
@@ -256,6 +293,7 @@ class NovusBiCreateComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 NovusBiCreateComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAppRes: PropTypes.any,
@@ -263,12 +301,14 @@ NovusBiCreateComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createAppRes: doCreateCategoryRes,
     allUsersRes: doUserAllRes,
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateCategory(data)),
@@ -276,6 +316,9 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(NovusBiCreateComponent);

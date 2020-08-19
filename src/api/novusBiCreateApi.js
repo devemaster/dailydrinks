@@ -3,6 +3,8 @@ import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 class novusBiCreateApi {
+    
+    // api function to send and get data from server side
     static donovusBiCreate(data) {
         const TOKEN = getItem('auth_token');
         try{
@@ -31,6 +33,8 @@ class novusBiCreateApi {
     }
 
     static fetchAllCountry() {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -56,6 +60,8 @@ class novusBiCreateApi {
         }
     }
     static fetchAllState(data) {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         let sendBody={
             countryid: data
@@ -85,6 +91,8 @@ class novusBiCreateApi {
         }
     }
     static fetchAllCity(data) {
+    
+        // api function to send and get data from server side
         console.log('state id', data);
         const TOKEN = getItem('auth_token');
         let sendBody={

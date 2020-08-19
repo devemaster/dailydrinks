@@ -3,6 +3,8 @@ import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class createUserApi {
     static doCreateUser(data) {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -30,6 +32,8 @@ class createUserApi {
     }
 
     static fetchAllCountry() {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
@@ -55,6 +59,8 @@ class createUserApi {
         }
     }
     static fetchAllState(data) {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         let sendBody={
             countryid: data
@@ -84,6 +90,8 @@ class createUserApi {
         }
     }
     static fetchAllCity(data) {
+    
+        // api function to send and get data from server side
         console.log('state id', data);
         const TOKEN = getItem('auth_token');
         let sendBody={

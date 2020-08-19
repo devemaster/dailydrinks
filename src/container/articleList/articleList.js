@@ -21,11 +21,8 @@ import { getItem } from '../../utils/localStore';
 let isDelete = false;
 
 class ArticleListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      wmsList: e.value,
-    })
-  }
+
+  // constructor function
   constructor() { 
     super();
     isDelete = false;
@@ -40,8 +37,13 @@ class ArticleListComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
+  // on component load function call
   componentDidMount() {
+
+    // get appData from global function
     let appData = JSON.parse(getItem('adminAppData'));
+
+    // already have app data set it to directly or call action to get that
     if(appData !== null) {
       appData.application_id = appData.app_id;
       appData.application_name = appData.app_name;
@@ -55,12 +57,17 @@ class ArticleListComponent extends React.PureComponent {
         articleList: itemArr
       });
     } else {
+
+      // article list get action function
       this.props.fetcharticleList();
     }
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // article list response
     if (props.articleListRes) {
 			if (props.articleListRes.data && props.articleListRes.data.articleList) {
 				if (props.articleListRes.data.articleList.success===true) {
@@ -71,6 +78,8 @@ class ArticleListComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // article delete confirm response
     if (props.doDeleteAppRes) {
 			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
 				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
@@ -79,12 +88,23 @@ class ArticleListComponent extends React.PureComponent {
             openDeleteAppModal: false,
             isDisabled: false,
           });
+
+          // on delete success again call update article list action
           this.props.fetchAllApplication();
 				}
 			}
     }
   }
 
+   // on select get data from data table
+   onSelectionChange = (e) => {   
+    this.setState({
+      wmsList: e.value,
+    })
+  }
+
+
+  // table action buttons
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -106,12 +126,13 @@ class ArticleListComponent extends React.PureComponent {
   }
 
 
+  // create new article page routing
   createApp(){
     this.props.history.push('/novus-bi-create')
   }
 
   
-
+  // delete article function
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -120,9 +141,12 @@ class ArticleListComponent extends React.PureComponent {
     let payload = {
       app_id: this.state.appId
     }
+
+    // delete article acation call
     this.props.deleteApplicationRecord(payload);
   }
 
+  // delete model open
   openDeleteApp = (rowData) => {
     this.setState({
       appId: rowData.application_id,
@@ -130,12 +154,14 @@ class ArticleListComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+  // show article iamge icon
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -145,6 +171,7 @@ class ArticleListComponent extends React.PureComponent {
     );
   }
 
+  // article status template for table 
   actionStatusTemplate = (data) => {
     return (
       <div className="status_main_bx">
@@ -156,6 +183,7 @@ class ArticleListComponent extends React.PureComponent {
     );
   }
 
+  // article date template for table
   adminActionTemplate = (rowData) => {
     return (
       <div className="date_field" style={{textAlign: 'center'}}>
@@ -173,11 +201,21 @@ class ArticleListComponent extends React.PureComponent {
   }
 
   render() {
+
+    // get article list data from state
     const { articleList } = this.state;
     console.log(articleList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Article List</div>);
+
+    // spinner loader 
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -253,16 +291,19 @@ class ArticleListComponent extends React.PureComponent {
   }
 }
 
+ // setup props data
 ArticleListComponent.propTypes = {
 	articleListRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+ // setup response function
 const mapStateToProps = createStructuredSelector({
   articleListRes: getarticleListRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetcharticleList: () => dispatch(fetcharticleList()),
@@ -270,6 +311,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(ArticleListComponent);

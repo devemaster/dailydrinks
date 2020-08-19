@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class StatusContentListApi {
+    
+    // api function to send and get data from server side
     static doStatusApp(data) {
         const TOKEN = getItem('auth_token');
         try{

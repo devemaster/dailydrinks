@@ -30,7 +30,7 @@ let userRole = getItem('userRoleId');
 let isUserAvailable = false;
 
 class EditUserComponent extends React.PureComponent {
-
+// constructor function
     constructor() {
         super();
         isCountry = false;
@@ -69,21 +69,10 @@ class EditUserComponent extends React.PureComponent {
         }
         this.handleKeypress = this.handleKeypress.bind(this)
     }
-    handleKeypress(e) {
-        const characterCode = e.key
-        if (characterCode === 'Backspace') return
 
-        const characterNumber = Number(characterCode)
-        if (characterNumber >= 0 && characterNumber <= 9) {
-            if (e.currentTarget.value && e.currentTarget.value.length) {
-            return
-            } else if (characterNumber === 0) {
-            e.preventDefault()
-            }
-            } else {
-            e.preventDefault()
-            }
-        }
+
+    
+// on component load function call
     componentDidMount() {
         let userAppGroup = getItem('adminAppId');
         if (userAppGroup !== null) {
@@ -92,7 +81,11 @@ class EditUserComponent extends React.PureComponent {
                 applicationName: getItem('adminAppName'),
             });
         }
+
+        // get country list action call
         this.props.getAllCountry();
+
+        // get applicaion action call
         this.props.fetchAllApplication();
         isCountry = true;
         isApplication = true;
@@ -125,8 +118,12 @@ class EditUserComponent extends React.PureComponent {
         });
     }
 
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
+
+        // application list response
         if (nextProps.allApplicationRes) {
 			if (nextProps.allApplicationRes.data && nextProps.allApplicationRes.data.applicationList) {
 				if (nextProps.allApplicationRes.data.applicationList.success===true  && isApplication) {
@@ -151,6 +148,8 @@ class EditUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // country list reponse
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true && isCountry){
@@ -178,6 +177,8 @@ class EditUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // get state list response
         if(nextProps.doAllStateRes){
             if(nextProps.doAllStateRes.data.stateList ){
                 if(nextProps.doAllStateRes.data.stateList.success === true && isState){
@@ -204,6 +205,8 @@ class EditUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // get city list response
         if(nextProps.doAllCityRes){
             if(nextProps.doAllCityRes.data.cityList ){
                 if(nextProps.doAllCityRes.data.cityList.success === true && isCity){
@@ -228,12 +231,16 @@ class EditUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // update user response
         if (nextProps.doEditUserRes) {
 			if (nextProps.doEditUserRes.data && nextProps.doEditUserRes.data.updateUser) {
 				if (nextProps.doEditUserRes.data.updateUser.success === true) {
                     this.setState({
                         isLoader: false,
                     });
+
+                    // route to user list page if user updated successfully
                     this.props.history.push('/users');
                 } else {
                     setTimeout(() => { this.setState({
@@ -243,6 +250,8 @@ class EditUserComponent extends React.PureComponent {
             }
         }
         
+
+        // check user for application access
         if(nextProps.checkUserRes){
             if(nextProps.checkUserRes.data.checkUser ){
                 if(nextProps.checkUserRes.data.checkUser.success === true && isUserAvailable) {
@@ -362,12 +371,31 @@ class EditUserComponent extends React.PureComponent {
         }
     }
 
+    // zip code input on fill change
+    handleKeypress(e) {
+        const characterCode = e.key
+        if (characterCode === 'Backspace') return
+
+        const characterNumber = Number(characterCode)
+        if (characterNumber >= 0 && characterNumber <= 9) {
+            if (e.currentTarget.value && e.currentTarget.value.length) {
+            return
+            } else if (characterNumber === 0) {
+            e.preventDefault()
+            }
+            } else {
+            e.preventDefault()
+            }
+        }
+
+    // close error model
     closeErrorModal = () => {
         this.setState({
             openErrorModal: false
         });
     }
 
+    // submit edit user form
     handleFormSubmit = () => {
         this.setState({
             isSubmited: true,
@@ -392,20 +420,25 @@ class EditUserComponent extends React.PureComponent {
                 zipcode: this.state.zipcode,
                 create_user: selectedUsr,
             }
+
+            // edit user action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
 
+    // back to previouse page 
     handleBack = () => {
         this.props.history.goBack();
     }
     
+    // on input change function
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
+    // on country select option change 
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -419,6 +452,7 @@ class EditUserComponent extends React.PureComponent {
         isState = true; 
     }
 
+    // on state select option change
     stateChange = (item) => {
         this.setState({
             selectedState: item,
@@ -430,6 +464,7 @@ class EditUserComponent extends React.PureComponent {
         isCity = true;
     }
 
+    // on city select option change
     cityChange = (item) => {
         this.setState({
             selectedCity: item,
@@ -437,12 +472,14 @@ class EditUserComponent extends React.PureComponent {
         });
     }
 
+    // user approvel for app 
     createApproved(e) {
         this.setState({
             [e.target.name]: e.target.value,
         })
     }
 
+    // validate user name and application selected or not
     validateUser(values) {
         const errors = {};
         if (values.applicationId === '') {
@@ -454,6 +491,7 @@ class EditUserComponent extends React.PureComponent {
         return errors;
      }     
 
+    // add approval request
     addApproved = () => {
         this.setState({
             isSubmitedUser: true,
@@ -473,11 +511,15 @@ class EditUserComponent extends React.PureComponent {
             
         }        
     }
+
+    // cancel delete
     cancelDeleteApp = () => {
         this.setState({
           openDeleteAppModal: false,
         });
       }
+
+    // delete confirm model-popup open
     openDeleteApp = (rowData) => {
         this.setState({
             remData: rowData,
@@ -485,6 +527,7 @@ class EditUserComponent extends React.PureComponent {
         });
     }
 
+    // remove approval of app for user
     removeApproved = () => {
         if(this.state.selectedUserList.length === 1){
             this.setState({ 
@@ -506,6 +549,8 @@ class EditUserComponent extends React.PureComponent {
         }
     }
 
+    
+    // table action button template
     actionTemplate = (rowData) => {
         return (
             <div style={{textAlign: 'center'}}>
@@ -516,11 +561,14 @@ class EditUserComponent extends React.PureComponent {
         )
     }
 
+    // user access success notification message
     notify = () => {    
         toast.success("User can now access this app", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
     };
+
+    // user access denied notification message
     notifydelete = () => {  
         //   console.log("&&&&&&&&")
     toast.error("User couldn't access this app", {
@@ -529,12 +577,22 @@ class EditUserComponent extends React.PureComponent {
     };
 
     render() {
-        const Header = (<div className="offer_head">Edit Customer</div>);        
+        // set page header title
+        const Header = (<div className="offer_head">Edit Customer</div>);     
+        
+        // loader spinner   
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+
+        // validation user error
         const errorsUser = this.validateUser(this.state);
+
+        // get data from state
         const { isSubmited, countryList, stateList, cityList, isSubmitedUser } = this.state;
 
+        // country list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -547,6 +605,7 @@ class EditUserComponent extends React.PureComponent {
             });
         }
 
+        // state list select option setup
         const stateListOptions = [];
         if (stateList && stateList.length > 0) {
             stateList.map((item) => {
@@ -559,6 +618,7 @@ class EditUserComponent extends React.PureComponent {
             });
         }
 
+        // city list select option setup
         const cityListOptions = [];
         if (cityList && cityList.length > 0) {
             cityList.map((item) => {
@@ -813,6 +873,7 @@ class EditUserComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 EditUserComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     doEditUserRes: PropTypes.any,
@@ -823,6 +884,7 @@ EditUserComponent.propTypes = {
     checkUserRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     doEditUserRes: doEditUserRes,
     doAllCountryRes: doAllCountryRes,
@@ -832,6 +894,7 @@ const mapStateToProps = createStructuredSelector({
     checkUserRes: doCheckUserRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateUser(data)),
@@ -842,6 +905,8 @@ function mapDispatchToProps(dispatch) {
         checkUserName: (data) => dispatch(checkUserName(data)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(EditUserComponent);

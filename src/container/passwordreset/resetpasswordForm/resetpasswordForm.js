@@ -7,6 +7,8 @@ import { createStructuredSelector } from 'reselect';
 
 const fields = ['encrypted_password'];
 
+
+// form field dynamic set
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <div>
         <input className="form-control" {...input} placeholder={label} type={type} />
@@ -14,6 +16,8 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
     </div>
 )
 
+
+// validations
 const validate = values => {
     const errors = {}
 
@@ -42,6 +46,7 @@ const validate = values => {
 
 class ResetPasswordForm extends React.PureComponent {
 
+    // constructor function
     constructor() {
         super();
         this.state = {
@@ -53,6 +58,8 @@ class ResetPasswordForm extends React.PureComponent {
     //     this.props.reset();
     // }
 
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         if(nextProps){
             if(nextProps.doResetpasswordRes.user.form.ReduxResetPasswordForm.submitSucceeded === true){
@@ -60,12 +67,15 @@ class ResetPasswordForm extends React.PureComponent {
             }
         }
     }
+
+    // change password
     changePasswordButton = () => {
         this.setState({
             changeTextPass: !this.state.changeTextPass,
         });
     }
     render() {
+        // get data from state
         const { handleSubmit, handleFormSubmit, pristine, submitting } = this.props
         return (
             <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -93,7 +103,7 @@ class ResetPasswordForm extends React.PureComponent {
         )
     }
 }
-
+// setup props data
 ResetPasswordForm.propTypes = {
     handleSubmit: PropTypes.func,
     submitting: PropTypes.bool,
@@ -101,16 +111,21 @@ ResetPasswordForm.propTypes = {
     doResetpasswordRes: PropTypes.any
 };
 
+
+// setup response function
 const mapStateToProps = createStructuredSelector({
     doResetpasswordRes: doResetpasswordRes
 });
-  
+ 
+// dispatch function 
 function mapDispatchToProps(dispatch,ownProps) {
     return {
         
     };
 }
 
+
+// form setup
 const ReduxResetPasswordForm = reduxForm({
     form: 'ReduxResetPasswordForm',
     validate,

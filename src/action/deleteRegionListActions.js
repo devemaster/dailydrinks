@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import DeleteRegionListApi from '../api/deleteRegionListApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doDeleteRegion(data) {
   return {
     type: types.DELETE_REGIONLIST,
@@ -10,6 +13,7 @@ export function doDeleteRegion(data) {
   };
 }
 
+// request respnse set
 export function doDeleteRegionRes(data) {
   return {
     type: types.DELETE_REGIONLIST_RES,
@@ -17,6 +21,7 @@ export function doDeleteRegionRes(data) {
   };
 }
 
+// call api, action and response
 export function deleteRegionListRecord(data) {
   const TOKEN = getItem('auth_token');
 

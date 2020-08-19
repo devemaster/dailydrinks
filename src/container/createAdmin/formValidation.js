@@ -1,4 +1,4 @@
-
+// forn vaidation for admin create
 export default function validate(values) {
   const errors = {};
   if (values.email === '') {

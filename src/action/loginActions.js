@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { setItem } from '../utils/localStore';
 // import {logout} from '../helper/helper';
 
+// request payload set
 export function doLogin(data) {
 
   return {
@@ -12,6 +13,7 @@ export function doLogin(data) {
   };
 }
 
+// request respnse set
 export function doLoginRes(user) {  
   return {
     type: types.DO_LOGIN_RES,
@@ -19,6 +21,7 @@ export function doLoginRes(user) {
   };
 }
 
+// call api, action and response
 export function submit_login(data) {
   return function(dispatch) {
     loginApi.doLogin(data).then(user => {

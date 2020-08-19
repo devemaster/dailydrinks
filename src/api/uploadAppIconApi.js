@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class UploadAppIconApi {
+    
+    // api function to send and get data from server side
     static doUploadAppIcon(file) {
         console.log('file', file[0]);
         const TOKEN = getItem('auth_token');

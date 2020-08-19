@@ -25,6 +25,7 @@ let userRole = getItem('userRoleId');
 let isUserAvailable = false;
 class CreateUserComponent extends React.PureComponent {
 
+    // constructor function
     constructor(props) {
         super(props);
         isUserAvailable = false;
@@ -60,22 +61,10 @@ class CreateUserComponent extends React.PureComponent {
         }
         this.handleKeypress = this.handleKeypress.bind(this)
     }
-    handleKeypress = (e) =>{
-        const characterCode = e.key
-        if (characterCode === 'Backspace') return
+
+
     
-        const characterNumber = Number(characterCode)
-        if (characterNumber >= 0 && characterNumber <= 9) {
-            if (e.currentTarget.value && e.currentTarget.value.length) {
-              return
-            } else if (characterNumber === 0) {
-              e.preventDefault()
-            }
-            } else {
-              e.preventDefault()
-            }
-        }
-        
+   // on component load function call     
     componentDidMount() {
         let userAppGroup = getItem('adminAppId');
         if (userAppGroup !== null) {
@@ -89,11 +78,19 @@ class CreateUserComponent extends React.PureComponent {
                 isLoader: false,
             });
         }
+
+        // get countryl list action call
         this.props.getAllCountry();
+
+        // get application list action call
         this.props.fetchAllApplication();
     }
 
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // application response
         if (nextProps.allApplicationRes) {
 			if (nextProps.allApplicationRes.data && nextProps.allApplicationRes.data.applicationList) {
 				if (nextProps.allApplicationRes.data.applicationList.success===true) {
@@ -103,6 +100,8 @@ class CreateUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -112,6 +111,8 @@ class CreateUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // state list response
         if(nextProps.doAllStateRes){
             if(nextProps.doAllStateRes.data.stateList ){
                 if(nextProps.doAllStateRes.data.stateList.success === true){
@@ -121,6 +122,8 @@ class CreateUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // city list response
         if(nextProps.doAllCityRes){
             if(nextProps.doAllCityRes.data.cityList ){
                 if(nextProps.doAllCityRes.data.cityList.success === true){
@@ -130,12 +133,16 @@ class CreateUserComponent extends React.PureComponent {
                 }
             }
         }
+
+        // create user response
         if(nextProps.createUserRes){
             if(nextProps.createUserRes.data.createUser ){
                 if(nextProps.createUserRes.data.createUser.success === true){
                     this.setState({
                         isLoader: false
                     });
+
+                    // user creat success route to user list page
                     this.props.history.push('/users');
                 } else {
                     setTimeout(() => { this.setState({
@@ -144,6 +151,9 @@ class CreateUserComponent extends React.PureComponent {
                 }
             }
         }
+        
+
+        // check user
         if(nextProps.checkUserRes){
             if(nextProps.checkUserRes.data.checkUser ){
                 if(nextProps.checkUserRes.data.checkUser.success === true && isUserAvailable) {
@@ -267,16 +277,36 @@ class CreateUserComponent extends React.PureComponent {
         }
     }
 
+    // on zip code input fill
+    handleKeypress = (e) =>{
+        const characterCode = e.key
+        if (characterCode === 'Backspace') return
+    
+        const characterNumber = Number(characterCode)
+        if (characterNumber >= 0 && characterNumber <= 9) {
+            if (e.currentTarget.value && e.currentTarget.value.length) {
+              return
+            } else if (characterNumber === 0) {
+              e.preventDefault()
+            }
+            } else {
+              e.preventDefault()
+            }
+        }
+
+    // error modal close
     closeErrorModal = () => {
         this.setState({
             openErrorModal: false
         });
     }
 
+    // back to user list page routing
     handleBack = () => {
         this.props.history.push('/users');
     }
 
+    // create user form submit
     handleSubmit() {
         this.setState({
           isSubmited: true,
@@ -302,16 +332,20 @@ class CreateUserComponent extends React.PureComponent {
                 zipcode: this.state.zipcode,
                 create_user: selectedUsr
             }
+
+            // create user action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
 
+    // input on change 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
+    // country select change
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -320,6 +354,7 @@ class CreateUserComponent extends React.PureComponent {
         this.props.getAllState(item.original.id)
     }
 
+    // state select change
     stateChange = (item) => {
         this.setState({
             selectedState: item,
@@ -329,19 +364,24 @@ class CreateUserComponent extends React.PureComponent {
 
     }
 
+    // city select change
     cityChange = (item) => {
         this.setState({
             selectedCity: item,
             city: item.value
         });
     }
+    
 
+    // application select on change
     createApproved(e) {
         this.setState({
             [e.target.name]: e.target.value,
         })
     }
 
+
+    // validate user name and application selected or not
     validateUser(values) {
         const errors = {};
         if (values.applicationId === '') {
@@ -353,6 +393,7 @@ class CreateUserComponent extends React.PureComponent {
         return errors;
     }
 
+    // approvel check 
     addApproved = () => {
         this.setState({
             isSubmitedUser: true,
@@ -372,6 +413,8 @@ class CreateUserComponent extends React.PureComponent {
             
         }
     }
+
+    // / cancel delete
     cancelDeleteApp = () => {
         this.setState({
           openDeleteAppModal: false,
@@ -384,7 +427,7 @@ class CreateUserComponent extends React.PureComponent {
         });
     }
 
-
+    // approve remove
     removeApproved = () => {
         if(this.state.selectedUserList.length === 1){
             this.setState({ 
@@ -406,6 +449,7 @@ class CreateUserComponent extends React.PureComponent {
         }
     }
 
+    // table select option on change call
     actionTemplate = (rowData) => {
         return (
             <div style={{textAlign: 'center'}}>
@@ -416,16 +460,21 @@ class CreateUserComponent extends React.PureComponent {
         )
     }
 
+    // show hide password field input
     showHidePass = () => {
         this.setState({
             showPasshword: !this.state.showPasshword
         },()=>{ })
     }
+
+    // user access success notification message
     notify = () => {    
         toast.success("User can now access this app", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
     };
+
+    // user access denied notification message
     notifydelete = () => {  
         //   console.log("&&&&&&&&")
     toast.error("User couldn't access this app", {
@@ -433,14 +482,24 @@ class CreateUserComponent extends React.PureComponent {
     });
     };
     render() {
+
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+
+        // user validation error
         const errorsUser = this.validateUser(this.state);
+
+        // get data from state
         const { isSubmited, countryList, stateList, cityList, isSubmitedUser } = this.state;
 
         // let countryListOptionsItems = [];
+        // country list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -452,6 +511,8 @@ class CreateUserComponent extends React.PureComponent {
                 );
             });
         }
+
+        // state list select option setup
         const stateListOptions = [];
         if (stateList && stateList.length > 0) {
             stateList.map((item) => {
@@ -463,6 +524,8 @@ class CreateUserComponent extends React.PureComponent {
                 );
             });
         }
+
+        // city list select option setup
         const cityListOptions = [];
         if (cityList && cityList.length > 0) {
             cityList.map((item) => {
@@ -730,6 +793,7 @@ class CreateUserComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 CreateUserComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createUserRes: PropTypes.any,
@@ -740,6 +804,7 @@ CreateUserComponent.propTypes = {
     checkUserRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createUserRes: doCreateUserRes,
     doAllCountryRes: doAllCountryRes,
@@ -749,6 +814,7 @@ const mapStateToProps = createStructuredSelector({
     checkUserRes: doCheckUserRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateUser(data)),
@@ -759,6 +825,8 @@ function mapDispatchToProps(dispatch) {
         checkUserName: (data) => dispatch(checkUserName(data)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CreateUserComponent);

@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 
 class loginApi {
+    
+    // api function to send and get data from server side
 
     static doLogin(data) {
         let sendBody={
@@ -19,7 +21,8 @@ class loginApi {
                 headers: ajaxRequestHeaders,
                 body: JSON.stringify(sendBody)
             }
-            return fetch(BASE_URL + '/superlogin', body).then(response => {
+            var url = BASE_URL + '/superlogin';
+            return fetch(url, body).then(response => {
                 return response.json();
             }).catch(error => {
                 return error;

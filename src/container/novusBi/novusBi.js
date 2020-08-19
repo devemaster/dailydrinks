@@ -22,11 +22,7 @@ import {Button} from 'primereact/button';
 let isDelete = false;
 
 class NovusBiComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      wmsList: e.value,
-    })
-  }
+ 
   constructor() { 
     super();
     isDelete = false;
@@ -91,10 +87,18 @@ class NovusBiComponent extends React.PureComponent {
     }
   }
 
+  // on table select on change
+  onSelectionChange = (e) => {   
+    this.setState({
+      wmsList: e.value,
+    })
+  }
+
+  // table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" onClick={()=> this.goUpdateApplication(rowData)}>
+        <button className="btn btn-edit-customer" >
           <i className="fa fa-pencil" aria-hidden="true"></i>
         </button>
         <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
@@ -104,20 +108,14 @@ class NovusBiComponent extends React.PureComponent {
     );
   }
 
-  goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/novus-bi-create',
-    //   state: {appData: rowData}
-    // })
-  }
-
-
+  
+  // create page routing 
   createApp(){
     this.props.history.push('/novus-bi-create')
   }
 
   
-
+// delete  confrim call
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -126,9 +124,11 @@ class NovusBiComponent extends React.PureComponent {
     let payload = {
       app_id: this.state.appId
     }
+    // delete action call
     this.props.deleteApplicationRecord(payload);
   }
 
+// delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       appId: rowData.application_id,
@@ -136,12 +136,14 @@ class NovusBiComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+ //  icon show template in table
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -151,6 +153,8 @@ class NovusBiComponent extends React.PureComponent {
     );
   }
 
+
+  // toggle buttons
   toggleBox() {		
 		this.setState({
       opened: true,
@@ -170,7 +174,9 @@ class NovusBiComponent extends React.PureComponent {
 		this.setState({
       opened: false,
     });    
-	}
+  }
+  
+  // status action templage for table
   actionStatusTemplate = (data) => {
     const { opened } = this.state;
     return (
@@ -187,6 +193,8 @@ class NovusBiComponent extends React.PureComponent {
     );
   }
 
+
+  
   adminActionTemplate = (rowData) => {
     return (
       <div className="date_field" style={{textAlign: 'center'}}>
@@ -204,11 +212,21 @@ class NovusBiComponent extends React.PureComponent {
   }
 
   render() {
+
+    // list data from state
     const { novusBiList } = this.state;
     console.log(novusBiList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Applications</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -289,16 +307,19 @@ class NovusBiComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 NovusBiComponent.propTypes = {
 	novusBiRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   novusBiRes: getnovusBiRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchnovusBi: () => dispatch(fetchnovusBi()),
@@ -306,6 +327,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(NovusBiComponent);

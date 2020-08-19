@@ -1,4 +1,4 @@
-
+// form validdation for create application form
 export default function validate(values) {
   const errors = {};
   if (values.applicationName === '') {

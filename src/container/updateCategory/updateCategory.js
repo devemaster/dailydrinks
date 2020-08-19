@@ -17,6 +17,8 @@ import validate from './formValidation';
 
 import {FileUpload} from 'primereact/fileupload';
 class UpdateCategoryComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +35,9 @@ class UpdateCategoryComponent extends React.PureComponent {
             iconName:'Choos Icon'
         }
     }
+
+    
+// on component load function call
     componentDidMount() {
         // Get country list //
         this.props.getAllCountry();
@@ -54,11 +59,16 @@ class UpdateCategoryComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log("Props cat", nextProps)
         this.setState({
             isLoader:false
         })
+
+        // upload file response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -68,6 +78,8 @@ class UpdateCategoryComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // category update resopnse
         if(nextProps.updateAppRes){
             if(nextProps.updateAppRes && nextProps.updateAppRes.data){            
                 if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateCategory ){
@@ -82,10 +94,13 @@ class UpdateCategoryComponent extends React.PureComponent {
         }
         
     }
+
+    // back to cateogry list page routing
     handleBack = () => {
         this.props.history.push('/category-list');
     }
 
+    // form submit
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -99,14 +114,20 @@ class UpdateCategoryComponent extends React.PureComponent {
                 category_name: this.state.category_name,
                 icon: this.state.icon,
             }
+
+            // update category action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // input on change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // file upload on change 
     handleFileChange = (e) => {
         this.setState({
             isLoader:true
@@ -114,14 +135,20 @@ class UpdateCategoryComponent extends React.PureComponent {
         this.setState({
             file: e.target.files
         });
+
+        // upload file action call
         this.props.uploadImage(e.target.files);
     }
+
+    // file upload progess show loader
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // file uplaod
     onBasicUploadAuto = (event) => {
         this.setState({
             isLoader:false
@@ -147,12 +174,19 @@ class UpdateCategoryComponent extends React.PureComponent {
     //     });
     // }
     render() {
+        // set page header title
         const Header = (<div className="offer_head">Update Category</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, countryList } = this.state;
 
+        // country list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -232,6 +266,7 @@ class UpdateCategoryComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateCategoryComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     updateAppRes: PropTypes.any,
@@ -240,6 +275,7 @@ UpdateCategoryComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     updateAppRes: doUpdateAppRes,
     doAllCountryRes: doAllCountryRes,
@@ -247,6 +283,7 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateCategory(data)),
@@ -255,6 +292,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateCategoryComponent);

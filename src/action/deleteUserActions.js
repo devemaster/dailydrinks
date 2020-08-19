@@ -4,6 +4,8 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
 
+
+// request payload set
 export function deleteUser(data) {
   return {
     type: types.DO_DELETE_USER, 
@@ -11,6 +13,8 @@ export function deleteUser(data) {
   };
 }
 
+
+// request respnse set
 export function doDeleteUserRes(data) {
   return {
     type: types.DO_DELETE_USER_RES, 
@@ -18,6 +22,7 @@ export function doDeleteUserRes(data) {
   };
 }
 
+// call api, action and response
 export function deleteUserDetails(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

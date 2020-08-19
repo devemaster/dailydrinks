@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class checkUserApi {  
+    
+    // api function to send and get data from server side
     static doCheckUser(data) {
         // let payload = {
         //     UserName: data

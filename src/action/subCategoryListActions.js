@@ -2,6 +2,9 @@ import * as types from './actionTypes';
 import subCategoryListApi from '../api/subCategoryListApi';
 import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
+
+
+// request payload set
 import Swal from 'sweetalert2';
 
 export function getsubCategoryList() {
@@ -11,6 +14,7 @@ export function getsubCategoryList() {
   };
 }
 
+// request respnse set
 export function getsubCategoryListRes(data) {  
   return {
     type: types.FETCH_SUBCATEGORYLIST_RES, 
@@ -18,6 +22,7 @@ export function getsubCategoryListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchsubCategoryList(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

@@ -22,11 +22,8 @@ import logoImg from '../../assets/images/novusone-logo.png';
 let isDelete = false;
 
 class CommentListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      wmsList: e.value,
-    })
-  }
+
+  // constructor function
   constructor() { 
     super();
     isDelete = false;
@@ -41,7 +38,10 @@ class CommentListComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
+  // on component load function call
   componentDidMount() {
+
+    // call function if already setup comment data get otherwise call a function to get comment list
     let appData = JSON.parse(getItem('adminAppData'));
     if(appData !== null) {
       appData.application_id = appData.app_id;
@@ -56,12 +56,17 @@ class CommentListComponent extends React.PureComponent {
         commentListList: itemArr
       });
     } else {
+      
+      // get comment list action call
       this.props.fetchcommentList();
     }
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // get comment list response
     if (props.commentListRes) {
 			if (props.commentListRes.data && props.commentListRes.data.commentList) {
 				if (props.commentListRes.data.commentList.success===true) {
@@ -72,6 +77,8 @@ class CommentListComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // comment delete confrim response
     if (props.doDeleteAppRes) {
 			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteApplication) {
 				if (props.doDeleteAppRes.data.deleteApplication.success===true && isDelete) {
@@ -80,18 +87,25 @@ class CommentListComponent extends React.PureComponent {
             openDeleteAppModal: false,
             isDisabled: false,
           });
+
+          // call comment list action whene delete success
           this.props.fetchAllApplication();
 				}
 			}
     }
   }
 
+  // on table select change function call
+  onSelectionChange = (e) => {   
+    this.setState({
+      wmsList: e.value,
+    })
+  }
+
+// table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" onClick={()=> this.goUpdateApplication(rowData)}>
-        <i className="fa fa-pencil" aria-hidden="true"></i>
-        </button>
         <button className="btn btn-delete-customer" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button>      
@@ -99,20 +113,20 @@ class CommentListComponent extends React.PureComponent {
     );
   }
 
-  goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/novus-bi-create',
-    //   state: {appData: rowData}
-    // })
-  }
-
-
-  createApp(){
-    this.props.history.push('/novus-bi-create')
-  }
+  // goUpdateApplication = (rowData) => {
+  //   // this.props.history.push({
+  //   //   pathname: '/novus-bi-create',
+  //   //   state: {appData: rowData}
+  //   // })
+  // }
 
   
+  // createApp(){
+  //   this.props.history.push('/novus-bi-create')
+  // }
 
+  
+// delete  confrim call
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -121,9 +135,12 @@ class CommentListComponent extends React.PureComponent {
     let payload = {
       app_id: this.state.appId
     }
+
+    // delete comment action call
     this.props.deleteApplicationRecord(payload);
   }
 
+// delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       appId: rowData.application_id,
@@ -131,12 +148,14 @@ class CommentListComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+ // category icon show template in table
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -146,29 +165,39 @@ class CommentListComponent extends React.PureComponent {
     );
   }
 
-
+  // show time template for table
   adminActionTemplate = (rowData) => {
     return (
       <div className="date_field" style={{textAlign: 'center'}}>
-        <p onClick={()=> this.goToAdmin(rowData)}>
+        <p >
           19/02/2020 11:15  
         </p>    
       </div>
     );
   }
 
-  goToAdmin = (data) => {
-    // this.props.history.push('/adminDetails',{
-    //   applicationData: data
-    // })
-  }
+  // goToAdmin = (data) => {
+  //   // this.props.history.push('/adminDetails',{
+  //   //   applicationData: data
+  //   // })
+  // }
 
   render() {
+
+    // get comment list from state
     const { commentListList } = this.state;
     console.log(commentListList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+
+    // set page header title
     const Header = (<div className="offer_head">Comment List</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -245,16 +274,19 @@ class CommentListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 CommentListComponent.propTypes = {
 	commentListRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   commentListRes: getcommentListRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchcommentList: () => dispatch(fetchcommentList()),
@@ -262,6 +294,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CommentListComponent);

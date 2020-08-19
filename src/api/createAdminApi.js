@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 
 class createAdminApi {
 
+    
+    // api function to send and get data from server side
     static doCreateAdmin(data) {
         const TOKEN = getItem('auth_token');
         try{

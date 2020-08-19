@@ -18,6 +18,7 @@ let isDelete = false;
 
 class AdminDetailsComponent extends React.PureComponent {
 
+  // constructor function
   constructor(props) {
     super(props);
     isDelete = false;
@@ -33,18 +34,28 @@ class AdminDetailsComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
   }
 
+  // on component load function call
   componentDidMount() {
+
+    // set already fetched application data
     let appData = this.props.location.state.applicationData;
     this.setState({
       selectAdminData: appData
     });
+
+    // set application payload id
     let payLoad = {
       application_id: appData.application_id
     }
+
+    // call admin list data action
     this.props.getAppAdminList(payLoad);
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
+
+    // get admin list data
     if (props.appAdminRes) {
 			if (props.appAdminRes.data && props.appAdminRes.data.adminDetails) {
 				if (props.appAdminRes.data.adminDetails.success===true) {
@@ -55,6 +66,8 @@ class AdminDetailsComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // get admin delete confirmation
     if (props.doDeleteAdminRes) {
 			if (props.doDeleteAdminRes.data && props.doDeleteAdminRes.data.deleteAdmin) {
 				if (props.doDeleteAdminRes.data.deleteAdmin.success===true && isDelete) {
@@ -72,6 +85,7 @@ class AdminDetailsComponent extends React.PureComponent {
     }
   }
 
+  // action button for dataTable
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -81,13 +95,15 @@ class AdminDetailsComponent extends React.PureComponent {
       </div>
     );
   }
-
+  
+  // admin create page routing function
   createAdmin(){
     this.props.history.push('/create-admin',{
       applicationData: this.state.selectAdminData
     })
   }
 
+  // delete function when confirm to delete
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -99,6 +115,7 @@ class AdminDetailsComponent extends React.PureComponent {
     this.props.deleteAdmin(payload);
   }
 
+  // open delete confirm model-popup
   openDeleteApp = (rowData) => {
     this.setState({
       adminId: rowData.user_id,
@@ -106,16 +123,19 @@ class AdminDetailsComponent extends React.PureComponent {
     });
   }
 
+  // cancel delete 
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+  // goto previous page
   handleBack = () => {
     this.props.history.push('/applications');
   }
 
+  // show address detail in admin table list
   actionAddressTemplate = (rowData) => {
     return (
       <div>
@@ -125,10 +145,19 @@ class AdminDetailsComponent extends React.PureComponent {
   }
 
   render() {
+    // get admin application data from state
     const { selectAdminData } = this.state;
+
+    // get admin list from state
     const { adminList } = this.state;
+
+    // page header title
     const Header = (<div className="offer_head">Applications</div>);
+
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -204,16 +233,19 @@ class AdminDetailsComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 AdminDetailsComponent.propTypes = {
   appAdminRes: PropTypes.any,
 	doDeleteAdminRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   appAdminRes: doAppAdminRes,
 	doDeleteAdminRes: doDeleteAdminRes,
 });
 
+// setup action calling function
 function mapDispatchToProps(dispatch) {
   return {
     getAppAdminList: (data) => dispatch(get_app_admin(data)),
@@ -221,6 +253,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(AdminDetailsComponent);

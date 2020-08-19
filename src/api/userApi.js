@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class usersApi {  
+    
+    // api function to send and get data from server side
     static doUserAll() {
         const TOKEN = getItem('auth_token');
         try{

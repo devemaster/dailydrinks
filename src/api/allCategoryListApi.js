@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class AllCategoryListApi {  
+    
+    // api function to send and get data from server side
     static getAllcategoryList() {
         const TOKEN = getItem('auth_token');
         try{

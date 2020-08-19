@@ -23,11 +23,9 @@ import logoImg from '../../assets/images/novusone-logo.png';
 let isDelete = false;
 
 class TrashListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      wmsList: e.value,
-    })
-  }
+  
+
+  // constructor function
   constructor() { 
     super();
     isDelete = false;
@@ -42,8 +40,11 @@ class TrashListComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
+// on component load function call
   componentDidMount() {
     let appData = JSON.parse(getItem('adminAppData'));
+
+    // if get data set it directaly otherwise call function to get data
     if(appData !== null) {
       appData.application_id = appData.app_id;
       appData.application_name = appData.app_name;
@@ -57,13 +58,18 @@ class TrashListComponent extends React.PureComponent {
         trashListList: itemArr
       });
     } else {
+      // get trash list action call
       this.props.fetchtrashList();
     }
   }
 
+  
+// on component receive new props
   componentWillReceiveProps(props) {
     
     console.log("props check", props)
+
+    // trash list resposne
     if (props.trashListRes) {
 			if (props.trashListRes.data && props.trashListRes.data.trashList) {
 				if (props.trashListRes.data.trashList.status===true) {
@@ -74,6 +80,8 @@ class TrashListComponent extends React.PureComponent {
 				}
 			}
     }
+
+    // delete trash  response
     if (props.doDeleteContentRes) {
 			if (props.doDeleteContentRes.data && props.doDeleteContentRes.data.doDeleteContentRes) {
 				if (isDelete) {
@@ -82,17 +90,26 @@ class TrashListComponent extends React.PureComponent {
             openDeleteAppModal: false,
             isDisabled: false,
           });
+
+          // on trash delete success call trash list action 
           this.props.fetchtrashList();
 				}
 			}
     }
   }
+
+  
+// table select option on change call
+  onSelectionChange = (e) => {   
+    this.setState({
+      wmsList: e.value,
+    })
+  }
+  
+// table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
-        <button className="btn btn-edit-customer" data-toggle="tooltip" data-placement="top" title="Restore" onClick={()=> this.goUpdateApplication(rowData)}>
-        <i class="fa fa-recycle" aria-hidden="true"></i>
-        </button>
         <button className="btn btn-delete-customer" data-toggle="tooltip" data-placement="top" title="Permanent Delete" onClick={()=> this.openDeleteApp(rowData)}>
           <i className="fa fa-trash" aria-hidden="true"></i>
         </button>      
@@ -100,6 +117,7 @@ class TrashListComponent extends React.PureComponent {
     );
   }
 
+ //  icon show template in table
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -109,6 +127,7 @@ class TrashListComponent extends React.PureComponent {
     );
   }
 
+ // status button  template in table
   actionStatusTemplate = (data) => {
     if(data.status === 'draft'){
       return (
@@ -139,6 +158,8 @@ class TrashListComponent extends React.PureComponent {
     }
     
   }
+
+  // select type template
   actionTypeTemplate = (data) => {
     let cat =data.categories.split(',');
     return (
@@ -150,6 +171,7 @@ class TrashListComponent extends React.PureComponent {
     );
   }
 
+  // admin action template
   adminActionTemplate = (rowData) => {
     let date =moment(rowData.date).format('DD/MM/YYYY HH:mm');
     return (
@@ -160,20 +182,12 @@ class TrashListComponent extends React.PureComponent {
       </div>
     );
   }
-  goUpdateApplication = (rowData) => {
-    // this.props.history.push({
-    //   pathname: '/novus-bi-create',
-    //   state: {appData: rowData}
-    // })
-  }
+  
 
-
-  createApp(){
-    this.props.history.push('/novus-bi-create')
-  }
 
   
 
+// delete  confrim call
   deleteApp = () => {
     console.log(this.state.contant_id)
     this.setState({
@@ -183,9 +197,11 @@ class TrashListComponent extends React.PureComponent {
     let payload = {
       contant_id: this.state.contant_id
     }
+    // delete action call
     this.props.deleteContentListRecord(payload);
   }
 
+// delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       contant_id: rowData.contant_id,
@@ -193,41 +209,17 @@ class TrashListComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
-  actionIconTemplate = (data) => {
-    return (
-      <div>
-        {/* <img src={data.icon} alt='icon' style={{width: 50, height: 50}} /> */}
-        <img src={logoImg} alt='icon' className="image_icons" />
-      </div>
-    );
-  }
+ 
 
-  actionStatusTemplate = (data) => {
-    return (
-      <div className="status_main_bx">
-        <button className="btn pending-status">
-          Draft
-        </button> 
-       
-      </div>
-    );
-  }
+ 
 
-  adminActionTemplate = (rowData) => {
-    return (
-      <div className="date_field" style={{textAlign: 'center'}}>
-        <p onClick={()=> this.goToAdmin(rowData)}>
-          19/02/2020 11:15  
-        </p>    
-      </div>
-    );
-  }
 
   goToAdmin = (data) => {
     // this.props.history.push('/adminDetails',{
@@ -236,11 +228,20 @@ class TrashListComponent extends React.PureComponent {
   }
 
   render() {
+    // trash list data from state
     const { trashListList } = this.state;
     console.log(trashListList);
+
+    // get user role from global function
     let userRole = getItem('userRoleId');
+    
+// set page header title
     const Header = (<div className="offer_head">Trash List</div>);
+    
+// loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+    
+// table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -319,16 +320,19 @@ class TrashListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 TrashListComponent.propTypes = {
 	trashListRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   trashListRes: gettrashListRes,
 	doDeleteContentRes: doDeleteContentRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchtrashList: () => dispatch(fetchtrashList()),
@@ -336,6 +340,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(TrashListComponent);

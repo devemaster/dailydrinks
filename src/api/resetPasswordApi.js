@@ -3,6 +3,8 @@ import { BASE_URL } from '../constants';
 import Swal from 'sweetalert2';
 
 class resetPasswordApi {
+    
+    // api function to send and get data from server side
     static doResetpassword(data) {
 
         let sendBody={

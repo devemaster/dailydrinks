@@ -3,6 +3,8 @@ import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class CreateRegionApi {
     static doCreateRegion(data) {
+    
+        // api function to send and get data from server side
         const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({

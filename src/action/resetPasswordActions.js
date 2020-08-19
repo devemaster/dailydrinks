@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import resetPasswordApi from '../api/resetPasswordApi';
 import Swal from 'sweetalert2'
 
+// request payload set
 export function doResetpassword(data) {
   return {
     type: types.DO_RESETPASSWORD,
@@ -9,6 +10,7 @@ export function doResetpassword(data) {
   };
 }
 
+// request respnse set
 export function doResetpasswordRes(user) {
   return {
     type: types.DO_RESETPASSWORD_RES,
@@ -16,6 +18,7 @@ export function doResetpasswordRes(user) {
   };
 }
 
+// call api, action and response
 export function reset_password(data) {
     return function(dispatch) {
       resetPasswordApi.doResetpassword(data).then(user => {

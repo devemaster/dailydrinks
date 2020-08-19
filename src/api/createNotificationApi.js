@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class CreateNotificationApi {
+    
+    // api function to send and get data from server side
     static doCreateNotification(data) {
         const TOKEN = getItem('auth_token');
         try{

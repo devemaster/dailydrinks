@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import UploadAppIconApi from '../api/uploadAppIconApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doUploadAppIcon(data) {
   return {
     type: types.UPLOAD_APPLICATION_ICON,
@@ -10,6 +13,7 @@ export function doUploadAppIcon(data) {
   };
 }
 
+// request respnse set
 export function doUploadAppIconRes(data) {
   return {
     type: types.UPLOAD_APPLICATION_ICON_RES,
@@ -17,6 +21,7 @@ export function doUploadAppIconRes(data) {
   };
 }
 
+// call api, action and response
 export function uploadAppIcon(data) {
   const TOKEN = getItem('auth_token');
 

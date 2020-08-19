@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class novusBiUpdateArticleApi {
+    
+    // api function to send and get data from server side
     static donovusBiUpdateArticle(data) {
         const TOKEN = getItem('auth_token');
         try{

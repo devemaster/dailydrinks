@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import DeleteBannerListApi from '../api/deleteBannerListApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doDeleteBanner(data) {
   return {
     type: types.DELETE_BANNERLIST,
@@ -10,6 +13,7 @@ export function doDeleteBanner(data) {
   };
 }
 
+// request respnse set
 export function doDeleteBannerRes(data) {
   return {
     type: types.DELETE_BANNERLIST_RES,
@@ -17,6 +21,7 @@ export function doDeleteBannerRes(data) {
   };
 }
 
+// call api, action and response
 export function deleteBannerListRecord(data) {
   const TOKEN = getItem('auth_token');
 

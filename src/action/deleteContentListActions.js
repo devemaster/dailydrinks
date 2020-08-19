@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import DeleteContentListApi from '../api/deleteContentListApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doDeleteApp(data) {
   return {
     type: types.DELETE_CONTENTLIST,
@@ -10,6 +13,7 @@ export function doDeleteApp(data) {
   };
 }
 
+// request respnse set
 export function doDeleteContentRes(data) {
   return {
     type: types.DELETE_CONTENTLIST_RES, 
@@ -17,6 +21,8 @@ export function doDeleteContentRes(data) {
   };
 }
 
+
+// call api, action and response
 export function deleteContentListRecord(data) {
   const TOKEN = getItem('auth_token');
 

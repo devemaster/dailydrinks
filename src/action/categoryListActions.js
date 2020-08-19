@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getcategoryList() {
 
   return {
@@ -11,6 +12,7 @@ export function getcategoryList() {
   };
 }
 
+// request respnse set
 export function getcategoryListRes(data) {  
   return {
     type: types.FETCH_CATEGORYLIST_RES, 
@@ -18,6 +20,7 @@ export function getcategoryListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchcategoryList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

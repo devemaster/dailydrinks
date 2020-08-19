@@ -15,6 +15,8 @@ import Loader from 'react-loader-advanced';
 import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 class UpdateContentComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +32,8 @@ class UpdateContentComponent extends React.PureComponent {
             appData: null
         }
     }
+    
+// on component load function call
     componentDidMount() {
         // Get country list //
         this.props.getAllCountry();
@@ -47,7 +51,11 @@ class UpdateContentComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // get country list resposne
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -77,6 +85,8 @@ class UpdateContentComponent extends React.PureComponent {
                 }
             }
         }
+
+        // upload file response
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -86,6 +96,8 @@ class UpdateContentComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // update app response
         if(nextProps.updateAppRes){
             if(nextProps.updateAppRes.data.uploadContent ){
                 if(nextProps.updateAppRes.data.uploadContent.success === true){
@@ -101,10 +113,13 @@ class UpdateContentComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to conten list page routing
     handleBack = () => {
         this.props.history.push('/content-list');
     }
 
+    // form submit
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -123,20 +138,28 @@ class UpdateContentComponent extends React.PureComponent {
                 selectedCountries: selectedCou.join(),
                 selectedUser: '',
             }
+
+            // content update action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // oninput change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // on file handle change
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
         this.props.uploadImage(e.target.files);
     }
+
+    // country change function
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -144,12 +167,20 @@ class UpdateContentComponent extends React.PureComponent {
         });
     }
     render() {
+        
+        // set page header title
         const Header = (<div className="offer_head">Update Content</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation error
         const errors = validate(this.state);
+
+        // data get from state
         const { isSubmited, countryList } = this.state;
 
+        // country list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -228,6 +259,7 @@ class UpdateContentComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateContentComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     updateAppRes: PropTypes.any,
@@ -236,6 +268,7 @@ UpdateContentComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     updateAppRes: doUpdateAppRes,
     doAllCountryRes: doAllCountryRes,
@@ -243,6 +276,8 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateContent(data)),
@@ -251,6 +286,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateContentComponent);

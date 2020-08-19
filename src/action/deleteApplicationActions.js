@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import DeleteApplicationApi from '../api/deleteApplicationApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+// request payload set
 export function doDeleteApp(data) {
   return {
     type: types.DELETE_APPLICATION,
@@ -10,6 +12,7 @@ export function doDeleteApp(data) {
   };
 }
 
+// request respnse set
 export function doDeleteAppRes(data) {
   return {
     type: types.DELETE_APPLICATION_RES,
@@ -17,6 +20,7 @@ export function doDeleteAppRes(data) {
   };
 }
 
+// call api, action and response
 export function deleteApplicationRecord(data) {
   const TOKEN = getItem('auth_token');
 

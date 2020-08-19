@@ -26,6 +26,8 @@ let userRole = getItem('userRoleId');
 let isUserAvailable = false;
 
 class UsersComponent extends React.PureComponent {
+
+  // constructor function
   constructor() { 
     super();
 		this.state = {
@@ -51,6 +53,7 @@ class UsersComponent extends React.PureComponent {
     this.createApproved = this.createApproved.bind(this);
   }
 
+  // on component load function call
   componentDidMount() {
     let userAppGroup = getItem('adminAppId');
     if (userAppGroup !== null) {
@@ -64,11 +67,19 @@ class UsersComponent extends React.PureComponent {
         isLoader: false,
       });
     }
+
+    // get user action call
     this.props.getUsers();
+
+    // get application action call
     this.props.fetchAllApplication();
   }
 
+  
+  // on component receive new props
   componentWillReceiveProps(props) {
+
+    // get application list response
     if (props.allApplicationRes) {
 			if (props.allApplicationRes.data && props.allApplicationRes.data.applicationList) {
 				if (props.allApplicationRes.data.applicationList.success===true) {
@@ -78,6 +89,8 @@ class UsersComponent extends React.PureComponent {
         }
       }
     }
+
+    // get all user response
     if (props.allUsersRes) {
 			if (props.allUsersRes.data && props.allUsersRes.data.allUser) {
 				if (props.allUsersRes.data.allUser.success===true) {
@@ -89,18 +102,26 @@ class UsersComponent extends React.PureComponent {
 			}
     }
     
+    // approve user response
     if (props.doUserApprovedRes) {
       if (props.doUserApprovedRes.data && props.doUserApprovedRes.data.approvedUser) {
         if (props.doUserApprovedRes.data.approvedUser.success === true && isApprove) {
           isApprove = false;
+
+          // get user when approve success
           this.props.getUsers();
         }
       }
     }
+
+    // app approve response
     if (props.userApproveAppRes) {
+      console.log(props.checkUserRes.data)
       if (props.userApproveAppRes.data && props.userApproveAppRes.data.userApproveApp) {
         if (props.userApproveAppRes.data.userApproveApp.success === true ) {
           // isApprovedApp = false;
+
+          // get user when approve success
           this.props.getUsers();
           this.setState({
             openApprovedModal: false
@@ -108,10 +129,14 @@ class UsersComponent extends React.PureComponent {
         }
       }
     }
+
+    // delete user resposne
     if (props.doDeleteUserRes) {
       if (props.doDeleteUserRes.data && props.doDeleteUserRes.data.deleteUser) {
         if (props.doDeleteUserRes.data.deleteUser.success === true && isDelete) {
           isDelete = false;
+
+          // get user when approve success
           this.props.getUsers();
           this.setState({
             openDeleteUserModal: false,
@@ -121,7 +146,9 @@ class UsersComponent extends React.PureComponent {
       }
     }
     
+    // check user approvel status
     if(props.checkUserRes){
+      
       if(props.checkUserRes.data.checkUser ){
           if(props.checkUserRes.data.checkUser.success === true && isUserAvailable) {
               isUserAvailable = false;
@@ -243,6 +270,7 @@ class UsersComponent extends React.PureComponent {
     }
   }
 
+  // user approved resqust
   approvedUser = () => {
     this.setState({
       isSubmited: true,
@@ -263,19 +291,25 @@ class UsersComponent extends React.PureComponent {
         create_user: selectedUsr,
         user_id: this.state.selectedUserId
       }
+
+      // approve user action call
       this.props.approveAppUser(payReq);
     }
   }
 
+  // user status update 
   approveDisapprove(rowData, status){
     let payloadReq = {
       user_id: rowData.user_id,
       status: status
     }
+
+    // user status update action call
     this.props.updateUserStatus(payloadReq);
     isApprove = true;
   }
 
+// delete  confrim call
   deleteUser = () => {
     let payLoad = {
       user_id: this.state.userId
@@ -287,6 +321,7 @@ class UsersComponent extends React.PureComponent {
     });
   }
 
+  // update user page routing with data
   updateUser = (data) => {
     this.props.history.push({
       pathname: 'updateUser',
@@ -294,12 +329,14 @@ class UsersComponent extends React.PureComponent {
     });
   }
 
+  // create uprove on change
   createApproved(e) {
     this.setState({
       [e.target.name]: e.target.value,
     })
   }
 
+// table action button template
   actionTemplate(rowData, column) {
     // console.log(rowData);
     return (<div style={{textAlign: 'center'}}>
@@ -331,6 +368,7 @@ class UsersComponent extends React.PureComponent {
     </div>);
   }
 
+// table action button template
   actionUpdateTemplate = (rowData) => {
     return (
       <div style={{textAlign: 'left'}}>
@@ -340,6 +378,7 @@ class UsersComponent extends React.PureComponent {
     );
   }
 
+// table  address template
   actionAddressTemplate = (rowData) => {
     return (
       <div>
@@ -348,6 +387,8 @@ class UsersComponent extends React.PureComponent {
     );
   }
 
+  
+// table status  show template
   statusTemplate = (rowData) => {
     return (<div style={{textAlign: 'left'}}>
       {
@@ -365,10 +406,12 @@ class UsersComponent extends React.PureComponent {
     </div>);
   }
 
+  // create user page routing
   createUser(){
     this.props.history.push('/createUser')
   }
 
+// delete confirm model-popup open
   openDeleteModal = (data) => {
     this.setState({
       userId: data.user_id,
@@ -376,12 +419,15 @@ class UsersComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteUser = () => {
     this.setState({
       openDeleteUserModal: false,
     });
   }
 
+
+  // on approe check function
   openApproved = (data) => {
     let appUserName = data.app_user;
     if (appUserName.length > 0) {
@@ -413,6 +459,7 @@ class UsersComponent extends React.PureComponent {
     }
   }
 
+  // approvel close
   closeApproved = () => {
     if (userRole === '1') {
       this.setState({
@@ -432,12 +479,15 @@ class UsersComponent extends React.PureComponent {
     
   }
 
+  // close error modal
   closeErrorModal = () => {
     this.setState({
         openErrorModal: false
     });
   } 
 
+
+  // validation of user application select or user name 
   validateUser(values) {
     const errors = {};
     if (values.applicationId === '') {
@@ -449,6 +499,7 @@ class UsersComponent extends React.PureComponent {
     return errors;
   }
 
+  // validation
   validate(values) {
     const errors = {};
     if (values.selectedUserList.length === 0) {
@@ -457,6 +508,8 @@ class UsersComponent extends React.PureComponent {
     return errors;
   }
 
+
+  // add appoved request function
   addApproved = () => {
     this.setState({
       isSubmitedUser: true,
@@ -476,6 +529,8 @@ class UsersComponent extends React.PureComponent {
     }
   }
 
+
+  // remove approve function set
   removeApproved = (data) => {
     if(this.state.selectedUserList.length === 1){
       this.setState({ 
@@ -492,6 +547,7 @@ class UsersComponent extends React.PureComponent {
     }
   }
 
+  // action approve tempalate for table
   actionApproveTemplate = (rowData) => {
     return (
       <div style={{textAlign: 'center'}}>
@@ -501,11 +557,26 @@ class UsersComponent extends React.PureComponent {
   }
 
   render() {
+
+    // get data from state
     const { usersList, isSubmitedUser, selectedUserList, isSubmited } = this.state;
+
+    // user validation error
     const errorsUser = this.validateUser(this.state);
+
+    // validation error
     const errors = this.validate(this.state);
+
+    
+    // set page header title
     const Header = (<div className="offer_head">Users</div>);
+
+    
+    // loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+    
+    // table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -671,6 +742,7 @@ class UsersComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 UsersComponent.propTypes = {
 	allUsersRes: PropTypes.any,
   doUserApprovedRes: PropTypes.any,
@@ -680,6 +752,7 @@ UsersComponent.propTypes = {
   checkUserRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
 	allUsersRes: doUserAllRes,
   doUserApprovedRes: doUserApprovedRes,
@@ -689,6 +762,7 @@ const mapStateToProps = createStructuredSelector({
   checkUserRes: doCheckUserRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		getUsers: () => dispatch(getAllUsers()),
@@ -700,6 +774,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UsersComponent);

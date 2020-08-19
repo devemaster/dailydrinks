@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import CreateNotificationApi from '../api/createNotificationApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+// request payload set
 export function doCreateNotification(data) {
   return {
     type: types.CREATE_NOTIFICATION,
@@ -10,6 +12,8 @@ export function doCreateNotification(data) {
   };
 }
 
+
+// request respnse set
 export function doCreateNotificationRes(data) {
   return {
     type: types.CREATE_NOTIFICATION_RES,
@@ -17,6 +21,7 @@ export function doCreateNotificationRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateNotification(data) {
   const TOKEN = getItem('auth_token');
 

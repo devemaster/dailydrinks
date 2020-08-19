@@ -16,6 +16,8 @@ import { fetchAllApplication, getAllApplicationRes } from '../../action/applicat
 import { getItem } from '../../utils/localStore';
 let isSend = false;
 class CreateNotificationComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         isSend = false;
@@ -34,6 +36,8 @@ class CreateNotificationComponent extends React.PureComponent {
             appName: '',
         }
     }
+
+    // on component load function call
     componentDidMount() {
         let userAppGroup = getItem('adminAppId');
         if (userAppGroup !== null) {
@@ -48,9 +52,15 @@ class CreateNotificationComponent extends React.PureComponent {
             });
         }
         
+        // application get action call
         this.props.fetchAllApplication();
     }
+
+
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // get application list response
         if (nextProps.allApplicationRes) {
 			if (nextProps.allApplicationRes.data && nextProps.allApplicationRes.data.applicationList) {
 				if (nextProps.allApplicationRes.data.applicationList.success===true) {
@@ -60,6 +70,8 @@ class CreateNotificationComponent extends React.PureComponent {
                 }
             }
         }
+
+        // user search response
         if(nextProps.doUserAllSearchRes){
             if (nextProps.doUserAllSearchRes.data && nextProps.doUserAllSearchRes.data.userSearch) {
 				if (nextProps.doUserAllSearchRes.data.userSearch.success===true) {
@@ -73,6 +85,8 @@ class CreateNotificationComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // create notification response
         if(nextProps.createNotificationRes){
             if(nextProps.createNotificationRes.data.createNotification ){
                 if(nextProps.createNotificationRes.data.createNotification.success === true && isSend){
@@ -93,10 +107,12 @@ class CreateNotificationComponent extends React.PureComponent {
         }
     }
 
+    // backt to application list page routing
     handleBack = () => {
         this.props.history.push('/applications');
     }
 
+    // create notifiction form submit function
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -117,14 +133,20 @@ class CreateNotificationComponent extends React.PureComponent {
                 type_message: this.state.body,
             }
             isSend = true;
+
+            // notification create action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // input on change 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // select user  on change
     handleInputChange = (value) => {
         if (value !== '') {
             this.setState({
@@ -140,6 +162,8 @@ class CreateNotificationComponent extends React.PureComponent {
             selectedUser: item
         });
     }
+
+    // on group change 
     changeGroup = (value) => {
         this.setState({
             groupValue: value.target.value
@@ -157,13 +181,22 @@ class CreateNotificationComponent extends React.PureComponent {
         })
     }
     render() {
+
+        // set page header title
         const Header = (<div className="offer_head">Create Notification</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation error
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, usersList } = this.state;
 
         // let countryListOptionsItems = [];
+
+        // user list select option setup
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -175,6 +208,7 @@ class CreateNotificationComponent extends React.PureComponent {
                 );
             });
         }
+        // get user role from global function
         let userRole = getItem('userRoleId');
         console.log(this.state.groupValue);
         return (
@@ -281,6 +315,7 @@ class CreateNotificationComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 CreateNotificationComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createNotificationRes: PropTypes.any,
@@ -288,12 +323,14 @@ CreateNotificationComponent.propTypes = {
     allApplicationRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createNotificationRes: doCreateNotificationRes,
     doUserAllSearchRes: doUserAllSearchRes,
 	allApplicationRes: getAllApplicationRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateNotification(data)),
@@ -301,6 +338,8 @@ function mapDispatchToProps(dispatch) {
 		fetchAllApplication: () => dispatch(fetchAllApplication()),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CreateNotificationComponent);

@@ -1,9 +1,9 @@
-import { getItem } from '../utils/localStore';
-import { BASE_URL } from '../constants';
+// import { getItem } from '../utils/localStore';
 
 class AverageListApi {  
+    
+    // api function to send and get data from server side
     static getAverageList() {
-        const TOKEN = getItem('auth_token');
         try{
             const ajaxRequestHeaders = new Headers({
                 'Content-Type': 'application/json',
@@ -26,7 +26,8 @@ class AverageListApi {
         }
     }
     static doUpdateAverage(data) {
-        const TOKEN = getItem('auth_token');
+    
+        // api function to send and get data from server side
         console.log(data)
         try{
             const ajaxRequestHeaders = new Headers({

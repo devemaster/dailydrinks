@@ -1,11 +1,15 @@
 
 import { getItem } from '../utils/localStore';
 
+
+// logout function
 export const logout=() =>{
     localStorage.clear();
     window.location.href = '/';
 }
 
+
+// login auth token check function
 export const checkLogin=() =>{
     const TOKEN = getItem('auth_token');
     if(TOKEN !== undefined || TOKEN !== null){
@@ -15,6 +19,7 @@ export const checkLogin=() =>{
     }
 }
 
+// amount format in doller
 export function dollarAmountFormat (input) {
     if(input) {
         if(input.length>0){
@@ -27,9 +32,13 @@ export function dollarAmountFormat (input) {
     }
 }
 
+// number comma set
 export function numberWithCommas(number)  {
     return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
+
+// number comma and doller set
+
 export function numberWithCommasAndDollar(number)  {
     if (number === null) {
         return '$0'
@@ -38,6 +47,7 @@ export function numberWithCommasAndDollar(number)  {
     }
 }
 
+// date formate
 export function dateFormat(date){
     if (!date) return null;
     let dateNew = {date};
@@ -53,6 +63,8 @@ export function dateFormat(date){
     let monthIndex = splitDate[1];
     return  monthNames[monthIndex - 1] + ' ' + day;
 }
+
+// load scripts
 export function loadScript () {    
     var tag = document.createElement('script');
     tag.async = false;
@@ -60,6 +72,7 @@ export function loadScript () {
     document.head.appendChild(tag);
 }
 
+// date and time formating
 export function dateTimeFormat(datetime) {
     // eslint-disable-next-line no-unused-expressions
     if (datetime !== null && datetime !== '' && datetime !== undefined) {

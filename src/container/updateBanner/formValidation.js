@@ -1,4 +1,4 @@
-
+// banner update from validation
 export default function validate(values) {
   const errors = {};
   if (values.title === '') {

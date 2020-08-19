@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class ArticleListApi {  
+    
+    // api function to send and get data from server side
     static getarticleList() {
         const TOKEN = getItem('auth_token');
         try{

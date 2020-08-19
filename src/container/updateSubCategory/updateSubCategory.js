@@ -16,6 +16,8 @@ import BackIcon from '../../assets/images/icon-left.svg';
 import validate from './formValidation';
 import {FileUpload} from 'primereact/fileupload';
 class UpdateSubCategoryComponent extends React.PureComponent {
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -32,6 +34,8 @@ class UpdateSubCategoryComponent extends React.PureComponent {
             iconName:'Choos Icon'
         }
     }
+
+    // on component load function call
     componentDidMount() {
         // Get country list //
         console.log(this.props.location.state.appData)
@@ -52,8 +56,13 @@ class UpdateSubCategoryComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
+
+        // upload image resposne
         if(nextProps.doUploadAppIconRes){
             if (nextProps.doUploadAppIconRes.data && nextProps.doUploadAppIconRes.data.uploadAppIcon) {
 				if (nextProps.doUploadAppIconRes.data.uploadAppIcon.success===true) {
@@ -64,12 +73,16 @@ class UpdateSubCategoryComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // update subcategory response
         if(nextProps.updateAppRes){       
             if(nextProps.updateAppRes.data && nextProps.updateAppRes.data.updateSubCategory ){
                 if(nextProps.updateAppRes.data.updateSubCategory && nextProps.updateAppRes.data.updateSubCategory.success === true){
                     this.setState({
                         isLoader: false
                     });
+
+                    // category update route to subcategory-list
                     this.props.history.push({
                         pathname: '/subcategory-list',
                         state: {appData: this.state.cat_id}
@@ -82,18 +95,24 @@ class UpdateSubCategoryComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to subcategory list
     handleBack = () => {
         this.props.history.push({
             pathname: '/subcategory-list',
             state: {appData: this.state.cat_id}
           });
     }
+
+    // file upload progess show laoder
     fileUploadProcess= () =>{
         console.log("hello");
         this.setState({
             isLoader:true
         })
     }
+
+    // file uplaod
     onBasicUploadAuto = (event) => {
         this.setState({
             isLoader:false
@@ -113,6 +132,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         // this.growl.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
     }
 
+    // form submit
     handleSubmit = () => {
         this.setState({
           isSubmited: true,
@@ -126,20 +146,30 @@ class UpdateSubCategoryComponent extends React.PureComponent {
                 subcategory_name: this.state.category_name,
                 icon: this.state.icon
             }
+
+            // udpate subcategory action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
+
+    // on input change
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
+
+    // on file change 
     handleFileChange = (e) => {
         this.setState({
             file: e.target.files
         });
+
+        // upload iamge action call 
         this.props.uploadImage(e.target.files);
     }
+
+    // on country change 
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -147,12 +177,20 @@ class UpdateSubCategoryComponent extends React.PureComponent {
         });
     }
     render() {
+        
+        // set page header title
         const Header = (<div className="offer_head">Update SubCategory</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation error
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, countryList } = this.state;
 
+        // countryl list select opiton setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -231,6 +269,7 @@ class UpdateSubCategoryComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 UpdateSubCategoryComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     updateAppRes: PropTypes.any,
@@ -239,6 +278,7 @@ UpdateSubCategoryComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     updateAppRes: doUpdateSubAppRes,
     doAllCountryRes: doAllCountryRes,
@@ -246,6 +286,7 @@ const mapStateToProps = createStructuredSelector({
     doUploadAppIconRes: doUploadAppIconRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitUpdateSubCategory(data)),
@@ -254,6 +295,8 @@ function mapDispatchToProps(dispatch) {
         uploadImage: (file) => dispatch(uploadAppIcon(file)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UpdateSubCategoryComponent);

@@ -15,6 +15,7 @@ import validate from './formValidation';
 
 class CreateAdminComponent extends React.PureComponent {
 
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -41,18 +42,26 @@ class CreateAdminComponent extends React.PureComponent {
         }
     }
 
+    
+    // on component load function call
     componentDidMount() {
         let appData = this.props.location.state.applicationData;
         this.setState({
             applicationData: appData
         });
+
+        // get contry list action call
         this.props.getAllCountry();
         this.setState({
             isLoader: false,
         });
     }
 
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // get country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -62,6 +71,8 @@ class CreateAdminComponent extends React.PureComponent {
                 }
             }
         }
+
+        // state list response
         if(nextProps.doAllStateRes){
             if(nextProps.doAllStateRes.data.stateList ){
                 if(nextProps.doAllStateRes.data.stateList.success === true){
@@ -71,6 +82,8 @@ class CreateAdminComponent extends React.PureComponent {
                 }
             }
         }
+
+        // city list response
         if(nextProps.doAllCityRes){
             if(nextProps.doAllCityRes.data.cityList ){
                 if(nextProps.doAllCityRes.data.cityList.success === true){
@@ -80,12 +93,16 @@ class CreateAdminComponent extends React.PureComponent {
                 }
             }
         }
+
+        // create admin response
         if(nextProps.createAdminRes){
             if(nextProps.createAdminRes.data.createAdmin ){
                 if(nextProps.createAdminRes.data.createAdmin.success === true){
                     this.setState({
                         isLoader: false
                     });
+
+                    // if created successfully route to admin list page
                     this.props.history.push('/adminDetails',{
                         applicationData: this.state.applicationData
                       })
@@ -98,10 +115,12 @@ class CreateAdminComponent extends React.PureComponent {
         }
     }
 
+    // back to previous page
     handleBack = () => {
         this.props.history.goBack();
     }
 
+    // form submit function 
     handleSubmit() {
         this.setState({
           isSubmited: true,
@@ -123,6 +142,8 @@ class CreateAdminComponent extends React.PureComponent {
                 zipcode: this.state.zipcode,
                 access_application_id: this.state.applicationData.application_id
             }
+
+            // call admin create action
             this.props.handleFormSubmit(payloadReq);
             this.setState({
                 isLoader: true,
@@ -130,12 +151,14 @@ class CreateAdminComponent extends React.PureComponent {
         }
     }
 
+    // input on change function
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
+    // country change function
     countryChange = (item) => {
         this.setState({
             selectedCountry: item,
@@ -144,6 +167,7 @@ class CreateAdminComponent extends React.PureComponent {
         this.props.getAllState(item.original.id)
     }
 
+    // state change function
     stateChange = (item) => {
         this.setState({
             selectedState: item,
@@ -152,6 +176,7 @@ class CreateAdminComponent extends React.PureComponent {
         this.props.getAllCity(item.original.state_id)
     }
 
+    // city change function
     cityChange = (item) => {
         this.setState({
             selectedCity: item,
@@ -159,12 +184,14 @@ class CreateAdminComponent extends React.PureComponent {
         });
     }
 
+
     createApproved(e) {
         this.setState({
             [e.target.name]: e.target.value,
         })
     }
 
+    // show hide password in input password field
     showHidePass = () => {
         this.setState({
             showPasshword: !this.state.showPasshword
@@ -172,11 +199,20 @@ class CreateAdminComponent extends React.PureComponent {
     }
 
     render() {
+        // set page header title
         const Header = (<div className="offer_head">Create Admin</div>);
+
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        //validation errors
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, countryList, stateList, cityList } = this.state;
 
+
+        // conutryl list select option setup
         const countryListOptions = [];
         if (countryList && countryList.length > 0) {
             countryList.map((item) => {
@@ -189,6 +225,8 @@ class CreateAdminComponent extends React.PureComponent {
             });
         }
 
+
+        // state list select option setup
         const stateListOptions = [];
         if (stateList && stateList.length > 0) {
             stateList.map((item) => {
@@ -201,6 +239,7 @@ class CreateAdminComponent extends React.PureComponent {
             });
         }
 
+        // city list select option setup
         const cityListOptions = [];
         if (cityList && cityList.length > 0) {
             cityList.map((item) => {
@@ -361,6 +400,7 @@ class CreateAdminComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 CreateAdminComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createAdminRes: PropTypes.any,
@@ -369,6 +409,7 @@ CreateAdminComponent.propTypes = {
     doAllStateRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createAdminRes: doCreateAdminRes,
     doAllCountryRes: doAllCountryRes,
@@ -376,6 +417,7 @@ const mapStateToProps = createStructuredSelector({
     doAllStateRes: doAllStateRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(create_admin(data)),
@@ -384,6 +426,8 @@ function mapDispatchToProps(dispatch) {
         getAllCity: (data) => dispatch(getAllCity(data)),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CreateAdminComponent);

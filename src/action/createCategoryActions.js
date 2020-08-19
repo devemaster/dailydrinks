@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import CreateCategoryApi from '../api/createCategoryApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+// request payload set
 export function doCreateCategory(data) {
   return {
     type: types.CREATE_CATEGORY,
@@ -10,6 +12,7 @@ export function doCreateCategory(data) {
   };
 }
 
+// request respnse set
 export function doCreateCategoryRes(data) {
   return {
     type: types.CREATE_CATEGORY_RES,
@@ -17,6 +20,7 @@ export function doCreateCategoryRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateCategory(data) {
   const TOKEN = getItem('auth_token');
 

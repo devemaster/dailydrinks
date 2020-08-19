@@ -24,11 +24,8 @@ import Modal from "react-responsive-modal";
 let isDelete = false;
 
 class SubCategoryListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      scategoryList: e.value,
-    })
-  }
+
+  // constructor function
   constructor() { 
     super();
     isDelete = false;
@@ -50,6 +47,7 @@ class SubCategoryListComponent extends React.PureComponent {
     this.actionTemplate = this.actionTemplate.bind(this);
 	}
 
+// on component load function call
   componentDidMount() {
     console.log(this.props.location.state)
     if(this.props.location.state.appData){
@@ -63,9 +61,13 @@ class SubCategoryListComponent extends React.PureComponent {
         this.setState({
           isLoader:true
         })
+
+        // get subcategory list action call
         this.props.fetchsubCategoryList(payloadReq);
       });
     }else{
+
+      // if not get category data foward to category list page
       this.props.history.push({
         pathname: '/category-list'
       })
@@ -73,11 +75,14 @@ class SubCategoryListComponent extends React.PureComponent {
     
   }
 
+// on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props);
     // this.setState({
     //   isLoader:false
     // })
+
+    // sub category list response
     if (props.subCategoryListRes) {
 			if (props.subCategoryListRes.data && props.subCategoryListRes.data.subCategoryList) {
 				if (props.subCategoryListRes.data.subCategoryList.success===true) {
@@ -93,6 +98,8 @@ class SubCategoryListComponent extends React.PureComponent {
         }
 			}
     }
+
+    // delete response
     if (props.doDeleteAppRes) {
 			if (props.doDeleteAppRes.data && props.doDeleteAppRes.data.deleteCategoryList) {
 				if (props.doDeleteAppRes.data.deleteCategoryList.success && isDelete) {
@@ -107,12 +114,22 @@ class SubCategoryListComponent extends React.PureComponent {
           let payloadReq = {
             cat_id: this.state.appData
           }
+          // after delete call subcategory list action 
           this.props.fetchsubCategoryList(payloadReq);
 				}
 			}
     }
   }
 
+  
+// table select option on change call
+  onSelectionChange = (e) => {   
+    this.setState({
+      scategoryList: e.value,
+    })
+  }
+  
+// table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}} className="btn-group">
@@ -125,22 +142,29 @@ class SubCategoryListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // update page routing with data
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/update-subcategory',
       state: {appData: rowData}
     })
   }
+
+  // back to category page routing
   handleBack = () => {
     this.props.history.push('/category-list');
 }
 
+
+// create new page routing
   createApp(){
     this.props.history.push('/novus-bi-create')
   }
 
   
 
+// delete  confrim call
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -149,9 +173,11 @@ class SubCategoryListComponent extends React.PureComponent {
     let payload = {
       id: this.state.appId
     }
+    // delete action call
     this.props.deleteSubCategoryListRecord(payload);
   }
 
+// delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       appId: rowData.subcat_id,
@@ -159,12 +185,14 @@ class SubCategoryListComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
 
+ // category icon show template in table
   actionIconTemplate = (data) => {
     return (
       <div>
@@ -175,18 +203,20 @@ class SubCategoryListComponent extends React.PureComponent {
   }
 
 
-  goToAdmin = (data) => {
-    // this.props.history.push('/adminDetails',{
-    //   applicationData: data
-    // })
-  }
 
   render() {
+
+    // get subcategory list data from state
     const { subCategoryList } = this.state;
     console.log(subCategoryList);
-    // let userRole = getItem('userRoleId');
+    
+// set page header title
     const Header = (<div className="offer_head">Sub-Category List</div>);
+    
+// loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
+    
+// table header
     var tableHeader = <div style={{'textAlign':'left'}}>
                         <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
                         <input type="text" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Search" size="50"/>
@@ -263,16 +293,19 @@ class SubCategoryListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 SubCategoryListComponent.propTypes = {
 	subCategoryListRes: PropTypes.any,
 	doDeleteAppRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   subCategoryListRes: getsubCategoryListRes,
 	doDeleteAppRes: doDeleteAppRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchsubCategoryList: (data) => dispatch(fetchsubCategoryList(data)),
@@ -280,6 +313,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(SubCategoryListComponent);

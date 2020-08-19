@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import StatusContentListApi from '../api/statusContentListApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doStatusApp(data) {
   return {
     type: types.STATUS_CONTENTLIST,
@@ -10,6 +13,7 @@ export function doStatusApp(data) {
   };
 }
 
+// request respnse set
 export function doStatusContentRes(data) {
   return {
     type: types.STATUS_CONTENTLIST_RES, 
@@ -17,6 +21,7 @@ export function doStatusContentRes(data) {
   };
 }
 
+// call api, action and response
 export function statusContentListRecord(data) {
   const TOKEN = getItem('auth_token');
 

@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import CreateApplicationApi from '../api/createApplicationApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+// request payload set
 export function doCreateApplication(data) {
   return {
     type: types.CREATE_APPLICATION,
@@ -10,6 +12,7 @@ export function doCreateApplication(data) {
   };
 }
 
+// request respnse set
 export function doCreateApplicationRes(data) {
   return {
     type: types.CREATE_APPLICATION_RES,
@@ -17,6 +20,7 @@ export function doCreateApplicationRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateApplication(data) {
   const TOKEN = getItem('auth_token');
 

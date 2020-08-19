@@ -3,6 +3,8 @@ import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 class editUserApi {
+    
+    // api function to send and get data from server side
     static doEditUser(data) {
         const TOKEN = getItem('auth_token');
         try{

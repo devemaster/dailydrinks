@@ -1,4 +1,4 @@
-
+// form validation for create category 
 export default function validate(values) {
   const errors = {};
   if (values.category_name === '') {

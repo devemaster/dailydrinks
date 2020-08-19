@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import UpdateContentApi from '../api/updateContentApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doUpdateApp(data) {
   return {
     type: types.UPDATE_CONTENT,
@@ -10,6 +13,7 @@ export function doUpdateApp(data) {
   };
 }
 
+// request respnse set
 export function doUpdateAppRes(data) {
   return {
     type: types.UPDATE_CONTENT_RES,
@@ -17,6 +21,7 @@ export function doUpdateAppRes(data) {
   };
 }
 
+// call api, action and response
 export function submitUpdateContent(data) {
   const TOKEN = getItem('auth_token');
 

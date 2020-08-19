@@ -12,6 +12,7 @@ import logoImg from '../../assets/images/novusone-logo.png';
 import { doUserAllRes } from '../../action/userActions';
 import Swal from 'sweetalert2';
 
+// panel logout function
 export function logout() {
     Swal.fire({
         title: 'Are you sure?',
@@ -36,6 +37,7 @@ let page="";
 
 class LayoutWrapper extends React.PureComponent {
 
+    // constructor function
     constructor() {
         super();
         this.state = {
@@ -46,6 +48,7 @@ class LayoutWrapper extends React.PureComponent {
         }
     }
 
+    // on component load function call
     componentDidMount() {
         page =window.location.pathname;
         page =page.split('/');
@@ -58,23 +61,27 @@ class LayoutWrapper extends React.PureComponent {
         })
     }
 
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         this.setState({
             isLoader: false
         })
     }
 
+
     openurl(geturl) {
         const url = geturl;
         window.open(url, '_blank');
     }
 
+    // siderbar toggle function
     toggleLeftSidebar = () => {
         this.setState({
             leftSidebar: !this.state.leftSidebar
         });
     }
 
+    // get userDetails
     goCustomer = () => {
         let data = {
             data: []
@@ -261,12 +268,14 @@ const mapStateToProps = createStructuredSelector({
 
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         doUserAllRes: (data) => dispatch(doUserAllRes(data)),
     };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(LayoutWrapper);

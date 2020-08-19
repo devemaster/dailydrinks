@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function doUserApproveApp(data) {
 
   return {
@@ -12,6 +13,7 @@ export function doUserApproveApp(data) {
   };
 }
 
+// request respnse set
 export function doUserApproveAppRes(data) {  
   return {
     type: types.DO_USER_APPROVE_APP_RES, 
@@ -19,6 +21,7 @@ export function doUserApproveAppRes(data) {
   };
 }
 
+// call api, action and response
 export function approveAppUser(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

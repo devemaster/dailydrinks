@@ -4,6 +4,8 @@ import DeleteAdminApi from '../api/deleteAdminApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+
+// request payload set
 export function doDeleteAdmin(data) {
   return {
     type: types.DELETE_ADMIN,
@@ -11,6 +13,7 @@ export function doDeleteAdmin(data) {
   };
 }
 
+// request respnse set
 export function doDeleteAdminRes(data) {
   return {
     type: types.DELETE_ADMIN_RES,
@@ -18,6 +21,7 @@ export function doDeleteAdminRes(data) {
   };
 }
 
+// call api, action and response
 export function delete_admin(data) {
 
   const TOKEN = getItem('auth_token');

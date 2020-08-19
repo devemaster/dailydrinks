@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import createUserApi from '../api/createUserApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+// request payload set
 export function doCreateUser(data) {
   return {
     type: types.DO_CREATE_USER,
@@ -10,6 +12,7 @@ export function doCreateUser(data) {
   };
 }
 
+// request respnse set
 export function doCreateUserRes(data) {
   return {
     type: types.DO_CREATE_USER_RES,
@@ -17,6 +20,7 @@ export function doCreateUserRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateUser(data) {
   const TOKEN = getItem('auth_token');
 

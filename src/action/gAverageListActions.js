@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getaverageList() {
 
   return {
@@ -11,6 +12,8 @@ export function getaverageList() {
   };
 }
 
+
+// request respnse set
 export function getAverageListRes(data) {  
   return {
     type: types.GAVERAGE_LIST_RES, 
@@ -18,6 +21,7 @@ export function getAverageListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchAverageList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

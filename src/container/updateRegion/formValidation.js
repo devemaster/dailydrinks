@@ -1,4 +1,4 @@
-
+// form validation for region update
 export default function validate(values) {
   const errors = {};
   if (values.region_name === '') {

@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getregionList() {
 
   return {
@@ -11,6 +12,7 @@ export function getregionList() {
   };
 }
 
+// request respnse set
 export function getRegionListRes(data) {  
   return {
     type: types.REGION_LIST_RES, 
@@ -18,6 +20,7 @@ export function getRegionListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchRegionList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

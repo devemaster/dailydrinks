@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { DataTable } from 'primereact/components/datatable/DataTable';
-import { Column } from 'primereact/components/column/Column';
 import './gAverage.scss';
 import LayoutWrapper from '../../component/LayoutWrapper/';
 import { fetchAverageList, getAverageListRes,submitUpdateAverage,doUpdateAverageRes } from '../../action/gAverageListActions';
@@ -13,18 +11,14 @@ import { fetchAverageList, getAverageListRes,submitUpdateAverage,doUpdateAverage
 import loaderImg from '../../assets/images/loader-example.gif';
 import Loader from 'react-loader-advanced';
 // import { getItem } from '../../utils/localStore';
-import Modal from "react-responsive-modal";
 import { getItem } from '../../utils/localStore';
 
 
 let isDelete = false;
 let arr =[];
 class GaverageComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      BannersList: e.value,
-    })
-  }
+  
+  // constructor function
   constructor() { 
     super();    
     isDelete = false;
@@ -62,16 +56,22 @@ class GaverageComponent extends React.PureComponent {
     }
 	}
 
+  // on component load function call
   componentDidMount() {
     
       this.setState({
         isLoader:true
       });
+
+      // averlage list action call
       this.props.fetchAverageList();  
   }
 
+  // on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // avarage list reposne
     if (props.AverageListRes) {
 			if (props.AverageListRes.data && props.AverageListRes.data.averageList) {
 				if (props.AverageListRes.data.averageList.success===false) {
@@ -101,11 +101,15 @@ class GaverageComponent extends React.PureComponent {
         }
 			}
     }
+
+    // avaerage list update resonse
     if(props.doUpdateAverageRes){
       if(props.doUpdateAverageRes && props.doUpdateAverageRes.data){            
           if(props.doUpdateAverageRes.data && props.doUpdateAverageRes.data.updateAverage ){
               if(props.doUpdateAverageRes.data.updateAverage && isDelete === true){
                 isDelete= false;
+
+                // get average list action call if update success
                 this.props.fetchAverageList();  
               } 
           }
@@ -113,12 +117,17 @@ class GaverageComponent extends React.PureComponent {
   }
   }
  
+
+ 
+  // make field editabel or static
   edit=()=>{
     this.setState({
       editable:!this.state.editable
     })
   }
   
+
+  // update function
   update=()=>{
       if(this.state.Age ===''){
         this.setState({
@@ -141,7 +150,7 @@ class GaverageComponent extends React.PureComponent {
           ErrorTMLS:false
         })
 
-      }else if(this.state.E_acervuline ==''){
+      }else if(this.state.E_acervuline ===''){
         this.setState({
           ErrorAge:false,
           ErrorDysbacteriosis:false,
@@ -151,7 +160,7 @@ class GaverageComponent extends React.PureComponent {
           ErrorID:false,
           ErrorTMLS:false
         })
-      }else if(this.state.E_maxima ==''){
+      }else if(this.state.E_maxima ===''){
         this.setState({
           ErrorAge:false,
           ErrorDysbacteriosis:false,
@@ -161,7 +170,7 @@ class GaverageComponent extends React.PureComponent {
           ErrorID:false,
           ErrorTMLS:false
         })
-      }else if(this.state.E_tenella ==''){
+      }else if(this.state.E_tenella ===''){
         this.setState({
           ErrorAge:false,
           ErrorDysbacteriosis:false,
@@ -172,7 +181,7 @@ class GaverageComponent extends React.PureComponent {
           ErrorTMLS:false
         })
         
-      }else if(this.state.ID ==''){
+      }else if(this.state.ID ===''){
         this.setState({
           ErrorAge:false,
           ErrorDysbacteriosis:false,
@@ -182,7 +191,7 @@ class GaverageComponent extends React.PureComponent {
           ErrorID:true,
           ErrorTMLS:false
         })
-      }else if(this.state.TMLS ==''){
+      }else if(this.state.TMLS ===''){
         this.setState({
           ErrorAge:false,
           ErrorDysbacteriosis:false,
@@ -224,16 +233,25 @@ class GaverageComponent extends React.PureComponent {
         "Dysbacteriosis": arr[0].Dysbacteriosis
       }
       isDelete = true;
+
+      // udpate gaverage action call
       this.props.handleFormSubmit(data);
       
     }
   }
 
   render() {
-    const { AverageList } = this.state;
-    // console.log(AverageList);
+
+    // get averageList data from state
+    // const { AverageList } = this.state;
+
+ // get user role from global function
     let userRole = getItem('userRoleId');
+    
+// set page header title
     const Header = (<div className="offer_head">Global Average</div>);
+    
+// loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
     // var tableHeader = <div style={{'textAlign':'left'}}>
     //                     <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
@@ -368,16 +386,19 @@ class GaverageComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 GaverageComponent.propTypes = {
 	AverageListRes: PropTypes.any,
   handleFormSubmit: PropTypes.func,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   AverageListRes: getAverageListRes,
   doUpdateAverageRes: doUpdateAverageRes,
 });
 
+// / dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchAverageList: () => dispatch(fetchAverageList()),
@@ -385,6 +406,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(GaverageComponent);

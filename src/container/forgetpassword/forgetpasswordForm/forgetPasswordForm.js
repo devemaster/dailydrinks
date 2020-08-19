@@ -5,6 +5,8 @@ import { Field, reduxForm } from 'redux-form'
 const fields = ['email'];
 const lower = value => value && value.toLowerCase();
 
+
+// field render for forgot form
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <div>
         <div>
@@ -14,6 +16,8 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
     </div>
 )
 
+
+// validation
 function validate(values) {
     const errors = {}
     if (!values.email) {
@@ -30,6 +34,7 @@ class ForgotpasswordForm extends React.PureComponent {
         }
     }
 
+    // component unmount
     componentWillUnmount() {
         this.props.reset();
     }
@@ -57,12 +62,15 @@ class ForgotpasswordForm extends React.PureComponent {
 
 }
 
+// setup props data
 ForgotpasswordForm.propTypes = {
     handleSubmit: PropTypes.func,
     submitting: PropTypes.bool,
     handleFormSubmit: PropTypes.func,
 };
 
+
+// property used apend to component
 export default reduxForm({
     form: 'ReduxForgotpasswordForm',
     fields,

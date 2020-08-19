@@ -3,6 +3,7 @@ import { BASE_URL } from '../constants';
 
 class AdminApi { 
 
+    // api function to send and get data from server side
     static doAppAdmin(data) {
         const TOKEN = getItem('auth_token');
         try{

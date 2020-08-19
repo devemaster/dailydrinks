@@ -1,4 +1,4 @@
-
+// form validation for update application
 export default function validate(values) {
   const errors = {};
   if (values.applicationName === '') {

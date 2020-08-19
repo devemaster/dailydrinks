@@ -2,6 +2,8 @@ import { getItem } from '../utils/localStore';
 import { BASE_URL } from '../constants';
 
 class TrashListApi {  
+    
+    // api function to send and get data from server side
     static gettrashList() {
         const TOKEN = getItem('auth_token');
         try{

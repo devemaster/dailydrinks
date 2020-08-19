@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getcommentList() {
 
   return {
@@ -11,6 +12,7 @@ export function getcommentList() {
   };
 }
 
+// request respnse set
 export function getcommentListRes(data) {  
   return {
     type: types.FETCH_COMMENTLIST_RES, 
@@ -18,6 +20,7 @@ export function getcommentListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchcommentList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

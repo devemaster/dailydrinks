@@ -17,6 +17,8 @@ import {MultiSelect} from 'primereact/multiselect';
 import Swal from 'sweetalert2'
 class RegionCreateComponent extends React.PureComponent {
     _isMounted = false;
+
+    // constructor function
     constructor(props) {
         super(props);
         this.state = {
@@ -32,6 +34,8 @@ class RegionCreateComponent extends React.PureComponent {
             categoryTitle:'Create Region',
         }
     }
+
+    // on component load function call
     componentDidMount() {
         // this.props.getAllUsers();
         
@@ -41,11 +45,15 @@ class RegionCreateComponent extends React.PureComponent {
             isLoader: false,
         });
     }
+    
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
         this.setState({
             isLoader: false
         });
         console.log("Check nextProps", nextProps)
+
+        // alluser list response
         if(nextProps.allUsersRes){
             if (nextProps.allUsersRes.data && nextProps.allUsersRes.data.allUser) {
 				if (nextProps.allUsersRes.data.allUser.success===true) {
@@ -55,6 +63,8 @@ class RegionCreateComponent extends React.PureComponent {
 				}
 			}
         }
+
+        // country list response
         if(nextProps.doAllCountryRes){
             if(nextProps.doAllCountryRes.data.countryList ){
                 if(nextProps.doAllCountryRes.data.countryList.success === true){
@@ -64,12 +74,16 @@ class RegionCreateComponent extends React.PureComponent {
                 }
             }
         }
+
+        // create region  response
         if(nextProps.createRegionRes){
             if(nextProps.createRegionRes.data.createRegion ){
                 if(nextProps.createRegionRes.data.createRegion.success === true){
                     this.setState({
                         isLoader: false
                     });
+
+                    // region create success route to region list page
                     this.props.history.push('/region-list');
                 } else {
                     setTimeout(() => { this.setState({
@@ -79,10 +93,13 @@ class RegionCreateComponent extends React.PureComponent {
             }
         }
     }
+
+    // back to region list page routing
     handleBack = () => {
         this.props.history.push('/region-list');
     }
 
+    // form submit 
     handleSubmit = () => {
         console.log(this.state.countrys)
     if(this.state.countrys && this.state.countrys.length > 0){ 
@@ -105,6 +122,8 @@ class RegionCreateComponent extends React.PureComponent {
                 region_name		: this.state.region_name,
                 country	: countryIds
             }
+
+            // region create action call
             this.props.handleFormSubmit(payloadReq);
         }
     }
@@ -118,12 +137,15 @@ class RegionCreateComponent extends React.PureComponent {
           })
     }
     }
+
+    // input on change 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
     
+    // on user change 
     userChange = (item) => {
         this.setState({
             selectedUser: item
@@ -131,17 +153,26 @@ class RegionCreateComponent extends React.PureComponent {
 
         
     }
+
+    // on country change 
     countryChange = (e) => {
         console.log(e.value)
     }
     render() {
+
+        // set page header title
         const Header = (<div className="offer_head">Create User</div>);
         
+        // loader spinner
         const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation error
         const errors = validate(this.state);
+
+        // get data from state
         const { isSubmited, countryList, usersList } = this.state;
 
-        // let countryListOptionsItems = [];
+        // create user select option
         const userListOptions = [];
         if (usersList && usersList.length > 0) {
             usersList.map((item) => {
@@ -229,6 +260,7 @@ class RegionCreateComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 RegionCreateComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     createRegionRes: PropTypes.any,
@@ -237,12 +269,14 @@ RegionCreateComponent.propTypes = {
     doUploadAppIconRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     createRegionRes: doCreateRegionRes,
     allUsersRes: doUserAllRes,
     doAllCountryRes: doAllCountryRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submitCreateRegion(data)),
@@ -250,6 +284,8 @@ function mapDispatchToProps(dispatch) {
         getAllUsers: () => dispatch(getAllUsers()),
     };
 }
+
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(RegionCreateComponent);

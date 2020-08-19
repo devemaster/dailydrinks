@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function gettrashList() {
 
   return {
@@ -11,6 +12,7 @@ export function gettrashList() {
   };
 }
 
+// request respnse set
 export function gettrashListRes(data) {  
   return {
     type: types.FETCH_TRASHLIST_RES, 
@@ -18,6 +20,7 @@ export function gettrashListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchtrashList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

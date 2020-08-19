@@ -4,6 +4,8 @@ import { getItem } from '../utils/localStore';
 
 class DeleteAdminApi {
 
+    
+    // api function to send and get data from server side
     static doDeleteAdmin(data) {
         const TOKEN = getItem('auth_token');
         try{

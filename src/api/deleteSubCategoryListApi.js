@@ -2,6 +2,8 @@
 import { BASE_URL } from '../constants';
 import { getItem } from '../utils/localStore';
 class DeleteSubCategoryListApi {
+    
+    // api function to send and get data from server side
     static doDeleteApp(data) {
         const TOKEN = getItem('auth_token');
         try{

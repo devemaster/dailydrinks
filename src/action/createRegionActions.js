@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
 import CreateRegionApi from '../api/createRegionApi';
+
+// request payload set
 export function doCreateRegion(data) {
   return {
     type: types.CREATE_REGION,
@@ -10,6 +12,7 @@ export function doCreateRegion(data) {
   };
 }
 
+// request respnse set
 export function doCreateRegionRes(data) {
   return {
     type: types.CREATE_REGION_RES,
@@ -17,6 +20,7 @@ export function doCreateRegionRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateRegion(data) {
   const TOKEN = getItem('auth_token');
 

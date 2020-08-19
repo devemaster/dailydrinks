@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function doEditUser(data) {
   return {
     type: types.DO_UPDATE_USER,
@@ -11,6 +12,7 @@ export function doEditUser(data) {
   };
 }
 
+// request respnse set
 export function doEditUserRes(data) {
   return {
     type: types.DO_UPDATE_USER_RES,
@@ -18,6 +20,7 @@ export function doEditUserRes(data) {
   };
 }
 
+// call api, action and response
 export function submitUpdateUser(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

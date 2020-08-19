@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function doUserSearchAll(data) {
 
   return {
@@ -12,6 +13,7 @@ export function doUserSearchAll(data) {
   };
 }
 
+// request respnse set
 export function doUserAllSearchRes(data) {  
   return {
     type: types.DO_ALL_SEARCH_USERS_RES, 
@@ -19,6 +21,7 @@ export function doUserAllSearchRes(data) {
   };
 }
 
+// call api, action and response
 export function getAllSearchUsers(data) {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

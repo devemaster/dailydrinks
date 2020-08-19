@@ -4,6 +4,7 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2';
 
+// request payload set
 export function getbannerList() {
 
   return {
@@ -11,6 +12,7 @@ export function getbannerList() {
   };
 }
 
+// request respnse set
 export function getBannerListRes(data) {  
   return {
     type: types.BANNER_LIST_RES, 
@@ -18,6 +20,7 @@ export function getBannerListRes(data) {
   };
 }
 
+// call api, action and response
 export function fetchBannerList() {
   const TOKEN = getItem('auth_token');
   if(TOKEN){

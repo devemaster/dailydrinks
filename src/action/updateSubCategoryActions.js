@@ -3,6 +3,9 @@ import {logout} from '../helper/helper';
 import UpdateSubCategoryApi from '../api/updateSubCategoryApi';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
+
+
+// request payload set
 export function doUpdateSubApp(data) {
   return {
     type: types.UPDATE_SUBCATEGORY,
@@ -10,6 +13,7 @@ export function doUpdateSubApp(data) {
   };
 }
 
+// request respnse set
 export function doUpdateSubAppRes(data) {
   return {
     type: types.UPDATE_SUBCATEGORY_RES,
@@ -17,6 +21,7 @@ export function doUpdateSubAppRes(data) {
   };
 }
 
+// call api, action and response
 export function submitUpdateSubCategory(data) {
   const TOKEN = getItem('auth_token');
 

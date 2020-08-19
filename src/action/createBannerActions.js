@@ -3,6 +3,8 @@ import {logout} from '../helper/helper';
 import { getItem } from '../utils/localStore';
 import Swal from 'sweetalert2'
 import CreateBannerApi from '../api/createBannerApi';
+
+// request payload set
 export function doCreateBanner(data) {
   return {
     type: types.CREATE_BANNER,
@@ -10,6 +12,8 @@ export function doCreateBanner(data) {
   };
 }
 
+
+// request respnse set
 export function doCreateBannerRes(data) {
   return {
     type: types.CREATE_BANNER_RES,
@@ -17,6 +21,7 @@ export function doCreateBannerRes(data) {
   };
 }
 
+// call api, action and response
 export function submitCreateBanner(data) {
   const TOKEN = getItem('auth_token');
 

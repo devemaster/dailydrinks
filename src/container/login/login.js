@@ -12,7 +12,7 @@ import Loader from 'react-loader-advanced';
 import loaderImg from '../../assets/images/loader-example.gif';
 
 class LoginComponent extends React.PureComponent {
-
+// constructor function
     constructor() {
         super();
         this.state = {
@@ -22,7 +22,10 @@ class LoginComponent extends React.PureComponent {
         }
     }
 
+    // on component receive new props
     componentWillReceiveProps(nextProps) {
+
+        // login response
         if (nextProps.loginRes.user.user) {
             if (nextProps.loginRes.user.user && nextProps.loginRes.user.user.data) {
                 if (nextProps.loginRes.user.user.success === true) {
@@ -36,11 +39,14 @@ class LoginComponent extends React.PureComponent {
         }
     }
 
+    // form submit 
     handleSubmit(data) {
         let sendRequest = data;
         this.setState({
             isLoader: true,
         })
+
+        // login action call
         this.props.handleFormSubmit(sendRequest);
     };
 
@@ -73,21 +79,25 @@ class LoginComponent extends React.PureComponent {
     }
 }
 
+// setup props data
 LoginComponent.propTypes = {
     handleFormSubmit: PropTypes.func,
     loginRes: PropTypes.any
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
     loginRes: doLoginRes
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
     return {
         handleFormSubmit: (data) => dispatch(submit_login(data))
     };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(LoginComponent);

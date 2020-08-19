@@ -22,11 +22,8 @@ import { getItem } from '../../utils/localStore';
 let isDelete = false;
 
 class RegionListComponent extends React.PureComponent {
-  onSelectionChange = (e) => {   
-    this.setState({
-      RegionsList: e.value,
-    })
-  }
+  
+  // constructor function
   constructor() { 
     super();    
     isDelete = false;
@@ -51,19 +48,26 @@ class RegionListComponent extends React.PureComponent {
     this.viewTemplate = this.viewTemplate.bind(this);
 	}
 
+// on component load function call
   componentDidMount() {
     
       this.setState({
         isLoader:true
       });
+
+      // get region list action call
       this.props.fetchRegionList();
       
+      // get country list action call
       this.props.getAllCountry();
     
   }
 
+// on component receive new props
   componentWillReceiveProps(props) {
     console.log("props check", props)
+
+    // region list response
     if (props.RegionListRes) {
 			if (props.RegionListRes.data && props.RegionListRes.data.regionList) {
 				if (props.RegionListRes.data.regionList.success===true) {
@@ -80,6 +84,7 @@ class RegionListComponent extends React.PureComponent {
 			}
     }
     
+    // country list response
     if(props.doAllCountryRes){
       if(props.doAllCountryRes.data.countryList ){
           if(props.doAllCountryRes.data.countryList.success === true){
@@ -89,6 +94,8 @@ class RegionListComponent extends React.PureComponent {
           }
       }
     }
+
+    // delete region confirm response
     if (props.doDeleteRegionRes) {
 			if (props.doDeleteRegionRes.data && props.doDeleteRegionRes.data.deleteRegionList) {
 				if (props.doDeleteRegionRes.data.deleteRegionList.success && isDelete) {
@@ -98,17 +105,28 @@ class RegionListComponent extends React.PureComponent {
             isDisabled: false,
             isLoader:false
           });
+
+          // call region list action after delete success
           this.props.fetchRegionList();
 				}
 			}
     }
   }
 
+  // on table select change function
+  onSelectionChange = (e) => {   
+    this.setState({
+      RegionsList: e.value,
+    })
+  }
 
+  // create region page routing
   createApp(){
     this.props.history.push('/region-create')
   }
 
+  
+// delete  confrim call
   deleteApp = () => {
     this.setState({
       isDisabled: true,
@@ -118,9 +136,11 @@ class RegionListComponent extends React.PureComponent {
     let payload = {
       region_id: this.state.cat_id
     }
+    // delete action call
     this.props.deleteRegionListRecord(payload);
   }
 
+// delete confirm model-popup open
   openDeleteApp = (rowData) => {
     this.setState({
       cat_id: rowData.region_id,
@@ -128,11 +148,14 @@ class RegionListComponent extends React.PureComponent {
     });
   }
 
+// cancel delete
   cancelDeleteApp = () => {
     this.setState({
       openDeleteAppModal: false,
     });
   }
+  
+// table action button template
   actionTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}  className="btn-group">
@@ -146,6 +169,8 @@ class RegionListComponent extends React.PureComponent {
       </div>
     );
   }
+  
+ // category icon show template in table
   actionIconTemplate = (data) => {
     
     let CountryArr = []
@@ -167,6 +192,9 @@ class RegionListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  
+ // show sub region route button template in table
   viewTemplate(rowData, column) {
     return (
       <div style={{textAlign: 'center'}}>
@@ -176,12 +204,16 @@ class RegionListComponent extends React.PureComponent {
       </div>
     );
   }
+
+  // region update page routing with data
   goUpdateApplication = (rowData) => {
     this.props.history.push({
       pathname: '/region-update',
       state: {appData: rowData}
     })
   }
+
+  // add sub region page routing with parent region data
   goAddSubRegion = (rowData) => {
     this.props.history.push({
       pathname: '/create-Region',
@@ -190,10 +222,17 @@ class RegionListComponent extends React.PureComponent {
   }
 
   render() {
+
+    // get region list data from state
     const { RegionList } = this.state;
-    // console.log(RegionList);
+ 
+ // get user role from global function
     let userRole = getItem('userRoleId');
+    
+// set page header title
     const Header = (<div className="offer_head">Region List</div>);
+    
+// loader spinner
     const spinner = <span><img src={loaderImg} alt="" /></span>;
     // var tableHeader = <div style={{'textAlign':'left'}}>
     //                     <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
@@ -273,18 +312,21 @@ class RegionListComponent extends React.PureComponent {
   }
 }
 
+// setup props data
 RegionListComponent.propTypes = {
 	RegionListRes: PropTypes.any,
 	doDeleteRegionRes: PropTypes.any,
   doAllCountryRes: PropTypes.any,
 };
 
+// setup response function
 const mapStateToProps = createStructuredSelector({
   RegionListRes: getRegionListRes,
 	doDeleteRegionRes: doDeleteRegionRes,
   doAllCountryRes: doAllCountryRes,
 });
 
+// dispatch function
 function mapDispatchToProps(dispatch) {
   return {
 		fetchRegionList: () => dispatch(fetchRegionList()),
@@ -293,6 +335,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// connect component to redux store
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(RegionListComponent);
