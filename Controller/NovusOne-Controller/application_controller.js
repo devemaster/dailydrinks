@@ -69,7 +69,7 @@ module.exports.application_management = (body, user) => {
 
       if (role_id == 1) {
         if (applicationName != "" && icon != "") {
-          resolve('data')
+          // resolve('data')
           if (applicationName && icon) {
             const finddata = `select * from application_management where application_name = '${applicationName}'`;
             client.query(finddata, (finderr, findress) => {
