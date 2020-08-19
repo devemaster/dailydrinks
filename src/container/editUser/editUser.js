@@ -1,0 +1,912 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import './editUser.css';
+import LayoutWrapper from '../../component/LayoutWrapper/';
+import { submitUpdateUser, doEditUserRes } from '../../action/editUserActions';
+import { getAllCountry, getAllState, getAllCity, doAllCountryRes, doAllCityRes, doAllStateRes } from '../../action/createUserActions';
+import { checkUserName, doCheckUserRes } from '../../action/checkUserActions';
+import { fetchAllApplication, getAllApplicationRes } from '../../action/applicationActions';
+import loaderImg from '../../assets/images/loader-example.gif';
+import Loader from 'react-loader-advanced';
+import BackIcon from '../../assets/images/icon-left.svg';
+import validate from './formValidation';
+import Select from 'react-select';
+import { DataTable } from 'primereact/components/datatable/DataTable';
+import { Column } from 'primereact/components/column/Column';
+import Modal from "react-responsive-modal";
+import { getItem } from '../../utils/localStore';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
+let isCountry = false;
+let isState = false;
+let isCity = false;
+let isApplication = false;
+let userRole = getItem('userRoleId');
+let isUserAvailable = false;
+
+class EditUserComponent extends React.PureComponent {
+// constructor function
+    constructor() {
+        super();
+        isCountry = false;
+        isState = false;
+        isCity = false;
+        isApplication = false;
+        isUserAvailable = false;
+        this.state = {
+            isLoader: true,
+            userData: null,
+            isSubmited: false,
+            fullname: '',
+            email: '',
+            company: '',
+            address1: '',
+            address2: '',
+            country: '',
+            state: '',
+            city: '',
+            zipcode: '',
+            countryList: [],
+            stateList: [],
+            cityList: [],
+            selectedCountry: null,
+            selectedState: null,
+            selectedCity: null,
+            applicationList: [],
+            applicationId: '',
+            applicationName: '',
+            userName: '',
+            selectedUserList: [],
+            openErrorModal: false,
+            isSubmitedUser: false,
+            openDeleteAppModal:false,
+            isDisabled:false
+        }
+        this.handleKeypress = this.handleKeypress.bind(this)
+    }
+
+
+    
+// on component load function call
+    componentDidMount() {
+        let userAppGroup = getItem('adminAppId');
+        if (userAppGroup !== null) {
+            this.setState({
+                applicationId: getItem('adminAppId'),
+                applicationName: getItem('adminAppName'),
+            });
+        }
+
+        // get country list action call
+        this.props.getAllCountry();
+
+        // get applicaion action call
+        this.props.fetchAllApplication();
+        isCountry = true;
+        isApplication = true;
+        const userDetails = this.props.location.state.userData;
+        this.setState({
+            userData: userDetails,
+        }, () => {
+            if (userRole === '2') {
+                if (this.state.userData.app_user.length > 0) {
+                    for (let item of this.state.userData.app_user) {
+                        item.application_name =  getItem('adminAppName');
+                    }
+                }
+            }
+            this.setState({
+                fullname: this.state.userData.fullname,
+                email: this.state.userData.email,
+                company: this.state.userData.company,
+                address1: this.state.userData.address1,
+                address2: this.state.userData.address2,
+                country: this.state.userData.country,
+                state: this.state.userData.state,
+                city: this.state.userData.city,
+                zipcode: this.state.userData.zipcode,
+                selectedUserList: this.state.userData.app_user,
+            })
+        });
+        this.setState({
+            isLoader: false,
+        });
+    }
+
+    
+    // on component receive new props
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+
+        // application list response
+        if (nextProps.allApplicationRes) {
+			if (nextProps.allApplicationRes.data && nextProps.allApplicationRes.data.applicationList) {
+				if (nextProps.allApplicationRes.data.applicationList.success===true  && isApplication) {
+                    isApplication = false;
+                    this.setState({
+                        applicationList: nextProps.allApplicationRes.data.applicationList.data
+                    }, () => {
+                        if (this.state.userData.app_user.length > 0) {
+                            let appUser = this.state.selectedUserList;
+                            for (let item of this.state.applicationList) {
+                                for (let items of appUser) {
+                                    if (Number(items.application_id) === item.application_id) {
+                                        items.application_name = item.application_name
+                                    }
+                                }
+                            }
+                            this.setState({
+                                selectedUserList: appUser,
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        // country list reponse
+        if(nextProps.doAllCountryRes){
+            if(nextProps.doAllCountryRes.data.countryList ){
+                if(nextProps.doAllCountryRes.data.countryList.success === true && isCountry){
+                    isCountry = false;
+                    this.setState({
+                        countryList: nextProps.doAllCountryRes.data.countryList.countriesList
+                    }, () => {
+                        // this.state.countryList
+                        if (this.state.country !== '') {
+                            for (let item of this.state.countryList) {
+                                if (this.state.userData.country.toLowerCase() === item.country_name.toLowerCase()) {
+                                    const selectedCountryObject = {
+                                        value: item.id,
+                                        label: this.state.country,
+                                    };
+                                    this.setState({
+                                        selectedCountry: selectedCountryObject,
+                                    }, () => {});
+                                    this.props.getAllState(item.id);
+                                    isState = true;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // get state list response
+        if(nextProps.doAllStateRes){
+            if(nextProps.doAllStateRes.data.stateList ){
+                if(nextProps.doAllStateRes.data.stateList.success === true && isState){
+                    isState = false;
+                    this.setState({
+                        stateList: nextProps.doAllStateRes.data.stateList.stateList
+                    }, () => {
+                        if (this.state.state !== '') {
+                            for (let item of this.state.stateList) {
+                                if (this.state.state.toLowerCase() === item.state_name.toLowerCase()) {
+                                    const selectedStateObject = {
+                                        value: item.state_id,
+                                        label: this.state.state,
+                                    };
+                                    this.setState({
+                                        selectedState: selectedStateObject,
+                                    }, () => {});
+                                    this.props.getAllCity(item.state_id)
+                                    isCity = true;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // get city list response
+        if(nextProps.doAllCityRes){
+            if(nextProps.doAllCityRes.data.cityList ){
+                if(nextProps.doAllCityRes.data.cityList.success === true && isCity){
+                    isCity = false;
+                    this.setState({
+                        cityList: nextProps.doAllCityRes.data.cityList.citylist
+                    }, () => {
+                        if (this.state.city !== '') {
+                            for (let item of this.state.cityList) {
+                                if (this.state.city.toLowerCase() === item.city_name.toLowerCase()) {
+                                    const selectedCityObject = {
+                                        value: item.city_id,
+                                        label: this.state.city,
+                                    };
+                                    this.setState({
+                                        selectedCity: selectedCityObject,
+                                    }, () => {});
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // update user response
+        if (nextProps.doEditUserRes) {
+			if (nextProps.doEditUserRes.data && nextProps.doEditUserRes.data.updateUser) {
+				if (nextProps.doEditUserRes.data.updateUser.success === true) {
+                    this.setState({
+                        isLoader: false,
+                    });
+
+                    // route to user list page if user updated successfully
+                    this.props.history.push('/users');
+                } else {
+                    setTimeout(() => { this.setState({
+                        isLoader: false
+                    }); }, 3000);
+                }
+            }
+        }
+        
+
+        // check user for application access
+        if(nextProps.checkUserRes){
+            if(nextProps.checkUserRes.data.checkUser ){
+                if(nextProps.checkUserRes.data.checkUser.success === true && isUserAvailable) {
+                    console.log("hello")
+                    this.notify();
+                    isUserAvailable = false;
+                    this.setState({
+                        isLoader: false
+                    });
+                    if (this.state.selectedUserList.length > 0) {
+                        let isTrue = 0;
+                        if (userRole === '1') {
+                            for (let items of this.state.selectedUserList) {
+                                if (items.application_id === this.state.applicationId) {
+                                    isTrue = 1;
+                                }
+                            }
+                        } else {
+                            for (let items of this.state.selectedUserList) {
+                                if (items.user_name === this.state.userName) {
+                                    isTrue = 1;
+                                }
+                            }
+                        }
+                        if (isTrue === 0) {
+                            let localArr = this.state.selectedUserList;
+                            let appName = '';
+                            if (userRole === '1') {
+                                for (let item of this.state.applicationList) {
+                                    if (Number(this.state.applicationId) === item.application_id) {
+                                        appName = item.application_name;
+                                    }
+                                }
+                            } else {
+                                appName = this.state.applicationName
+                            }
+                            localArr.push({
+                                application_id: this.state.applicationId,
+                                application_name: appName,
+                                user_name: this.state.userName,
+                            });
+                            this.setState({
+                                selectedUserList: localArr,
+                            }, () => {
+                                if (userRole === '1') {
+                                    this.setState({
+                                        applicationId: '',
+                                        userName: '',
+                                        isSubmitedUser: false
+                                    })
+                                } else {
+                                    this.setState({
+                                        userName: '',
+                                        isSubmitedUser: false
+                                    })
+                                }
+                            });
+                        } else {
+                            this.setState({
+                                openErrorModal: true
+                            });
+                        }
+                    } else {
+                        let localArr = this.state.selectedUserList;
+                        let appName = '';
+                        if (userRole === '1') {
+                            for (let item of this.state.applicationList) {
+                                if (Number(this.state.applicationId) === item.application_id) {
+                                    appName = item.application_name;
+                                }
+                            }
+                        } else {
+                            appName = this.state.applicationName
+                        }
+                        localArr.push({
+                            application_id: this.state.applicationId,
+                            application_name: appName,
+                            user_name: this.state.userName,
+                        });
+                        this.setState({
+                            selectedUserList: localArr,
+                        }, () => {
+                            if (userRole === '1') {
+                                this.setState({
+                                    applicationId: '',
+                                    userName: '',
+                                    isSubmitedUser: false
+                                })
+                            } else {
+                                this.setState({
+                                    userName: '',
+                                    isSubmitedUser: false
+                                })
+                            }
+                        });
+                    }
+                }
+                if(nextProps.checkUserRes.data.checkUser.success === false && isUserAvailable) {
+                    isUserAvailable = false;
+                    this.setState({
+                        isLoader: false
+                    });
+                    Swal.fire({
+                        title: nextProps.checkUserRes.data.checkUser.message,
+                        type: 'info',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        timer: 3000
+                    });
+                }
+            } else {
+                
+                setTimeout(() => { this.setState({
+                    isLoader: false
+                }); }, 3000);
+            }
+        }
+    }
+
+    // zip code input on fill change
+    handleKeypress(e) {
+        const characterCode = e.key
+        if (characterCode === 'Backspace') return
+
+        const characterNumber = Number(characterCode)
+        if (characterNumber >= 0 && characterNumber <= 9) {
+            if (e.currentTarget.value && e.currentTarget.value.length) {
+            return
+            } else if (characterNumber === 0) {
+            e.preventDefault()
+            }
+            } else {
+            e.preventDefault()
+            }
+        }
+
+    // close error model
+    closeErrorModal = () => {
+        this.setState({
+            openErrorModal: false
+        });
+    }
+
+    // submit edit user form
+    handleFormSubmit = () => {
+        this.setState({
+            isSubmited: true,
+        }, () => { });
+        validate(this.state);
+        const errors = validate(this.state);
+        if (Object.keys(errors).length === 0) {
+            let selectedUsr = this.state.selectedUserList;
+            for (var i = 0; i < selectedUsr.length; i++) {
+                var o = selectedUsr[i];
+                delete o.application_name;
+            }
+            let payloadReq = {
+                user_id: this.state.userData.user_id,
+                fullname: this.state.fullname,
+                company: this.state.company,
+                address1: this.state.address1,
+                address2: this.state.address2,
+                country: this.state.country,
+                state: this.state.state,
+                city: this.state.city,
+                zipcode: this.state.zipcode,
+                create_user: selectedUsr,
+            }
+
+            // edit user action call
+            this.props.handleFormSubmit(payloadReq);
+        }
+    }
+
+    // back to previouse page 
+    handleBack = () => {
+        this.props.history.goBack();
+    }
+    
+    // on input change function
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    // on country select option change 
+    countryChange = (item) => {
+        this.setState({
+            selectedCountry: item,
+            country: item.value,
+            selectedState:null,
+            selectedCity:null,
+            cityList:[],
+            stateList: []
+        });
+        this.props.getAllState(item.original.id)
+        isState = true; 
+    }
+
+    // on state select option change
+    stateChange = (item) => {
+        this.setState({
+            selectedState: item,
+            state: item.value,
+            selectedCity:null,
+            cityList:[]
+        });
+        this.props.getAllCity(item.original.state_id)
+        isCity = true;
+    }
+
+    // on city select option change
+    cityChange = (item) => {
+        this.setState({
+            selectedCity: item,
+            city: item.value
+        });
+    }
+
+    // user approvel for app 
+    createApproved(e) {
+        this.setState({
+            [e.target.name]: e.target.value,
+        })
+    }
+
+    // validate user name and application selected or not
+    validateUser(values) {
+        const errors = {};
+        if (values.applicationId === '') {
+            errors.applicationId = 'Please select application';
+        }
+        if (values.userName === '') {
+            errors.userName = 'Please enter username';
+        }
+        return errors;
+     }     
+
+    // add approval request
+    addApproved = () => {
+        this.setState({
+            isSubmitedUser: true,
+        }, () => { });
+        this.validateUser(this.state);
+        const errors = this.validateUser(this.state);
+
+        if (Object.keys(errors).length === 0) {
+            let requestData = {
+                UserName: this.state.userName
+            }
+            isUserAvailable = true;
+            this.props.checkUserName(requestData)
+            this.setState({
+                isLoader: true
+            });
+            
+        }        
+    }
+
+    // cancel delete
+    cancelDeleteApp = () => {
+        this.setState({
+          openDeleteAppModal: false,
+        });
+      }
+
+    // delete confirm model-popup open
+    openDeleteApp = (rowData) => {
+        this.setState({
+            remData: rowData,
+            openDeleteAppModal: true,
+        });
+    }
+
+    // remove approval of app for user
+    removeApproved = () => {
+        if(this.state.selectedUserList.length === 1){
+            this.setState({ 
+                selectedUserList: [],
+                openDeleteAppModal:false
+            },()=>{
+                this.notifydelete()
+             })
+        } else {
+            var index = this.state.selectedUserList.indexOf(this.state.remData)
+            let removeData = this.state.selectedUserList.slice(0, index).concat(this.state.selectedUserList.slice(index + 1, this.state.selectedUserList.length));
+            
+            this.setState({ 
+                selectedUserList: removeData,
+                openDeleteAppModal:false
+            },()=>{ 
+                this.notifydelete()
+            })
+        }
+    }
+
+    
+    // table action button template
+    actionTemplate = (rowData) => {
+        return (
+            <div style={{textAlign: 'center'}}>
+                <button className="btn btn-delete-update-user" onClick={() => this.openDeleteApp(rowData)}>
+                    <i className="fa fa-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+        )
+    }
+
+    // user access success notification message
+    notify = () => {    
+        toast.success("User can now access this app", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+    };
+
+    // user access denied notification message
+    notifydelete = () => {  
+        //   console.log("&&&&&&&&")
+    toast.error("User couldn't access this app", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+    });
+    };
+
+    render() {
+        // set page header title
+        const Header = (<div className="offer_head">Edit Customer</div>);     
+        
+        // loader spinner   
+        const spinner = <span><img src={loaderImg} alt="" /></span>;
+
+        // validation errors
+        const errors = validate(this.state);
+
+        // validation user error
+        const errorsUser = this.validateUser(this.state);
+
+        // get data from state
+        const { isSubmited, countryList, stateList, cityList, isSubmitedUser } = this.state;
+
+        // country list select option setup
+        const countryListOptions = [];
+        if (countryList && countryList.length > 0) {
+            countryList.map((item) => {
+                countryListOptions.push({ value: item.country_name, label: item.country_name, original: item });
+                return (
+                <option value={item.country_name} id={item.id} key={item.id}>
+                    {item.country_name}              
+                </option>
+                );
+            });
+        }
+
+        // state list select option setup
+        const stateListOptions = [];
+        if (stateList && stateList.length > 0) {
+            stateList.map((item) => {
+                stateListOptions.push({ value: item.state_name, label: item.state_name, original: item });
+                return (
+                <option value={item.state_name} id={item.state_id} key={item.state_id}>
+                    {item.state_name}              
+                </option>
+                );
+            });
+        }
+
+        // city list select option setup
+        const cityListOptions = [];
+        if (cityList && cityList.length > 0) {
+            cityList.map((item) => {
+                cityListOptions.push({ value: item.city_name, label: item.city_name, original: item });
+                return (
+                <option value={item.city_name} id={item.city_id} key={item.city_id}>
+                    {item.city_name}              
+                </option>
+                );
+            });
+        }
+
+        return (
+            <LayoutWrapper title="Update User" header={Header} >
+                <Loader show={this.state.isLoader} message={spinner}>
+                    <div className="edit_profile_content_wrapper">
+                        <div className="createprofile_heading">
+                            <div className="createprofile_back_icon_text"  onClick={this.handleBack}>
+                                <img src={BackIcon} alt="" className="createprofile_back_icon" />
+                                <span className="createprofile_go_back">Back to Users</span>
+                            </div>
+                            <span className="offering_detail_title">Update User</span>
+                        </div>
+                        <div className="editprofile_content">
+                            <div className="form_content_editprofile edit_profile_form_fields_wrapper">
+                                <div>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Full Name</label>
+                                                    <input type="text" className="form-control" placeholder="Enter full name" name="fullname" onChange={(e) => this.handleChange(e)} value={this.state.fullname} />
+                                                    {errors && isSubmited && <span className="error-message">{errors.fullname}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Email</label>
+                                                    <input type="email" className="form-control" placeholder="Enter email" name="email" onChange={(e) => this.handleChange(e)} value={this.state.email} disabled/>
+                                                    {errors && isSubmited && <span className="error-message">{errors.email}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Company Name</label>
+                                                    <input type="text" className="form-control" placeholder="Enter company name" name="company" onChange={(e) => this.handleChange(e)} value={this.state.company} />
+                                                    {errors && isSubmited && <span className="error-message">{errors.company}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Address 1</label>
+                                                    <input type="text" className="form-control" placeholder="Enter address 1" name="address1" onChange={(e) => this.handleChange(e)} value={this.state.address1}/>
+                                                    {errors && isSubmited && <span className="error-message">{errors.address1}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Address 2</label>
+                                                    <input type="text" className="form-control" placeholder="Enter address 2" name="address2" onChange={(e) => this.handleChange(e)}  value={this.state.address2}/>
+                                                    {errors && isSubmited && <span className="error-message">{errors.address2}</span>}
+                                                </div>
+                                            
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Zip Code</label>
+                                                    <input type="number"  min='1' step='1' onKeyDown={this.handleKeypress}  className="form-control" placeholder="Enter ZipCode" name="zipcode" onChange={(e) => this.handleChange(e)} value={this.state.zipcode}/>
+                                                    {errors && isSubmited && <span className="error-message">{errors.zipcode}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>Country</label>
+                                                    <Select
+                                                        value={this.state.selectedCountry}
+                                                        onChange={this.countryChange}
+                                                        options={countryListOptions}
+                                                        name="country"
+                                                        placeholder="Select Country"
+                                                    />
+                                                    {errors && isSubmited && <span className="error-message">{errors.country}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>State</label>
+                                                    <Select
+                                                        value={this.state.selectedState}
+                                                        onChange={this.stateChange}
+                                                        options={stateListOptions}
+                                                        name="state"
+                                                        placeholder="Select State"
+                                                    />
+                                                    {errors && isSubmited && <span className="error-message">{errors.state}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="mt-2">
+                                                <div className="form-group">
+                                                    <label>City</label>
+                                                    <Select
+                                                        value={this.state.selectedCity}
+                                                        onChange={this.cityChange}
+                                                        options={cityListOptions}
+                                                        name="city"
+                                                        placeholder="Select City"
+                                                    />
+                                                    {errors && isSubmited && <span className="error-message">{errors.city}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-md-6 col-sm-12">
+                                        <div className="row">
+                                            <div className="col-5 col-md-5 col-sm-12">
+                                                {/* <div className="form-group">
+                                                    <select className="form-control" name="applicationId" onChange={(e) => this.createApproved(e)} value={this.state.applicationId}>
+                                                        <option value=''>Select Application</option>
+                                                        {
+                                                            (this.state.applicationList) && this.state.applicationList.map((opp, j) =>
+                                                                <option key={j} value={opp.application_id} disabled={opp.disabled}>{opp.application_name}</option>
+                                                            )
+                                                        }
+                                                    </select>
+                                                    {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.applicationId}</span>}
+                                                </div> */}
+                                                {
+                                                    userRole === '1' ?
+                                                    <div className="form-group">
+                                                        <select className="form-control" name="applicationId" onChange={(e) => this.createApproved(e)} value={this.state.applicationId}>
+                                                            <option value=''>Select Application</option>
+                                                            {
+                                                                (this.state.applicationList) && this.state.applicationList.map((opp, j) =>
+                                                                    <option key={j} value={opp.application_id} disabled={opp.disabled}>{opp.application_name}</option>
+                                                                )
+                                                            }
+                                                        </select>
+                                                        {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.applicationId}</span>}
+                                                    </div>
+                                                    :
+                                                    <div className="form-group">
+                                                        <select className="form-control" name="applicationId" value={this.state.applicationId} readOnly>
+                                                            <option value={this.state.applicationId} disabled={true}>{this.state.applicationName}</option>
+                                                        </select>
+                                                        {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.applicationId}</span>}
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div className="col-5 col-md-5 col-sm-12">
+                                                <div className="form-group">
+                                                    <input type="text" className="form-control" name="userName" placeholder="Enter user name" onChange={(e) => this.createApproved(e)} value={this.state.userName} />
+                                                    {errorsUser && isSubmitedUser && <span className="error-message">{errorsUser.userName}</span>}
+                                                </div>
+                                            </div>
+                                            <div className="col-2 col-md-2 col-sm-12">
+                                                <div className="form-group">
+                                                    {
+                                                        <button
+                                                        onClick={() => {
+                                                            this.addApproved()
+                                                        }}
+                                                        className="btn addmore-btn mt0">ADD</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {
+                                        this.state.selectedUserList.length > 0 &&
+                                        <div className="row mt-5">
+                                            <div className="col-md-12">
+                                                <DataTable value={this.state.selectedUserList} paginator={true} rows={10}  responsive scrollable  emptyMessage="No data found">
+                                                    <Column className="tableCols" field="application_name" header="Application Name" sortable style={{width: '280px'}}/>
+                                                    <Column className="tableCols" field="user_name" header="User Name" sortable style={{width: '120px'}}/>
+                                                    <Column className="tableCols" field="action" header="Action" body={this.actionTemplate} style={{width: '130px'}}/>
+                                                </DataTable>
+                                            </div>
+                                        </div>
+                                    }
+                                    
+                                    <Modal open={this.state.openErrorModal} onClose={this.closeErrorModal} center>
+                                        <div className="error-message-user-modal">
+                                            <div className="row" >
+                                            {
+                                                    userRole === '1' ?
+                                                    <div className="error-message-user-header"> This application already selected please choose other application </div>
+                                                    :
+                                                    <div className="error-message-user-header"> This user already added please enter other user </div>
+
+                                                }
+                                            </div>
+                                            <div className="row" style={{width: 500}}>
+                                                
+                                            </div>
+                                        </div>
+                                    </Modal>
+                                    <Modal open={this.state.openDeleteAppModal} onClose={this.cancelDeleteApp} center>
+                                        <div className="delete-user-modal">
+                                        <div className="row" >
+                                            <div className="delete-user-header"> Are you sure you want to delete </div>
+                                        </div>
+                                        <div className="row" style={{width: 500}}>
+                                        </div>
+                                        <div className="row text_center" style={{marginTop: 30}}>
+                                            <div className="col-6 col-md-6 col-sm-6" style={{textAlign: 'right'}}>
+                                            <button
+                                                className="btn delete-user-yes-btn"
+                                                onClick={() => this.removeApproved() }
+                                                disabled={this.state.isDisabled}
+                                            >
+                                                Yes
+                                            </button>
+                                            </div>
+                                            <div className="col-6 col-md-6 col-sm-6">
+                                            <button
+                                                className="btn delete-user-no-btn"
+                                                onClick={() => this.cancelDeleteApp() }
+                                            >
+                                                No
+                                            </button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </Modal>
+                                    <div>
+                                        <button onClick={() => this.handleFormSubmit()} className="btn btn-primary login_button" >Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ToastContainer />
+                </Loader>
+            </LayoutWrapper>
+        )
+    }
+}
+
+// setup props data
+EditUserComponent.propTypes = {
+    handleFormSubmit: PropTypes.func,
+    doEditUserRes: PropTypes.any,
+    doAllCountryRes: PropTypes.any,
+    doAllCityRes: PropTypes.any,
+    doAllStateRes: PropTypes.any,
+    allApplicationRes: PropTypes.any,
+    checkUserRes: PropTypes.any,
+};
+
+// setup response function
+const mapStateToProps = createStructuredSelector({
+    doEditUserRes: doEditUserRes,
+    doAllCountryRes: doAllCountryRes,
+    doAllCityRes: doAllCityRes,
+    doAllStateRes: doAllStateRes,
+	allApplicationRes: getAllApplicationRes,
+    checkUserRes: doCheckUserRes,
+});
+
+// dispatch function
+function mapDispatchToProps(dispatch) {
+    return {
+        handleFormSubmit: (data) => dispatch(submitUpdateUser(data)),
+        getAllCountry: () => dispatch(getAllCountry()),
+        getAllState: (data) => dispatch(getAllState(data)),
+        getAllCity: (data) => dispatch(getAllCity(data)),
+		fetchAllApplication: () => dispatch(fetchAllApplication()),
+        checkUserName: (data) => dispatch(checkUserName(data)),
+    };
+}
+
+// connect component to redux store
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect)(EditUserComponent);

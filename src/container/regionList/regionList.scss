@@ -1,0 +1,219 @@
+
+.application-list_content{
+    margin: auto;
+    height: 100%;
+
+    .customer_inner_content{
+        background-color: #fff;
+        overflow-y: scroll;
+        height: calc(100% - 0px);
+        padding: 15px;
+        border-radius: 4px;
+        padding-bottom: 0px;
+    }
+    td, th {
+        text-align: center;
+    }
+    /* .customer_no{
+        position: absolute;
+        z-index: 99999;
+        top: -1px;
+    } */
+    .bulk-file{
+        margin-left: 50px; 
+    }
+
+    .select_search{
+        position: relative;
+        top: -8px;
+        z-index: 9999;
+        left: 90px;
+        width: 70% !important;
+    }
+    .customer_search{
+        margin-top: -10px;
+    }
+    .tableheight .ui-datatable-scrollable-body{
+        max-height: calc(100vh - 270px);
+    }
+    .dataTableNameColumn {
+        font-family: 'ChivoRegular';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 20px;
+        color: #00395A;
+    }
+    .tableCols {
+        word-wrap: break-word;
+        font-family: 'ChivoRegular' !important;
+    }
+    .btn-delete-customer{
+        margin-top: 0px;
+        background-color: #FF0000 !important;
+        border-color: #FF0000 !important;
+        color: #fff !important;
+        margin-left: 10px !important;
+    }
+    .btn-add-customer{
+        margin-top: 0px;
+        background-color: rgb(9, 54, 255) !important;
+        border-color: rgb(9, 54, 255) !important;
+        color: #fff !important;
+        margin-left: 10px !important;
+    }
+    .btn-edit-customer{
+        background-color: #00395A !important;
+        border-color: #00395A !important;
+        color: #fff !important;
+    }
+    .btn-placeOrder{
+        background: #00395A !important;
+        border-color: #00395A !important;
+        width: max-content;
+        font-size: 16px !important;;
+        font-weight: 600 !important;;
+        margin-bottom: 15px;
+        color: #fff !important;
+    }
+
+    .upload-btn-wrapper {
+        position: relative;
+        /* overflow: hidden; */
+        display: inline-block;
+        margin-left: 30px;
+    }
+
+    .tableCols{
+        font-weight: 300;
+    }
+
+    .admistration_tab{
+        width: 100%;
+    }
+    .advisor-tab-tableheight {
+        
+        .p-datatable {
+            .p-datatable-scrollable-body {
+                max-height: calc(100vh - 280px);
+            }
+        }
+    }
+    .administration_tab {
+        .heading_title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    }
+    .pending-status {
+        background: #007bff;
+        text-align: center;
+        color: #fff;
+    }
+    .approve-status {
+        background: green;
+        text-align: center;
+        color: #fff;
+    }
+    .disapprove-status {
+        background: red;
+        text-align: center;
+        color: #fff;
+    }
+}
+.image_icons{
+    width: 100%;
+    height: 60px;
+    object-fit: contain;
+}
+body .novus_datatable.p-datatable .p-datatable-thead > tr > th {
+    border: 0px solid #c8c8c8;
+    text-align: center;
+}
+body .novus_datatable.p-datatable .p-datatable-tbody > tr > td {
+    border: 0px solid #c8c8c8;
+    text-align: center;
+}
+body .novus_datatable.p-datatable .p-datatable-header, body .novus_datatable.p-datatable .p-datatable-footer {
+    border: 0px solid #c8c8c8;
+}
+body .novus_datatable .p-paginator {
+    border: 0px solid #c8c8c8;
+}
+body .novus_datatable.p-datatable .p-datatable-tbody > tr {
+    border-bottom: 1px solid #c8c8c8;
+}
+.date_field p{
+    margin-bottom: 0;
+}
+.status_main_bx{
+    position: relative;
+}
+.status_bx {
+    position: absolute;
+    min-width: 350px;
+    left: -50%;
+    top:0;
+}
+.application-list_content .status_main_bx .btn-delete-customer {
+    margin-left: 0px !important;
+}
+.application-list_content .status_main_bx .status_bx button {
+    min-height: 70px;
+    border-radius: 0;
+}
+.application-list_content .novus_datatable .btn-edit-customer {
+    background-color: transparent!important;
+    border-color: transparent !important;
+    color: #00395a !important;
+    font-size: 20px;
+    outline: none !important;
+    box-shadow: none;
+}
+.application-list_content .novus_datatable .btn-delete-customer {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: #f00 !important;
+    font-size: 20px;
+    outline: none !important;
+    box-shadow: none;
+}
+body .p-datatable .p-datatable-thead > tr > th {
+    border: 0px solid #c8c8c8 !important;
+}
+body .p-datatable .p-datatable-tbody > tr > td {
+    border: 0px solid #c8c8c8 !important;
+}
+body .p-paginator {
+    border: 0px solid #c8c8c8 !important;
+}
+.p-treetable-frozen-view>.p-treetable-scrollable-body>table>.p-treetable-tbody>tr>td:last-child {
+    height: 50px !important;
+}
+span.fa.fa-search.form-control-feedback.search-icon {
+    display: none;
+}
+.header_dropopen .dropdown-menu.menu_fontSze {
+    display: block;
+}
+.active_drop_menus .dropdown-menu.menu_fontSze {
+    display: block;
+} 
+.active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a i, 
+.active_drop_menus .right_sidebar_content .dropdown-menu.menu_fontSze a i,
+.active_drop_menus .left_sidebar_content .dropdown-menu.menu_fontSze a span, 
+.active_drop_menus .right_sidebar_content .dropdown-menu.menu_fontSze a span{
+    color: #333;
+}
+// tbody.p-datatable-tbody tr:nth-child(1) i.fa.fa-eye, 
+// tbody.p-datatable-tbody tr:nth-child(4) i.fa.fa-eye, 
+// tbody.p-datatable-tbody tr:nth-child(5) i.fa.fa-eye {
+//     display: none;
+// } 
+span.countrySpan {
+    background: lightgray;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 0 5px 5px 0;
+    display: inline-flex;
+}
