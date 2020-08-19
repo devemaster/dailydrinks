@@ -9,23 +9,16 @@ const { Client } = require('pg');
 // 	ssl: true
 // })
 
-// const client = new Client({
-// 	user: 'postgres',
-// 	password: 'Emaster@123',
-// 	host: 'localhost',
-// 	port: 5432,
-// 	database: 'redis',
-// 	ssl: true
-// })
-
 const client = new Client({
 	user: 'postgres',
-	password: 'admin',
+	password: 'Emaster@123',
+	// password: 'admin',
 	host: 'localhost',
 	port: 5432,
 	database: 'redis',
 	ssl: true
 })
+
 client
 	.connect()
 	.then(() => console.log('connected to DB'))
