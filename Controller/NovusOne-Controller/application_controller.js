@@ -160,7 +160,6 @@ module.exports.application_list = (user) => {
                 data: Array,
               };
               redisClient.hgetall("app", function (err, data) {
-                // resolve('data')
                 if (err) {
                   resolve(message.SOMETHINGWRONG);
                 } else {
